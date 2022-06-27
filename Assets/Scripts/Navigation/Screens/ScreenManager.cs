@@ -27,8 +27,10 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
         Context.ScreenManager = this;
     }
 
-    private void Start()
+    private async void Start()
     {
+        await UniTask.WaitUntil(() => Context.Instance != null);
+
         foreach (var screen in CreatedScreens)
             screen.gameObject.SetActive(false);
 
