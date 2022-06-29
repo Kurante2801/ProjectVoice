@@ -40,7 +40,7 @@ public class LevelCard : MonoBehaviour
         if (texture == null) return;
 
         Background.texture = texture;
-        BackgroundFitter.aspectRatio = texture.width / (float)texture.height;
+        BackgroundFitter.aspectRatio = Level.Meta.background_aspect_ratio ?? texture.width / (float)texture.height;
     }
 
     public void DoClick()

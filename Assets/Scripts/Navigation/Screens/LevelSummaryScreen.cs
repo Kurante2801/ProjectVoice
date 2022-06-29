@@ -41,11 +41,13 @@ public class LevelSummaryScreen : Screen
             ArtistLocalized.gameObject.SetActive(false);
 
         Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio);
+        Context.PlaySongPreview(level);
     }
 
     public void ReturnButton()
     {
         Backdrop.Instance.SetBackdrop(null);
+        Context.StopSongPreview();
         Context.ScreenManager.ReturnScreen();
     }
 }

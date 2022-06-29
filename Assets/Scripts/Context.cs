@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
 using System.Collections;
@@ -24,6 +25,10 @@ public class Context : SingletonMonoBehavior<Context>
     public static int AndroidVersionCode = -1;
 
     public static Level SelectedLevel;
+    
+    public static AudioSource AudioSource;
+    private static string audioPath;
+    private static CancellationTokenSource audioToken;
 
     protected override void Awake()
     {
@@ -77,6 +82,8 @@ public class Context : SingletonMonoBehavior<Context>
                 Debug.LogError(e);
             }
         }
+
+        AudioSource = GetComponent<AudioSource>();
     }
 
 
@@ -100,6 +107,53 @@ public class Context : SingletonMonoBehavior<Context>
     public string GetAndroidStoragePath()
     {
         return AndroidVersionCode <= 29 ? GetAndroidLegacyStoragePath() : Application.persistentDataPath;
+    }
+
+    public static async void PlaySongPreview(Level level)
+    {
+        bool useMusic = string.IsNullOrWhiteSpace(level.Meta.preview_path);
+        string path;
+
+        // Check if preview_path exists
+        if (!useMusic)
+        {
+            path = level.Path + level.Meta.preview_path;
+            if (!File.Exists(path))
+            {
+                Debug.LogWarning("Preview file not fount at " + path);
+                path = level.Path + level.Meta.music_path;
+                useMusic = true;
+            }
+        }
+        else
+            path = level.Path + level.Meta.music_path;
+
+        audioToken?.Cancel();
+        audioToken = null;
+        // Play preview
+        var clip = await AudioLoader.LoadClip(path);
+        AudioSource.Stop();
+        AudioSource.clip = clip;
+
+        if (useMusic)
+            AudioSource.time = Mathf.Clamp(level.Meta.preview_time / 1000f, 0f, AudioSource.clip.length);
+        else
+            AudioSource.time = 0f; // Not doing this causes an exception
+
+        AudioSource.volume = 0f;
+        AudioSource.loop = true;
+        AudioSource.DOKill();
+        AudioSource.DOFade(1f, 0.5f);
+        AudioSource.Play();
+
+        audioPath = path;
+    }
+
+    public static void StopSongPreview()
+    {
+        audioToken?.Cancel();
+        AudioSource.DOFade(0f, 0.25f).OnComplete(() => AudioSource.Stop());
+        audioPath = "";
     }
 }
 

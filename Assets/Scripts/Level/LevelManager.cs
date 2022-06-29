@@ -85,18 +85,18 @@ public class LevelManager
                         {
                             if (File.Exists($"{path}song_full{extension}"))
                             {
-                                meta.music_path = $"{path}song_full{extension}";
+                                meta.music_path = $"song_full{extension}";
                                 break;
                             }
                         }
 
-                        if (meta.preview_time <= 0)
+                        if (meta.preview_time < 0)
                         {
                             foreach (string extension in extensions)
                             {
                                 if (File.Exists($"{path}song_pv{extension}"))
                                 {
-                                    meta.preview_path = $"{path}song_pv{extension}";
+                                    meta.preview_path = $"song_pv{extension}";
                                     break;
                                 }
                             }

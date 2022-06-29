@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public static class SongConfigParser
@@ -30,6 +31,7 @@ public static class SongConfigParser
         var config = ParseINI(file);
 
         meta.background_aspect_ratio = 4.0f / 3.0f; // Default for legacy
+        meta.preview_time = -1;
 
         foreach (KeyValuePair<string, string> entry in config)
         {
@@ -50,7 +52,7 @@ public static class SongConfigParser
                     break;
                 // Project Voice customs
                 case "background_aspect_ratio":
-                    meta.background_aspect_ratio = float.TryParse(entry.Value, out float ratio) ? ratio : 1;
+                    meta.background_aspect_ratio = float.TryParse(entry.Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out float ratio) ? ratio : 1;
                     break;
                 case "title_localized":
                     meta.title_localized = entry.Value;

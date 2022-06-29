@@ -14,7 +14,6 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
 
     public async void SetBackdrop(string path, float? aspect = null)
     {
-        print(path);
         if (path == backdropPath) return;
         backdropPath = path;
 
@@ -36,7 +35,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
             Background.texture = await TextureExtensions.LoadTexture(path);
             Background.DOColor(Color.white, 0.25f);
 
-            AspectRatioFitter.aspectRatio = aspect != null ? (float)aspect : Background.texture.width / (float)Background.texture.height;
+            AspectRatioFitter.aspectRatio = aspect ?? Background.texture.width / (float)Background.texture.height;
         }
     }
 }
