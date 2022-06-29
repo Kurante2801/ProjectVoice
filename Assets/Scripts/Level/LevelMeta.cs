@@ -9,12 +9,14 @@ public class LevelMeta
 	public string artist_source;
 	public string illustrator;
 	public string illustrator_source;
+	public string illustrator_localized;
 	public string charter;
-	public int preview_time;
 
 	public string music_path;
+	public int preview_time;
 	public string preview_path;
 	public string background_path;
+	public float? background_aspect_ratio;
 }
 
 [System.Serializable]

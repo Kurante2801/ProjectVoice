@@ -11,6 +11,8 @@ public class InitializationScreen : Screen
     public async override void OnScreenBecameActive()
     {
         base.OnScreenBecameActive();
+
         await Context.LevelManager.LoadLevels();
+        Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
     }
 }

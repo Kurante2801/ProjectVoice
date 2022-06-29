@@ -9,10 +9,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform), typeof(Canvas), typeof(CanvasGroup))]
 public abstract class Screen : MonoBehaviour
 {
-    public Canvas Canvas;
-    public CanvasGroup CanvasGroup;
-    public RectTransform RectTransform;
-    public GraphicRaycaster GraphicRaycaster;
+    [HideInInspector] public Canvas Canvas;
+    [HideInInspector] public CanvasGroup CanvasGroup;
+    [HideInInspector] public RectTransform RectTransform;
+    [HideInInspector] public GraphicRaycaster GraphicRaycaster;
 
     private ScreenState state = ScreenState.Destroyed;
     public ScreenState State
@@ -67,7 +67,7 @@ public abstract class Screen : MonoBehaviour
 
     public virtual void OnScreenBecameActive()
     {
-        CanvasGroup.blocksRaycasts = true;
+        SetBlockRaycasts(true);
     }
 
     public virtual void OnScreenPostActive()
@@ -81,6 +81,23 @@ public abstract class Screen : MonoBehaviour
 
     public virtual void OnScreenBecameInactive()
     {
+        SetBlockRaycasts(false);
+    }
+
+    public virtual void OnScreenTransitionInEnded()
+    {
+        SetBlockRaycasts(true);
+    }
+
+    public virtual void OnScreenTransitionOutBegan()
+    {
+        SetBlockRaycasts(false);
+    }
+
+    public virtual void SetBlockRaycasts(bool block)
+    {
+        CanvasGroup.blocksRaycasts = block;
+        CanvasGroup.interactable = block;
     }
 }
 

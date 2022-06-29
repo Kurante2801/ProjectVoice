@@ -1,16 +1,29 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.U2D;
+using UnityEngine.UI;
 
 public class Context : SingletonMonoBehavior<Context>
 {
     public static ScreenManager ScreenManager;
     public static readonly LevelManager LevelManager = new();
+    
+    public static int ReferenceWidth = 1280;
+    public static int ReferenceHeight = 960;
+
+    public static int ScreenWidth;
+    public static int ScreenHeight;
+
     public static string UserDataPath;
     public static int AndroidVersionCode = -1;
+
+    public static Level SelectedLevel;
 
     protected override void Awake()
     {
@@ -23,6 +36,9 @@ public class Context : SingletonMonoBehavior<Context>
         base.Awake();
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = 120;
+
+        ScreenWidth = UnityEngine.Screen.width;
+        ScreenHeight = UnityEngine.Screen.height;
 
 #if UNITY_EDITOR
         Application.runInBackground = true;

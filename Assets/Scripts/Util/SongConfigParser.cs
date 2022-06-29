@@ -29,6 +29,8 @@ public static class SongConfigParser
         var meta = new LevelMeta();
         var config = ParseINI(file);
 
+        meta.background_aspect_ratio = 4.0f / 3.0f; // Default for legacy
+
         foreach (KeyValuePair<string, string> entry in config)
         {
             switch (entry.Key)
@@ -45,6 +47,31 @@ public static class SongConfigParser
                     meta.artist = entry.Value;
                     break;
                 case "diff":
+                    break;
+                // Project Voice customs
+                case "background_aspect_ratio":
+                    meta.background_aspect_ratio = float.TryParse(entry.Value, out float ratio) ? ratio : 1;
+                    break;
+                case "title_localized":
+                    meta.title_localized = entry.Value;
+                    break;
+                case "artist_localized":
+                    meta.artist_localized = entry.Value;
+                    break;
+                case "illustrator":
+                    meta.illustrator = entry.Value;
+                    break;
+                case "illustrator_source":
+                    meta.illustrator_source = entry.Value;
+                    break;
+                case "illustrator_localized":
+                    meta.illustrator_localized = entry.Value;
+                    break;
+                case "charter":
+                    meta.charter = entry.Value;
+                    break;
+                case "preview_time":
+                    meta.preview_time = int.TryParse(entry.Value, out int time) ? time : -1;
                     break;
             }
         }

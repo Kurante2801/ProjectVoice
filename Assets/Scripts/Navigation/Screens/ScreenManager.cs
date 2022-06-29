@@ -83,12 +83,13 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
         if (oldScreen != null)
         {
             oldScreen.CanvasGroup.DOFade(0f, duration);
+            oldScreen.OnScreenTransitionOutBegan();
 
             if (!simultaneous && duration > 0f)
                 await UniTask.Delay(TimeSpan.FromSeconds(duration));
 
             oldScreen.State = ScreenState.Inactive;
-
+            
             if (destroyOld)
                 DestroyScreen(oldScreen.GetID());
             else
@@ -108,6 +109,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
             await UniTask.Delay(TimeSpan.FromSeconds(duration));
 
         ChangingToScreenId = null;
+        newScreen.OnScreenTransitionInEnded();
     }
 
     public string PopAndPeekHistory()
