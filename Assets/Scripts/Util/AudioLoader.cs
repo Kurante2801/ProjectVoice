@@ -31,10 +31,12 @@ public static class AudioLoader
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 throw new Exception(request.error);
 
+            //await UniTask.SwitchToMainThread(); // <- test what this do
             var stream = new MemoryStream(request.downloadHandler.data);
             var mpeg = new MpegFile(stream);
             var samples = new float[mpeg.Length];
             mpeg.ReadSamples(samples, 0, (int)mpeg.Length);
+            //await UniTask.SwitchToThreadPool()
 
             var clip = AudioClip.Create(path, samples.Length, mpeg.Channels, mpeg.SampleRate, false);
             clip.SetData(samples, 0);

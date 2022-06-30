@@ -22,11 +22,21 @@ public class LevelCard : MonoBehaviour
         Title.text = level.Meta.title;
         Artist.text = level.Meta.artist;
 
-        TitleLocalized.gameObject.SetActive(!string.IsNullOrWhiteSpace(level.Meta.title_localized));
-        TitleLocalized.text = level.Meta.title_localized ?? "";
+        if (!string.IsNullOrWhiteSpace(level.Meta.title_localized))
+        {
+            TitleLocalized.gameObject.SetActive(true);
+            TitleLocalized.text = "<font-weight=500>" + level.Meta.title_localized.SanitizeTMP();
+        }
+        else
+            TitleLocalized.gameObject.SetActive(false);
 
-        ArtistLocalized.gameObject.SetActive(!string.IsNullOrWhiteSpace(level.Meta.title_localized));
-        ArtistLocalized.text = level.Meta.artist_localized ?? "";
+        if (!string.IsNullOrEmpty(level.Meta.artist_localized))
+        {
+            ArtistLocalized.gameObject.SetActive(true);
+            ArtistLocalized.text = "<font-weight=500>" + level.Meta.artist_localized.SanitizeTMP();
+        }
+        else
+            ArtistLocalized.gameObject.SetActive(false);
 
         LoadBackground();
     }

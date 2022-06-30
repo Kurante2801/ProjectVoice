@@ -50,4 +50,9 @@ public class LevelSummaryScreen : Screen
         Context.StopSongPreview();
         Context.ScreenManager.ReturnScreen();
     }
+
+    public void SettingsButton()
+    {
+        Context.ScreenManager.ChangeScreen("SettingsScreen");
+    }
 }

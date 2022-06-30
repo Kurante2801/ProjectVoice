@@ -30,6 +30,16 @@ public class Context : SingletonMonoBehavior<Context>
     private static string audioPath;
     private static CancellationTokenSource audioToken;
 
+    public static LocalizationManager LocalizationManager = new();
+    public static UnityEvent OnLocalizationChanged = new();
+
+    public static Color BackgroundColor = "#191919".ToColor();  // The void (camera color)
+    public static Color Foreground1Color = "#323232".ToColor(); // Used for scroll bars, etc.
+    public static Color Foreground2Color = "#4B4B4B".ToColor(); // Used for dropdowns, input fields, deselected buttons, etc.
+
+    public static Color MainColor = Color.red;
+    public static UnityEvent OnMainColorChanged = new();
+
     protected override void Awake()
     {
         if (GameObject.FindGameObjectsWithTag("Context").Length > 1) // This is 1 instead of 0 because 'this' has the tag too
@@ -41,6 +51,7 @@ public class Context : SingletonMonoBehavior<Context>
         base.Awake();
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = 120;
+        BetterStreamingAssets.Initialize();
 
         ScreenWidth = UnityEngine.Screen.width;
         ScreenHeight = UnityEngine.Screen.height;
@@ -128,6 +139,8 @@ public class Context : SingletonMonoBehavior<Context>
         else
             path = level.Path + level.Meta.music_path;
 
+        if (path == audioPath) return;
+
         audioToken?.Cancel();
         audioToken = null;
         // Play preview
@@ -155,8 +168,4 @@ public class Context : SingletonMonoBehavior<Context>
         AudioSource.DOFade(0f, 0.25f).OnComplete(() => AudioSource.Stop());
         audioPath = "";
     }
-}
-
-public class LevelEvent : UnityEvent<Level>
-{
 }

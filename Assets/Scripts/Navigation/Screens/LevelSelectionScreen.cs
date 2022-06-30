@@ -30,4 +30,9 @@ public class LevelSelectionScreen : Screen
             Levels[level.ID] = card;
         }
     }
+
+    public void SettingsButton()
+    {
+        Context.ScreenManager.ChangeScreen("SettingsScreen");
+    }
 }

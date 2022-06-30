@@ -54,10 +54,13 @@ public abstract class Screen : MonoBehaviour
         GraphicRaycaster = GetComponent<GraphicRaycaster>();
     }
 
+    /// <summary>
+    /// Called when the screen is initialized. This needs to be called at the end of any overrides otherwise layouts are fucked!
+    /// </summary>
     public virtual void OnScreenInitialized()
     {
         // According to https://github.com/Cytoid/Cytoid/blob/1ce07d83628aef0fd5afbc450ecd4fed0600e47b/Assets/Scripts/Screen/Screen.cs#L195
-        // we have to rebuild all layout groups 2 times
+        // we have to rebuild all layout groups 2 times, confirmed
         var layouts = gameObject.GetComponentsInChildren<LayoutGroup>();
         foreach (var layoutGroup in layouts)
             layoutGroup.transform.RebuildLayout();

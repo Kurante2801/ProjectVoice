@@ -13,6 +13,7 @@ public class InitializationScreen : Screen
         base.OnScreenBecameActive();
 
         await Context.LevelManager.LoadLevels();
+        await Context.LocalizationManager.Initialize();
         Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
     }
 }
