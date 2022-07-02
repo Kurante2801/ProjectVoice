@@ -53,4 +53,10 @@ public class PlayerSettings
         get => PlayerPrefsExtensions.GetColor("testcolor", Color.white, false);
         set => PlayerPrefsExtensions.SetColor("testcolor", value, false);
     }
+
+    public static Color TestColorAlpha
+    {
+        get => PlayerPrefsExtensions.GetColor("testcoloralpha", Color.white, true);
+        set => PlayerPrefsExtensions.SetColor("testcoloralpha", value, true);
+    }
 }

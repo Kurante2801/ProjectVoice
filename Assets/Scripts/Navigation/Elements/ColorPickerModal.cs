@@ -1,93 +1,155 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Globalization;
 using UnityEngine.Events;
+using DG.Tweening;
 
-// TODO: Change to use ColorHSV instead of RGB! ! !
 public class ColorPickerModal : MonoBehaviour
 {
-    public RectTransform AlphaInputContainer;
-    public RawImage ColorBox, HSVBar, AlphaBar;
-    public TMP_InputField RedInput, GreenInput, BlueInput, AlphaInput, HEXInput;
+    [Tooltip("Objects to hide when alpha is not allowed")]
+    public List<GameObject> AlphaObjects = new();
+    public Image CancelColorImage, AcceptColorImage;
+
+    public RawImage SVGraphic, HueGraphic, AlphaGraphic;
+    public TMP_InputField RedInput, GreenInput, BlueInput, AlphaInput, HexInput;
     public Slider HueSlider, AlphaSlider;
     public Slider2D SaturationValueSlider;
+    public Image TextBar;
+    public TMP_Text PropertyText;
 
-    private Color32 previous = Color.white;
+    public CanvasGroup CanvasGroup;
 
-    private Color32 _value = Color.white;
-    public Color32 Value = Color.white;
-    public bool AlphaAllowed = true;
+    public bool AllowAlpha = true;
 
-    private float _hue;
+    private float _hue = 0f, _saturation = 0f, _value = 0f;
+    private byte _alpha = 255;
+    public byte Alpha { get => AllowAlpha ? _alpha : (byte)255; set => _alpha = value; }
+    public float Hue { get => _hue; set => _hue = Mathf.Clamp01(value); }
+    public float Saturation { get => _saturation; set => _saturation = Mathf.Clamp01(value); }
 
-    public UnityEvent<Color> OnFinishedEditing = new();
+    public float Value { get => _value; set => _value = Mathf.Clamp01(value); }
+
+    public Color32 RGBA => ColorExtensions.HSVToRGB(Hue, Saturation, Value).WithAlpha(Alpha);
+
+    private Color32 previous;
+
+    public UnityEvent<Color32> OnEditEnd = new();
+
+    public GameObject Blocker;
+
+    public static ColorPickerModal CreateModal(Canvas rootCanvas)
+    {
+        var prefab = Context.Instance.ColorPickerModalPrefab;
+        var blocker = CreateBlocker(rootCanvas);
+        var gameObject = Instantiate(prefab, blocker.transform);
+
+        var modal = gameObject.GetComponent<ColorPickerModal>();
+        modal.Blocker = blocker;
+        modal.CanvasGroup.alpha = 0f;
+        return modal;
+    }
+
+    // From TMP Dropdown
+    private static GameObject CreateBlocker(Canvas rootCanvas)
+    {
+        var blocker = new GameObject("Blocker");
+        var rect = blocker.AddComponent<RectTransform>();
+        // Make rect fill screen
+        rect.SetParent(rootCanvas.transform, false);
+        rect.anchorMin = rect.sizeDelta = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+
+        var canvas = blocker.AddComponent<Canvas>();
+        canvas.sortingOrder = SortingLayer.GetLayerValueFromName("Modals");
+        blocker.AddComponent<GraphicRaycaster>();
+
+        var image = blocker.AddComponent<Image>();
+        image.color = Color.black.WithAlpha(0.5f);
+
+        return blocker;
+    }
 
     private void Awake()
     {
-        RedInput.onEndEdit.AddListener(value => RGBAInputchanged(value, 0));
-        GreenInput.onEndEdit.AddListener(value => RGBAInputchanged(value, 1));
-        BlueInput.onEndEdit.AddListener(value => RGBAInputchanged(value, 2));
-        AlphaInput.onEndEdit.AddListener(value => RGBAInputchanged(value, 3));
+        RedInput.onEndEdit.AddListener(value => RGBAInputChanged(value, 0));
+        GreenInput.onEndEdit.AddListener(value => RGBAInputChanged(value, 1));
+        BlueInput.onEndEdit.AddListener(value => RGBAInputChanged(value, 2));
+        AlphaInput.onEndEdit.AddListener(value => RGBAInputChanged(value, 3));
 
-        HEXInput.onEndEdit.AddListener(value =>
+        HexInput.onEndEdit.AddListener(value =>
         {
-            Value = value.ToColor(AlphaAllowed);
+            var color = value.ToColor(AllowAlpha);
+            Color.RGBToHSV(color, out _hue, out _saturation, out _value);
+            Alpha = ((Color32)color).a;
             ValueChanged();
         });
-        AlphaSlider.onValueChanged.AddListener(value =>
-        {
-            if (!AlphaAllowed) return;
-            Value.a = (byte)value;
-            ValueChanged();
-        });
+
+        HueSlider.minValue = 0f;
+        HueSlider.maxValue = 1f;
+        HueSlider.wholeNumbers = false;
         HueSlider.onValueChanged.AddListener(value =>
         {
-            Color.RGBToHSV(Value, out float h, out float s, out float v);
-            Color32 color = Color.HSVToRGB(value, s, v);
-            Value = color.WithAlpha(Value.a);
-            _hue = value;
-            ValueChanged(false, true);
-            
-        });
-        SaturationValueSlider.OnValueChanged.AddListener(value =>
-        {
-            Color.RGBToHSV(Value, out float h, out float s, out float v);
-            s = value.y;
-            v = value.x;
-            Color32 color = Color.HSVToRGB(h, s, v);
-            Value = color.WithAlpha(Value.a);
-            ValueChanged(false, false);
+            Hue = value;
+            ValueChanged(updateHue: false);
         });
 
-        AlphaInputContainer.gameObject.SetActive(AlphaAllowed);
-        AlphaSlider.gameObject.SetActive(AlphaAllowed);
+        SaturationValueSlider.OnValueChanged.AddListener(value =>
+        {
+            Saturation = value.y;
+            Value = value.x;
+            ValueChanged(updateSV: false);
+        });
+
+        AlphaSlider.minValue = 0f;
+        AlphaSlider.maxValue = 255f;
+        AlphaSlider.wholeNumbers = true;
+        AlphaSlider.onValueChanged.AddListener(value =>
+        {
+            Alpha = (byte)value;
+            ValueChanged();
+        });
     }
 
     private void OnEnable()
     {
-        RegenerateSVTexture();
-        RegenerateHTexture();
+        RegenerateSaturationValueGraphic();
+        RegenerateHueTexture();
         RegenerateAlphaTexture();
     }
 
     private void OnDisable()
     {
-        if (AlphaBar.texture != null)
-            DestroyImmediate(AlphaBar.texture);
-        if (HSVBar.texture != null)
-            DestroyImmediate(AlphaBar.texture);
-        if (ColorBox.texture != null)
-            DestroyImmediate(AlphaBar.texture);
+        if (HueGraphic.texture != null)
+            DestroyImmediate(HueGraphic.texture);
+        if (HueGraphic.texture != null)
+            DestroyImmediate(HueGraphic.texture);
+        if (SVGraphic.texture != null)
+            DestroyImmediate(SVGraphic.texture);
+    }
+
+    private void RGBAInputChanged(string value, int index)
+    {
+        var parsed = (byte)(float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : 0);
+
+        if (index == 3)
+            Alpha = parsed;
+        else
+        {
+            var color = RGBA;
+            color[index] = parsed;
+            Color.RGBToHSV(color, out _hue, out _saturation, out _value);
+        }
+
+        ValueChanged();
     }
 
     private void RegenerateAlphaTexture()
     {
-        if (!AlphaAllowed) return;
-        if (AlphaBar.texture != null)
-            DestroyImmediate(AlphaBar.texture);
+        if (!AllowAlpha) return;
+        if (AlphaGraphic.texture != null)
+            DestroyImmediate(AlphaGraphic.texture);
 
         var texture = new Texture2D(256, 1);
         texture.wrapMode = TextureWrapMode.Clamp;
@@ -98,92 +160,110 @@ public class ColorPickerModal : MonoBehaviour
         texture.SetPixels32(pixels);
         texture.Apply();
 
-        AlphaBar.texture = texture;
+        AlphaGraphic.texture = texture;
     }
 
-    private void RegenerateHTexture()
+    private void RegenerateHueTexture()
     {
-        if (HSVBar.texture != null)
-            DestroyImmediate(HSVBar.texture);
+        if (HueGraphic.texture != null)
+            DestroyImmediate(HueGraphic.texture);
 
         var texture = new Texture2D(1, 360);
         texture.wrapMode = TextureWrapMode.Clamp;
 
-        var pixels = new Color[360];
+        var pixels = new Color32[360];
         for (int i = 0; i < 360; i++)
-            pixels[i] = Color.HSVToRGB(i / 360f, 1, 1);
-        texture.SetPixels(pixels);
+            pixels[i] = Color.HSVToRGB(i / 360f, 1f, 1f);
+        texture.SetPixels32(pixels);
         texture.Apply();
 
-        HSVBar.texture = texture;
+        HueGraphic.texture = texture;
     }
 
-
-    // Almost everything was written by GitHub Copilot, I literally only had to make it use Value's Hue with the Color.RGBToHSV function
-    private void RegenerateSVTexture()
+    // GitHub Copilot wrote literally this entire function
+    private void RegenerateSaturationValueGraphic()
     {
-        if (ColorBox.texture != null)
-            DestroyImmediate(ColorBox.texture);
+        if (SVGraphic.texture != null)
+            DestroyImmediate(SVGraphic.texture);
 
-        //if(hue == default)
-            //Color.RGBToHSV(Value, out hue, out float _, out float _);
-        
         var texture = new Texture2D(256, 256);
         texture.wrapMode = TextureWrapMode.Clamp;
 
         var pixels = new Color32[256 * 256];
         for (int i = 0; i < 256; i++)
             for (int j = 0; j < 256; j++)
-                pixels[i * 256 + j] = Color.HSVToRGB(_hue, i / 255f, j / 255f);
+                pixels[i + j * 256] = Color.HSVToRGB(Hue, j / 255f, i / 255f);
         texture.SetPixels32(pixels);
         texture.Apply();
 
-        ColorBox.texture = texture;
+        SVGraphic.texture = texture;
     }
 
-    public void ValueChanged(bool updateH = true, bool updateSV = true)
+    public void ValueChanged(bool updateHue = true, bool updateSV = true)
     {
-        /*if (Value.r == _value.r && Value.g == _value.g && Value.b == _value.b && Value.a == _value.a)
-            return;*/
-
-        if (AlphaAllowed)
-            AlphaSlider.SetValueWithoutNotify(Value.a);
-
-        Color.RGBToHSV(Value, out float h, out float s, out float v);
-
-        if (updateH)
+        if (updateHue)
+            HueSlider.SetValueWithoutNotify(Hue);
+        if (updateSV)
         {
-            HueSlider.SetValueWithoutNotify(h);
-            _hue = h;
-        }
-        if(updateSV)
-        {
-            SaturationValueSlider.SetValueNormalized(new Vector2(v, s));
-            RegenerateSVTexture();
+            SaturationValueSlider.SetValueNormalized(new Vector2(Value, Saturation));
+            RegenerateSaturationValueGraphic();
         }
 
-        RedInput.SetTextWithoutNotify(Value.r.ToString());
-        GreenInput.SetTextWithoutNotify(Value.g.ToString());
-        BlueInput.SetTextWithoutNotify(Value.b.ToString());
-        if (AlphaAllowed)
-            AlphaInput.SetTextWithoutNotify(Value.a.ToString());
-        HEXInput.SetTextWithoutNotify(Value.ToHEX(true, AlphaAllowed));
+        var color = RGBA;
+        if (AllowAlpha)
+        {
+            AlphaSlider.value = Alpha;
+            AlphaInput.SetTextWithoutNotify(Alpha.ToString());
+            AlphaGraphic.color = color.WithAlpha(255);
+        }
 
-        AlphaBar.color = Value.WithAlpha(255);
+        RedInput.SetTextWithoutNotify(color.r.ToString());
+        GreenInput.SetTextWithoutNotify(color.g.ToString());
+        BlueInput.SetTextWithoutNotify(color.b.ToString());
+        HexInput.SetTextWithoutNotify(color.ToHex(true, AllowAlpha));
+
+        AcceptColorImage.color = color;
     }
-    
-    private void RGBAInputchanged(string value, int index)
+
+    public void SetValues(Color32 value, string text, bool allowAlpha)
     {
-        if (index == 3 && !AlphaAllowed) return;
+        if (string.IsNullOrWhiteSpace(text))
+            TextBar.gameObject.SetActive(false);
+        else
+            PropertyText.text = text;
 
-        Value[index] = (byte)(float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float result) ? result : 0f);
+        Color.RGBToHSV(value, out _hue, out _saturation, out _value);
+        Alpha = value.a;
+        AllowAlpha = allowAlpha;
         ValueChanged();
+
+        previous = value;
+        CancelColorImage.color = value.WithAlpha(allowAlpha ? value.a : (byte)255);
+
+        foreach (var gameObject in AlphaObjects)
+            gameObject.SetActive(allowAlpha);
+        CanvasGroup.DOKill();
+        CanvasGroup.DOFade(1f, 0.25f);
     }
 
-    public void SetValues(Color32 color, bool alphaAllowed = false)
+    public void CancelButton()
     {
-        Value = color;
-        AlphaAllowed = alphaAllowed;
-        ValueChanged();
+        if (Blocker != null)
+            Destroy(Blocker);
+        else
+            Destroy(gameObject);
     }
+
+    public void ResetButton()
+    {
+        SetValues(previous, PropertyText.text, AllowAlpha);
+    }
+
+    public void AcceptButton()
+    {
+        var color = RGBA;
+        CancelButton();
+        OnEditEnd?.Invoke(color);
+    }
+
 }

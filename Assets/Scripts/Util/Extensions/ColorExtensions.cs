@@ -13,7 +13,7 @@ public static class ColorExtensions
 	/// <param name="color"></param>
 	/// <param name="hashtag"></param>
 	/// <returns></returns>
-	public static string ToHEX(this Color32 color, bool hashtag = false, bool alpha = false)
+	public static string ToHex(this Color32 color, bool hashtag = false, bool alpha = false)
 	{
         return string.Concat(hashtag ? "#" : "", color.r.ToString("X2"), color.g.ToString("X2"), color.b.ToString("X2"), alpha ? color.a.ToString("X2") : "");
 	}
@@ -24,7 +24,7 @@ public static class ColorExtensions
 	/// <param name="color"></param>
 	/// <param name="hashtag"></param>
 	/// <returns></returns>
-	public static string ToHEX(this Color color, bool hashtag = false, bool alpha = false) => ((Color32)color).ToHEX(hashtag, alpha);
+	public static string ToHex(this Color color, bool hashtag = false, bool alpha = false) => ((Color32)color).ToHex(hashtag, alpha);
 
 	private static readonly char[] ValidHEX =
 	{
@@ -36,7 +36,7 @@ public static class ColorExtensions
 	/// </summary>
 	/// <param name="hex"></param>
 	/// <returns></returns>
-	public static string ValidateHEX(this string hex, bool parseAlpha = false)
+	public static string ValidateHex(this string hex, bool parseAlpha = false)
 	{
         var builder = new StringBuilder(hex.ToUpper());
 		builder = builder.Replace("#", "");
@@ -59,7 +59,7 @@ public static class ColorExtensions
 	/// <returns></returns>
 	public static Color ToColor(this string hex, bool parseAlpha = false)
 	{
-		hex = ValidateHEX(hex, parseAlpha);
+		hex = ValidateHex(hex, parseAlpha);
 		return new Color32(
 			byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
 			byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
@@ -77,14 +77,6 @@ public static class ColorExtensions
 		return new Color32(color.r, color.g, color.b, alpha);
 	}
 
-    public static ColorHSV ToHSV(this Color color)
-    {
-		Color.RGBToHSV(color, out float h, out float s, out float v);
-		return new ColorHSV(h, s, v);
-    }
-
-	public static ColorHSV ToHSV(this Color32 color) => ((Color)color).ToHSV();
-
-	public static Color ToRGB(this ColorHSV color) => Color.HSVToRGB((float)color.h / 360f, (float)color.s, (float)color.v);
+    public static Color32 HSVToRGB(float h, float s, float v) => Color.HSVToRGB(h, s, v);
 
 }

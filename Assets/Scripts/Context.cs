@@ -50,6 +50,9 @@ public class Context : SingletonMonoBehavior<Context>
     public static Color MainColor = DifficultyType.Extra.GetColor();
     public static UnityEvent OnMainColorChanged = new();
 
+    public static float ColorPickerModalHeight = 638f;
+    public GameObject ColorPickerModalPrefab;
+
     protected override void Awake()
     {
         if (GameObject.FindGameObjectsWithTag("Context").Length > 1) // This is 1 instead of 0 because 'this' has the tag too

@@ -3,6 +3,8 @@
 
     "OPTIONS": "Options",
     "RETURN": "Return",
+    "ACCEPT": "Accept",
+    "CANCEL": "Cancel",
 
     "OPTIONS_TRUE_BOOLEAN": "Yes",
     "OPTIONS_FALSE_BOOLEAN": "No",

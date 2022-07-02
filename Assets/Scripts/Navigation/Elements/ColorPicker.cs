@@ -11,6 +11,7 @@ public class ColorPicker : MonoBehaviour
     public Button ColorButton;
     public TMP_InputField InputField;
     public bool AllowAlpha = false;
+    public string ModalText = "";
 
     private Color _color = Color.white;
     public Color Color
@@ -32,15 +33,15 @@ public class ColorPicker : MonoBehaviour
 
     public void UpdateValues()
     {
-        InputField.SetTextWithoutNotify(_color.ToHEX(true, AllowAlpha));
+        InputField.SetTextWithoutNotify(_color.ToHex(true, AllowAlpha));
         ColorImage.color = _color.WithAlpha(AllowAlpha ? _color.a : 1f);
     }
 
     private void InputFieldChanged(string value)
     {
         var desired = value.ToColor(AllowAlpha);
-        InputField.SetTextWithoutNotify(desired.ToHEX(true, AllowAlpha));
-
+        InputField.SetTextWithoutNotify(desired.ToHex(true, AllowAlpha));
+        
         if (desired == Color) return;
         Color = desired;
 
@@ -48,25 +49,23 @@ public class ColorPicker : MonoBehaviour
         OnValueChanged?.Invoke(Color);
     }
 
-    public void SetValues(Color color, bool allowAlpha)
+    public void SetValues(Color color, bool allowAlpha, string modalText)
     {
         AllowAlpha = allowAlpha;
         Color = color;
+        ModalText = modalText;
     }
 
-    // From TextMesh Pro's Dropdown code
-    /*private GameObject CreateBlocker(Canvas rootCanvas)
+    public void OpenModal()
     {
-        var blocker = new GameObject("Blocker");
-        var blockerRect = blocker.AddComponent<RectTransform>();
-        blockerRect.SetParent(rootCanvas.transform, false);
-        blockerRect.anchorMin = Vector2.zero;
-        blockerRect.anchorMax = Vector2.one;
-        blockerRect.sizeDelta = Vector2.zero;
-
-        var blockerCanvas = blocker.AddComponent<Canvas>();
-        blockerCanvas.overrideSorting = true;
-        
-
-    }*/
+        var rootCanvas = GetComponentInParent<Canvas>().rootCanvas;
+        var modal = ColorPickerModal.CreateModal(rootCanvas);
+        modal.SetValues(Color, ModalText, AllowAlpha);
+        modal.OnEditEnd.AddListener(value =>
+        {
+            Color = value;
+            UpdateValues();
+            OnValueChanged?.Invoke(value);
+        });
+    }
 }

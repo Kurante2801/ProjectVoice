@@ -10,5 +10,5 @@ public static class PlayerPrefsExtensions
 
     public static Color GetColor(string key, bool parseAlpha = false) => PlayerPrefs.GetString(key).ToColor(parseAlpha);
     public static Color GetColor(string key, Color defaultValue, bool parseAlpha = false) => PlayerPrefs.HasKey(key) ? GetColor(key, parseAlpha) : defaultValue;
-    public static void SetColor(string key, Color value, bool parseAlpha = false) => PlayerPrefs.SetString(key, value.ToHEX(true, parseAlpha));
+    public static void SetColor(string key, Color value, bool parseAlpha = false) => PlayerPrefs.SetString(key, value.ToHex(true, parseAlpha));
 }

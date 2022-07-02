@@ -86,11 +86,16 @@ public class OptionsScreen : Screen
         GeneralSettings.Add(offset);
 
         var test = Instantiate(SettingColorElementPrefab, GeneralContent).GetComponent<SettingColorElement>();
-        test.SetValues(PlayerSettings.TestColor, false);
+        test.SetValues(PlayerSettings.TestColor, false, "Test Color");
         test.SetLocalizationKeys("Test Color", "");
         test.OnValueChanged.AddListener(value => PlayerSettings.TestColor = value);
-
         GeneralSettings.Add(test);
+
+        var testAlpha = Instantiate(SettingColorElementPrefab, GeneralContent).GetComponent<SettingColorElement>();
+        testAlpha.SetValues(PlayerSettings.TestColorAlpha, true, "Test Color with Alpha");
+        testAlpha.SetLocalizationKeys("Test Color with Alpha", "");
+        testAlpha.OnValueChanged.AddListener(value => PlayerSettings.TestColorAlpha = value);
+        GeneralSettings.Add(testAlpha);
     }
 
     private void PopulateNotes()
