@@ -143,6 +143,9 @@ namespace Crystal
 
         Rect GetSafeArea ()
         {
+            if (!PlayerSettings.SafeArea)
+                return new Rect(0f, 0f, UnityEngine.Screen.width, UnityEngine.Screen.height);
+
             Rect safeArea = UnityEngine.Screen.safeArea;
 
             if (Application.isEditor && Sim != SimDevice.None)

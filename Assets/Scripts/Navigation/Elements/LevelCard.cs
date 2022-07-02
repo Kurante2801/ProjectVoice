@@ -3,17 +3,20 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelCard : MonoBehaviour
 {
-    public Canvas Canvas;
+    //public Canvas Canvas;
     public RawImage Background;
     public AspectRatioFitter BackgroundFitter;
     public TMP_Text Title, TitleLocalized, Artist, ArtistLocalized;
     public Level Level;
+    public RectTransform DifficultyContainer;
+    public GameObject DifficultyBoxPrefab;
 
     public void SetLevel(Level level)
     {
@@ -37,6 +40,22 @@ public class LevelCard : MonoBehaviour
         }
         else
             ArtistLocalized.gameObject.SetActive(false);
+
+        foreach (Transform child in DifficultyContainer)
+            Destroy(child.gameObject);
+
+        // Load difficulty boxes
+        foreach (var chart in level.Meta.charts)
+        {
+            var gameObject = Instantiate(DifficultyBoxPrefab, DifficultyContainer);
+            gameObject.GetComponent<Image>().color = chart.type.GetColor();
+
+            var diff = chart.difficulty;
+            if(diff > 17)
+                gameObject.GetComponentInChildren<TMP_Text>().text = "<font-weight=500>17+";
+            else
+                gameObject.GetComponentInChildren<TMP_Text>().text = "<font-weight=500>" + chart.difficulty.ToString();
+        }
 
         LoadBackground();
     }

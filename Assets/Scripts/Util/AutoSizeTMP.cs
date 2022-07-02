@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// Content Size Fitter doesn't update when
-// changing text through code smh...
+// Content Size Fitter doesn't update when changing text through code smh...
 
 [ExecuteAlways, RequireComponent(typeof(TMP_Text))]
 public class AutoSizeTMP : MonoBehaviour

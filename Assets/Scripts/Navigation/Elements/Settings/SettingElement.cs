@@ -12,18 +12,22 @@ public class SettingElement : MonoBehaviour
     protected virtual void OnEnable()
     {
         Context.OnLocalizationChanged.AddListener(LocalizationChanged);
+        Context.OnMainColorChanged.AddListener(MainColorChanged);
         LocalizationChanged();
+        MainColorChanged();
     }
 
     protected virtual void OnDisable()
     {
         Context.OnLocalizationChanged.RemoveListener(LocalizationChanged);
+        Context.OnMainColorChanged.RemoveListener(MainColorChanged);
     }
 
     protected virtual void LocalizationChanged()
     {
         Name.text = NameLocalizationKey.Get();
         Description.text = DescriptionLocalizationKey.Get();
+        Description.gameObject.SetActive(Description.text != "");
     }
 
     public virtual void SetLocalizationKeys(string name, string description)
@@ -32,4 +36,6 @@ public class SettingElement : MonoBehaviour
         DescriptionLocalizationKey = description;
         LocalizationChanged();
     }
+
+    protected virtual void MainColorChanged() { }
 }

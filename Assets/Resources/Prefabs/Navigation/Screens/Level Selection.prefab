@@ -844,7 +844,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SettingsButton
+      value: OptionsButton
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -940,7 +940,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480315554108, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_Name
-      value: Setttings
+      value: Options
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480684629911, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -960,7 +960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4481820421550080648, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: Key
-      value: UI_OPTIONS
+      value: OPTIONS
       objectReference: {fileID: 0}
     - target: {fileID: 4481820421550080648, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_Enabled

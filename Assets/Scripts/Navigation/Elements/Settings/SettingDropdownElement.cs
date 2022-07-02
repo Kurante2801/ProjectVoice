@@ -7,10 +7,11 @@ using UnityEngine.Events;
 public class SettingDropdownElement : SettingElement
 {
     public TMP_Dropdown Dropdown;
-    public UnityEvent<int, string> OnValueChanged = new();
+    public UnityEvent<int, string, object> OnValueChanged = new();
     public UnityEvent OnLocaleChanged = new();
 
-    private string[] values;
+    private string[] _values;
+    private object[] _data;
 
     private void Awake()
     {
@@ -18,42 +19,54 @@ public class SettingDropdownElement : SettingElement
         Dropdown.onValueChanged.AddListener(ItemSelected);
     }
 
-    protected override void OnEnable()
+    private void SetValues(string[] names, object[] data)
     {
-        base.OnEnable();
-        Context.OnMainColorChanged.AddListener(MainColorChanged);
-        MainColorChanged();
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        Context.OnMainColorChanged.RemoveListener(MainColorChanged);
-    }
-
-    public void SetValues(string[] options, string selected = null)
-    {
-        values = options;
+        _values = names;
+        _data = data;
         Dropdown.options.Clear();
-        for(int i = 0; i < options.Length; i++)
+        for (int i = 0; i < names.Length; i++)
         {
-            string option = options[i];
-            Dropdown.options.Add(new TMP_Dropdown.OptionData(option));
+            string text = names[i];
+            Dropdown.options.Add(new TMP_Dropdown.OptionData(text));
+        }
+    }
+    
+    public void SetValues(string[] names, object[] data, string selected)
+    {
+        SetValues(names, data);
 
-            if (option == selected)
+        for(int i = 0; i < names.Length; i++)
+        {
+            if (names[i] == selected)
+                Dropdown.value = i;
+        }
+    }
+    public void SetValues(string[] names, object[] data, object selected)
+    {
+        SetValues(names, data);
+
+        for (int i = 0; i < data.Length; i++)
+        {
+            if (selected.Equals(data[i]))
                 Dropdown.value = i;
         }
     }
 
     private void ItemSelected(int index)
     {
-        OnValueChanged?.Invoke(index, values[index]);
+        OnValueChanged?.Invoke(index, _values[index], _data[index]);
     }
 
-    private void MainColorChanged()
+    protected override void MainColorChanged()
     {
         var colors = Dropdown.colors;
         colors.pressedColor = Context.MainColor;
         Dropdown.colors = colors;
+    }
+
+    protected override void LocalizationChanged()
+    {
+        base.LocalizationChanged();
+        OnLocaleChanged?.Invoke();
     }
 }

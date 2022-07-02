@@ -31,41 +31,21 @@ public class LocalizationManager
         }
 
         Fallback = Localizations["en"];
-
-        //var path = Path.Combine(Application.streamingAssetsPath, "Localizations");
-
-        /*foreach (string filepath in Directory.GetFiles(path, "*.json"))
-         {
-            using var request = UnityWebRequest.Get(filepath);
-            await request.SendWebRequest();
-        
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-                throw new Exception(request.error);
-        
-            var localization = new Localization
-            {
-                Identifier = Path.GetFileNameWithoutExtension(filepath),
-                Strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(DownloadHandlerBuffer.GetContent(request))
-            };
-        
-            Localizations[localization.Identifier] = localization;
-        }*/
     }
 
     public string GetLocalized(string key, string fallback)
-{
-if (Localizations.ContainsKey(ActiveLocalization) && Localizations[ActiveLocalization].Strings.TryGetValue(key, out string localized))
-    return localized;
-else if (Fallback.Strings.TryGetValue(key, out string english))
-    return english;
-else
-    return fallback;
-}
-
+    {
+        if (Localizations.ContainsKey(ActiveLocalization) && Localizations[ActiveLocalization].Strings.TryGetValue(key, out string localized))
+            return localized;
+        else if (Fallback.Strings.TryGetValue(key, out string english))
+            return english;
+        else
+            return fallback;
+    }
 }
 
 public class Localization
 {
-public string Identifier;
-public Dictionary<string, string> Strings = new();
+    public string Identifier;
+    public Dictionary<string, string> Strings = new();
 }

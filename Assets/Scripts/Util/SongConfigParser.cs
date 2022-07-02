@@ -33,6 +33,8 @@ public static class SongConfigParser
         meta.background_aspect_ratio = 4.0f / 3.0f; // Default for legacy
         meta.preview_time = -1;
 
+        float? bpm = null;
+
         foreach (KeyValuePair<string, string> entry in config)
         {
             switch (entry.Key)
@@ -44,11 +46,33 @@ public static class SongConfigParser
                     meta.title = entry.Value;
                     break;
                 case "bpm":
+                    bpm = float.TryParse(entry.Value, out float bpm_parsed) ? bpm_parsed : null;
                     break;
                 case "author":
                     meta.artist = entry.Value;
                     break;
                 case "diff":
+                    string[] diffs = entry.Value.Split('-');
+                    for(int i = 0; i < diffs.Length; i++)
+                    {
+                        int diff = int.TryParse(diffs[i], out int diff_parsed) ? diff_parsed : 0;
+                        if (diff < 1) continue;
+                        
+                        var type = (Enum.TryParse<DifficultyType>(i.ToString(), out var type_parsed) && Enum.IsDefined(typeof(DifficultyType), type_parsed)) ? type_parsed : DifficultyType.Extra;
+                        var chart = new ChartSection()
+                        {
+                            difficulty = diff,
+                            name = type.ToString(),
+                            type = type,
+                        };
+
+                        if (i < 3)
+                            chart.path = $"track_{chart.type}.json";
+                        else
+                            chart.path = $"track_extra{i - 1}.json";
+
+                        meta.charts.Add(chart);
+                    }
                     break;
                 // Project Voice customs
                 case "background_aspect_ratio":
@@ -77,6 +101,10 @@ public static class SongConfigParser
                     break;
             }
         }
+
+        if (bpm != null)
+            foreach (var chart in meta.charts)
+                chart.bpms = new float[] { (float)bpm };
 
         return meta;
     }

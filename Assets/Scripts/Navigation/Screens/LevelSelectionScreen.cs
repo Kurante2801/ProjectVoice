@@ -31,8 +31,8 @@ public class LevelSelectionScreen : Screen
         }
     }
 
-    public void SettingsButton()
+    public void OptionsButton()
     {
-        Context.ScreenManager.ChangeScreen("SettingsScreen");
+        Context.ScreenManager.ChangeScreen("OptionsScreen");
     }
 }

@@ -1,11 +1,25 @@
 {
     "LANGUAGE_NAME": "español",
 
-    "UI_OPTIONS": "Opciones",
-    "UI_RETURN": "Volver",
+    "OPTIONS": "Opciones",
+    "RETURN": "Volver",
+
+    "OPTIONS_TRUE_BOOLEAN": "Sí",
+    "OPTIONS_FALSE_BOOLEAN": "No",
 
     "OPTIONS_GENERAL_TAB": "General",
     "OPTIONS_LANG_NAME": "Idioma",
+    "OPTIONS_LANG_DESC": "Language",
+    "OPTIONS_SAFEAREA_NAME": "Habilitar Area Segura",
+    "OPTIONS_SAFEAREA_DESC": "La interfaz evitará las cámaras integradas a la pantalla.",
+    "OPTIONS_TARGETFPS_NAME": "Límite de FPS",
+    "OPTIONS_TARGETFPS_DESC": "",
+    "OPTIONS_MUSICVOLUME_NAME": "Volumen de Música",
+    "OPTIONS_MUSICVOLUME_DESC": "",
+    "OPTIONS_BACKGROUNDDIM_NAME": "Atenuación del Fondo",
+    "OPTIONS_BACKGROUNDDIM_DESC": "Un número más alto significa un fondo más oscuro dentro del juego.",
+    "OPTIONS_AUDIOOFFSET_NAME": "Audio Offset",
+    "OPTIONS_AUDIOOFFSET_DESC": "En segundos, un número alto retrasará la música.",
 
     "OPTIONS_NOTES_TAB": "Notas"
 }

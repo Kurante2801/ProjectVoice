@@ -42,7 +42,7 @@ public class LevelManager
         return await LoadLevels(paths);
     }
 
-    private string[] extensions = new string[] { ".mp3", ".wav", ".ogg" };
+    private readonly string[] extensions = new string[] { ".mp3", ".wav", ".ogg" };
     public async UniTask<List<Level>> LoadLevels(List<string> paths)
     {
         var tasks = new List<UniTask>();

@@ -1,11 +1,25 @@
 {
     "LANGUAGE_NAME": "english",
 
-    "UI_OPTIONS": "Options",
-    "UI_RETURN": "Return",
+    "OPTIONS": "Options",
+    "RETURN": "Return",
+
+    "OPTIONS_TRUE_BOOLEAN": "Yes",
+    "OPTIONS_FALSE_BOOLEAN": "No",
 
     "OPTIONS_GENERAL_TAB": "General",
     "OPTIONS_LANG_NAME": "Language",
+    "OPTIONS_LANG_DESC": "",
+    "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",
+    "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
+    "OPTIONS_TARGETFPS_NAME": "FPS Limit",
+    "OPTIONS_TARGETFPS_DESC": "",
+    "OPTIONS_MUSICVOLUME_NAME": "Music Volume",
+    "OPTIONS_MUSICVOLUME_DESC": "",
+    "OPTIONS_BACKGROUNDDIM_NAME": "Background Dim",
+    "OPTIONS_BACKGROUNDDIM_DESC": "A higher number means a darker background during gameplay.",
+    "OPTIONS_AUDIOOFFSET_NAME": "Audio Offset",
+    "OPTIONS_AUDIOOFFSET_DESC": "In seconds, a higher number will delay the music.",
 
     "OPTIONS_NOTES_TAB": "Notes"
 }

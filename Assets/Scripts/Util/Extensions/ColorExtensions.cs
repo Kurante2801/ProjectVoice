@@ -6,15 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 public static class ColorExtensions
-{
-	/// <summary>
-	/// Returns a HEX string
-	/// </summary>
-	/// <param name="color"></param>
-	/// <param name="hashtag"></param>
-	/// <returns></returns>
-	public static string ToHEX(this Color color, bool hashtag = false, bool alpha = false) => ((Color32)color).ToHEX(hashtag, alpha);
-   
+{  
 	/// <summary>
 	/// Returns a HEX string
 	/// </summary>
@@ -23,13 +15,16 @@ public static class ColorExtensions
 	/// <returns></returns>
 	public static string ToHEX(this Color32 color, bool hashtag = false, bool alpha = false)
 	{
-		string hex = hashtag ? "#" : "";
-		hex += color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
-        if (alpha)
-            hex += color.a.ToString("X2");
-
-        return  hex;
+        return string.Concat(hashtag ? "#" : "", color.r.ToString("X2"), color.g.ToString("X2"), color.b.ToString("X2"), alpha ? color.a.ToString("X2") : "");
 	}
+
+	/// <summary>
+	/// Returns a HEX string
+	/// </summary>
+	/// <param name="color"></param>
+	/// <param name="hashtag"></param>
+	/// <returns></returns>
+	public static string ToHEX(this Color color, bool hashtag = false, bool alpha = false) => ((Color32)color).ToHEX(hashtag, alpha);
 
 	private static readonly char[] ValidHEX =
 	{
@@ -43,16 +38,16 @@ public static class ColorExtensions
 	/// <returns></returns>
 	public static string ValidateHEX(this string hex, bool parseAlpha = false)
 	{
-		hex = hex.Replace("#", "").ToUpper() + "00000000";
+        var builder = new StringBuilder(hex.ToUpper());
+		builder = builder.Replace("#", "");
+		builder.Append("FFFFFFFF");
+
         int length = parseAlpha ? 8 : 6;
-        var builder = new StringBuilder(hex);
 
 		for (int i = 0; i < length; i++)
 		{
-			if (!ValidHEX.Contains(hex[i]))
-			{
+			if (!ValidHEX.Contains(builder[i]))
 				builder[i] = 'F';
-			}
 		}
 
 		return builder.ToString(0, length);
@@ -64,7 +59,7 @@ public static class ColorExtensions
 	/// <returns></returns>
 	public static Color ToColor(this string hex, bool parseAlpha = false)
 	{
-		hex = ValidateHEX(hex);
+		hex = ValidateHEX(hex, parseAlpha);
 		return new Color32(
 			byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
 			byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
@@ -81,4 +76,15 @@ public static class ColorExtensions
 	{
 		return new Color32(color.r, color.g, color.b, alpha);
 	}
+
+    public static ColorHSV ToHSV(this Color color)
+    {
+		Color.RGBToHSV(color, out float h, out float s, out float v);
+		return new ColorHSV(h, s, v);
+    }
+
+	public static ColorHSV ToHSV(this Color32 color) => ((Color)color).ToHSV();
+
+	public static Color ToRGB(this ColorHSV color) => Color.HSVToRGB((float)color.h / 360f, (float)color.s, (float)color.v);
+
 }

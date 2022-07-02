@@ -33,11 +33,21 @@ public class Context : SingletonMonoBehavior<Context>
     public static LocalizationManager LocalizationManager = new();
     public static UnityEvent OnLocalizationChanged = new();
 
-    public static Color BackgroundColor = "#191919".ToColor();  // The void (camera color)
-    public static Color Foreground1Color = "#323232".ToColor(); // Used for scroll bars, etc.
-    public static Color Foreground2Color = "#4B4B4B".ToColor(); // Used for dropdowns, input fields, deselected buttons, etc.
+    public static DifficultyType SelectedDifficultyType = DifficultyType.Extra;
+    public static int SelectedDifficultyIndex = 0;
+    public static ChartSection SelectedChart;
 
-    public static Color MainColor = Color.red;
+    public static Color BackgroundColor = "#191919".ToColor();  // The void (camera color)
+    /// <summary>
+    /// Used for scroll bars, deselected buttons etc.
+    /// </summary>
+    public static Color Foreground1Color = "#323232".ToColor();
+    /// <summary>
+    /// Used for dropdowns, input fields, etc.
+    /// </summary>
+    public static Color Foreground2Color = "#4B4B4B".ToColor();
+
+    public static Color MainColor = DifficultyType.Extra.GetColor();
     public static UnityEvent OnMainColorChanged = new();
 
     protected override void Awake()
@@ -50,7 +60,7 @@ public class Context : SingletonMonoBehavior<Context>
 
         base.Awake();
         DontDestroyOnLoad(gameObject);
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = PlayerSettings.TargetFPS;
         BetterStreamingAssets.Initialize();
 
         ScreenWidth = UnityEngine.Screen.width;
@@ -95,6 +105,7 @@ public class Context : SingletonMonoBehavior<Context>
         }
 
         AudioSource = GetComponent<AudioSource>();
+        AudioSource.volume = PlayerSettings.MusicVolume;
     }
 
 
@@ -156,7 +167,7 @@ public class Context : SingletonMonoBehavior<Context>
         AudioSource.volume = 0f;
         AudioSource.loop = true;
         AudioSource.DOKill();
-        AudioSource.DOFade(1f, 0.5f);
+        AudioSource.DOFade(PlayerSettings.MusicVolume, 1.25f);
         AudioSource.Play();
 
         audioPath = path;
@@ -165,6 +176,7 @@ public class Context : SingletonMonoBehavior<Context>
     public static void StopSongPreview()
     {
         audioToken?.Cancel();
+        AudioSource.DOKill();
         AudioSource.DOFade(0f, 0.25f).OnComplete(() => AudioSource.Stop());
         audioPath = "";
     }
