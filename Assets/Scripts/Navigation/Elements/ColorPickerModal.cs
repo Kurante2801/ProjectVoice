@@ -95,10 +95,12 @@ public class ColorPickerModal : MonoBehaviour
             ValueChanged(updateHue: false);
         });
 
+        SaturationValueSlider.Min = new Vector2(1f, 0f);
+        SaturationValueSlider.Max = new Vector2(0f, 1f);
         SaturationValueSlider.OnValueChanged.AddListener(value =>
         {
-            Saturation = value.y;
-            Value = value.x;
+            Saturation = value.x;
+            Value = value.y;
             ValueChanged(updateSV: false);
         });
 
@@ -110,23 +112,6 @@ public class ColorPickerModal : MonoBehaviour
             Alpha = (byte)value;
             ValueChanged();
         });
-    }
-
-    private void OnEnable()
-    {
-        RegenerateSaturationValueGraphic();
-        RegenerateHueTexture();
-        RegenerateAlphaTexture();
-    }
-
-    private void OnDisable()
-    {
-        if (HueGraphic.texture != null)
-            DestroyImmediate(HueGraphic.texture);
-        if (HueGraphic.texture != null)
-            DestroyImmediate(HueGraphic.texture);
-        if (SVGraphic.texture != null)
-            DestroyImmediate(SVGraphic.texture);
     }
 
     private void RGBAInputChanged(string value, int index)
@@ -145,68 +130,14 @@ public class ColorPickerModal : MonoBehaviour
         ValueChanged();
     }
 
-    private void RegenerateAlphaTexture()
-    {
-        if (!AllowAlpha) return;
-        if (AlphaGraphic.texture != null)
-            DestroyImmediate(AlphaGraphic.texture);
-
-        var texture = new Texture2D(256, 1);
-        texture.wrapMode = TextureWrapMode.Clamp;
-
-        var pixels = new Color32[256];
-        for (int i = 0; i < 256; i++)
-            pixels[i] = new Color32(255, 255, 255, (byte)i);
-        texture.SetPixels32(pixels);
-        texture.Apply();
-
-        AlphaGraphic.texture = texture;
-    }
-
-    private void RegenerateHueTexture()
-    {
-        if (HueGraphic.texture != null)
-            DestroyImmediate(HueGraphic.texture);
-
-        var texture = new Texture2D(1, 360);
-        texture.wrapMode = TextureWrapMode.Clamp;
-
-        var pixels = new Color32[360];
-        for (int i = 0; i < 360; i++)
-            pixels[i] = Color.HSVToRGB(i / 360f, 1f, 1f);
-        texture.SetPixels32(pixels);
-        texture.Apply();
-
-        HueGraphic.texture = texture;
-    }
-
-    // GitHub Copilot wrote literally this entire function
-    private void RegenerateSaturationValueGraphic()
-    {
-        if (SVGraphic.texture != null)
-            DestroyImmediate(SVGraphic.texture);
-
-        var texture = new Texture2D(256, 256);
-        texture.wrapMode = TextureWrapMode.Clamp;
-
-        var pixels = new Color32[256 * 256];
-        for (int i = 0; i < 256; i++)
-            for (int j = 0; j < 256; j++)
-                pixels[i + j * 256] = Color.HSVToRGB(Hue, j / 255f, i / 255f);
-        texture.SetPixels32(pixels);
-        texture.Apply();
-
-        SVGraphic.texture = texture;
-    }
-
     public void ValueChanged(bool updateHue = true, bool updateSV = true)
     {
         if (updateHue)
             HueSlider.SetValueWithoutNotify(Hue);
         if (updateSV)
         {
-            SaturationValueSlider.SetValueNormalized(new Vector2(Value, Saturation));
-            RegenerateSaturationValueGraphic();
+            SaturationValueSlider.SetValueNormalized(new Vector2(1f - Saturation, Value));
+            SVGraphic.material.SetFloat("_Hue", Hue);
         }
 
         var color = RGBA;

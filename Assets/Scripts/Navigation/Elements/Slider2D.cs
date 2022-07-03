@@ -81,12 +81,7 @@ public class Slider2D : Selectable, IDragHandler, IInitializePotentialDragHandle
     private void ValueChanged()
     {
         UpdateVisuals();
-        OnValueChanged?.Invoke(new Vector2(MapRange(NormalizedValue.x, 0f, 1f, Min.x, Max.x), MapRange(NormalizedValue.y, 0f, 1f, Min.y, Max.y)));
-    }
-
-    private float MapRange(float value, float min1, float max1, float min2, float max2)
-    {
-        return (value - min1) * (max2 - min2) / (max1 - min1) + min2;
+        OnValueChanged?.Invoke(new Vector2(Mathf.Lerp(Min.x, Max.x, NormalizedValue.x), Mathf.Lerp(Min.y, Max.y, NormalizedValue.y)));
     }
 
     public void SetValueNormalized(Vector2 value)

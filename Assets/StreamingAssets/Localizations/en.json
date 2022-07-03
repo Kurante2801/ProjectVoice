@@ -4,6 +4,7 @@
     "OPTIONS": "Options",
     "RETURN": "Return",
     "ACCEPT": "Accept",
+    "RESET": "Reset",
     "CANCEL": "Cancel",
 
     "OPTIONS_TRUE_BOOLEAN": "Yes",
