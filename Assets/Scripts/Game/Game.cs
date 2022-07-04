@@ -186,9 +186,14 @@ public class Game : SingletonMonoBehavior<Game>
     private void ScreenSizeChanged(int w, int h)
     {
         OnScreenSizeChanged?.Invoke(w, h);
-
-        Track.ScreenMargin = 120f / Context.ReferenceWidth * w;
-        Track.ScreenWorldWidth = (w - Track.ScreenMargin * 2) / h * Camera.orthographicSize;
+        // To make the track's size accurate, we resize the camera to be the size of the screen / 10f
+        // I don't know how much performance it costs to make the camera large since there's no documentation about that...
+        // so I'm making it screen / 10f just in case it does have a performance impact.
+        Camera.orthographicSize = h * 0.05f;
+        Camera.transform.position = new Vector3(w * 0.05f, h * 0.05f, -10f);
+        Track.ScreenMargin = 12f / Context.ReferenceWidth * w;
+        Track.ScaleY = 1f / Context.ReferenceHeight * h;
+        Track.TrackWorldY = 11.9f / Context.ReferenceHeight * h;
     }
 
     private bool TrackExists(ChartModel.TrackModel track)

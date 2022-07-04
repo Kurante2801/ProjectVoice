@@ -16,7 +16,7 @@ public class Context : SingletonMonoBehavior<Context>
     public static readonly LevelManager LevelManager = new();
     
     public static int ReferenceWidth = 1280;
-    public static int ReferenceHeight = 960;
+    public static int ReferenceHeight = 720; // Gameplay reference
 
     public static int ScreenRealWidth;
     public static int ScreenWidth => UnityEngine.Screen.width;

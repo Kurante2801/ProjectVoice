@@ -136,21 +136,8 @@ public static class LegacyParser
             track.despawn_duration = 250;
             track.spawn_duration = legacy.EntranceOn ? 350 : 0;
 
+            track.move_transitions = ConvertTransitions(track, legacy.Move, legacy.X);
             track.scale_transitions = ConvertTransitions(track, legacy.Scale, legacy.Size);
-
-            track.move_transitions = new();
-            var move_transitions = ConvertTransitions(track, legacy.Move, legacy.X);
-            foreach(var transition in move_transitions)
-            {
-                track.move_transitions.Add(new()
-                {
-                    start_time = transition.start_time,
-                    end_time = transition.end_time,
-                    start_value = transition.start_value * 100f,
-                    end_value = transition.start_value * 100f,
-                    easing = transition.easing
-                });
-            }
 
             // Turn color numbers into hex codes
             track.color_transitions = new();

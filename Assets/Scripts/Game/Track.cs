@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class Track : MonoBehaviour
 {
-    public static float ScreenWorldWidth = 113.8f;
-    public static float ScreenMargin = 120f;
-    
+    public static float TrackScreenWidth = 0.115f;
+    public static float TrackWorldY = 11.9f;
+    public static float ScreenMargin = 12f;
+    public static float ScaleY = 1f;
 
     public ChartModel.TrackModel Model;
     public List<MoveTransition> MoveTransitions = new();
@@ -36,7 +37,7 @@ public class Track : MonoBehaviour
         if (Model == null) return;
 
         // Despawn
-        if (Conductor.Instance.Time > Model.despawn_time + Model.despawn_duration)
+        if (Conductor.Instance.Time > Model.despawn_time/* + Model.despawn_duration*/)
         {
             Game.Instance.DisposeTrack(this);
             return;
@@ -44,10 +45,11 @@ public class Track : MonoBehaviour
 
         int time = Conductor.Instance.Time;
 
-        float pos = GetPositionValue(time).MapRange(0f, 100f, -ScreenWorldWidth, ScreenWorldWidth);
-        transform.position = transform.position.WithX(pos);
+        float pos = ScreenMargin + (Context.ScreenWidth * 0.1f - ScreenMargin * 2) * GetPositionValue(time);
+        transform.position = new Vector3(pos, TrackWorldY, 0f);
+        transform.localScale = transform.localScale.WithY(ScaleY);
 
-        var scale = GetScaleValue(time) / Context.ReferenceWidth * Context.ScreenWidth * 1.05f;
+        var scale = (Context.ScreenWidth / background.sprite.rect.size.x) * TrackScreenWidth * GetScaleValue(time); // I need to cache values from here later
         background.transform.localScale = background.transform.localScale.WithX(scale);
 
         var color = GetColorValue(time);
