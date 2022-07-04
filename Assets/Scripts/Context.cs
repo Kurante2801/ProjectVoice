@@ -18,8 +18,10 @@ public class Context : SingletonMonoBehavior<Context>
     public static int ReferenceWidth = 1280;
     public static int ReferenceHeight = 960;
 
-    public static int ScreenWidth;
-    public static int ScreenHeight;
+    public static int ScreenRealWidth;
+    public static int ScreenWidth => UnityEngine.Screen.width;
+    public static int ScreenRealHeight;
+    public static int ScreenHeight => UnityEngine.Screen.height;
 
     public static string UserDataPath;
     public static int AndroidVersionCode = -1;
@@ -53,6 +55,8 @@ public class Context : SingletonMonoBehavior<Context>
     public static float ColorPickerModalHeight = 638f;
     public GameObject ColorPickerModalPrefab;
 
+    public static bool IsInitialized = false;
+
     protected override void Awake()
     {
         if (GameObject.FindGameObjectsWithTag("Context").Length > 1) // This is 1 instead of 0 because 'this' has the tag too
@@ -66,8 +70,8 @@ public class Context : SingletonMonoBehavior<Context>
         Application.targetFrameRate = PlayerSettings.TargetFPS;
         BetterStreamingAssets.Initialize();
 
-        ScreenWidth = UnityEngine.Screen.width;
-        ScreenHeight = UnityEngine.Screen.height;
+        ScreenRealWidth = UnityEngine.Screen.width;
+        ScreenRealHeight = UnityEngine.Screen.height;
 
 #if UNITY_EDITOR
         Application.runInBackground = true;
@@ -109,29 +113,8 @@ public class Context : SingletonMonoBehavior<Context>
 
         AudioSource = GetComponent<AudioSource>();
         AudioSource.volume = PlayerSettings.MusicVolume;
-    }
 
-
-    // This is a copy paste of https://github.com/Cytoid/Cytoid/blob/1ce07d83628aef0fd5afbc450ecd4fed0600e47b/Assets/Scripts/Context.cs#L740
-    public string GetAndroidLegacyStoragePath()
-    {
-        try
-        {
-            using var javaClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activityClass = javaClass.GetStatic<AndroidJavaObject>("currentActivity");
-            return activityClass.Call<AndroidJavaObject>("getAndroidStorageFile").Call<string>("getAbsolutePath");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("Could not get Android storage path");
-            Debug.LogError(e);
-            return null;
-        }
-    }
-
-    public string GetAndroidStoragePath()
-    {
-        return AndroidVersionCode <= 29 ? GetAndroidLegacyStoragePath() : Application.persistentDataPath;
+        IsInitialized = true;
     }
 
     public static async void PlaySongPreview(Level level)
@@ -182,5 +165,43 @@ public class Context : SingletonMonoBehavior<Context>
         AudioSource.DOKill();
         AudioSource.DOFade(0f, 0.25f).OnComplete(() => AudioSource.Stop());
         audioPath = "";
+    }
+
+
+    // This is a copy paste of https://github.com/Cytoid/Cytoid/blob/1ce07d83628aef0fd5afbc450ecd4fed0600e47b/Assets/Scripts/Context.cs#L740
+    public string GetAndroidLegacyStoragePath()
+    {
+        try
+        {
+            using var javaClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            using var activityClass = javaClass.GetStatic<AndroidJavaObject>("currentActivity");
+            return activityClass.Call<AndroidJavaObject>("getAndroidStorageFile").Call<string>("getAbsolutePath");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Could not get Android storage path");
+            Debug.LogError(e);
+            return null;
+        }
+    }
+
+    public string GetAndroidStoragePath()
+    {
+        return AndroidVersionCode <= 29 ? GetAndroidLegacyStoragePath() : Application.persistentDataPath;
+    }
+
+    public static void SetAutoRotation(bool enabled)
+    {
+        if (enabled)
+        {
+            UnityEngine.Screen.autorotateToLandscapeLeft = true;
+            UnityEngine.Screen.autorotateToLandscapeRight = true;
+        }
+        else
+        {
+            UnityEngine.Screen.autorotateToLandscapeLeft = UnityEngine.Screen.orientation == ScreenOrientation.LandscapeLeft;
+            UnityEngine.Screen.autorotateToLandscapeRight = UnityEngine.Screen.orientation == ScreenOrientation.LandscapeRight;
+        }
+
     }
 }

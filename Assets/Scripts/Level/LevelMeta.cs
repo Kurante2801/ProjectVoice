@@ -32,5 +32,5 @@ public class ChartSection
 	public string name;
 	public DifficultyType type;
 	public string music_override;
-	public float[] bpms;
+    public float[] bpms;
 }

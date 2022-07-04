@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class Backdrop : SingletonMonoBehavior<Backdrop>
 {
+    public Canvas Canvas;
     public RawImage Background;
     public RawImage BackgroundBlurred;
     public AspectRatioFitter AspectRatioFitter;

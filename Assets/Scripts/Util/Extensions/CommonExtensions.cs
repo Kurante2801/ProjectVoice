@@ -69,4 +69,19 @@ public static class CommonExtensions
 
         return text;
     }
+
+    public static float MapRange(this float value, float from1, float from2, float to1, float to2)
+    {
+        return (value - from1) * (to2 - to1) / (from2 - from1) + to1;
+    }
+
+    public static float MapRange(this int value, float from1, float from2, float to1, float to2)
+    {
+        return (value - from1) * (to2 - to1) / (from2 - from1) + to1;
+    }
+
+    public static bool IsBetween(this int value, int min, int max)
+    {
+        return min <= value && value <= max;
+    }
 }

@@ -8,7 +8,8 @@ using Cysharp.Threading.Tasks;
 using System;
 
 public static class AudioLoader
-{    
+{
+    public static double MPEGLength = -1f;
     public static AudioType Detect(string path)
     {
         return Path.GetExtension(path) switch
@@ -22,6 +23,7 @@ public static class AudioLoader
 
     public static async UniTask<AudioClip> LoadClip(string path)
     {
+        MPEGLength = -1f;
         // Load Windows MP3, breaks some features but good enough for testing
         if(Application.platform == RuntimePlatform.WindowsEditor && Detect(path) == AudioType.MPEG)
         {
@@ -31,15 +33,13 @@ public static class AudioLoader
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 throw new Exception(request.error);
 
-            //await UniTask.SwitchToMainThread(); // <- test what this do
-            var stream = new MemoryStream(request.downloadHandler.data);
-            var mpeg = new MpegFile(stream);
+            var mpeg = new MpegFile(new MemoryStream(request.downloadHandler.data));
             var samples = new float[mpeg.Length];
             mpeg.ReadSamples(samples, 0, (int)mpeg.Length);
-            //await UniTask.SwitchToThreadPool()
-
             var clip = AudioClip.Create(path, samples.Length, mpeg.Channels, mpeg.SampleRate, false);
             clip.SetData(samples, 0);
+            MPEGLength = mpeg.Duration.TotalSeconds;
+            
             return clip;
         }
         else

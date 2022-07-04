@@ -42,7 +42,7 @@ public class LevelManager
         return await LoadLevels(paths);
     }
 
-    private readonly string[] extensions = new string[] { ".mp3", ".wav", ".ogg" };
+    private readonly string[] extensions = new string[] { ".wav", ".ogg", ".mp3" };
     public async UniTask<List<Level>> LoadLevels(List<string> paths)
     {
         var tasks = new List<UniTask>();
@@ -77,8 +77,7 @@ public class LevelManager
                     await UniTask.SwitchToThreadPool();
                     if (filename == "songconfig.txt")
                     {
-                        meta = SongConfigParser.ParseLegacy(File.ReadAllText(fullpath));
-                        meta.background_path = "image_regular.png";
+                        meta = LegacyParser.ParseMeta(File.ReadAllText(fullpath));
 
                         // Check what exists
                         foreach (string extension in extensions)
