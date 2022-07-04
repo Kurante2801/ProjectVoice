@@ -42,3 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Tracks
+    uniqueID: 2386400807
+    locked: 0
+  - name: Track Decorations
+    uniqueID: 2229497477
+    locked: 0

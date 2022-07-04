@@ -40,8 +40,8 @@ public class ChartModel
         public int easing;
         public int start_time;
         public int end_time;
-        public int start_value; // 0 - 100
-        public int end_value;
+        public float start_value; // 0 - 100
+        public float end_value;
     }
 
     [Serializable]

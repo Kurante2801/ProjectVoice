@@ -138,8 +138,6 @@ public static class LegacyParser
 
             track.scale_transitions = ConvertTransitions(track, legacy.Scale, legacy.Size);
 
-            // Move transforms range from -0.12 to 1.12 in legacy, so we have to turn them into 0 to 100
-            // this is because PV uses the screen edges on a 0 - 100 range
             track.move_transitions = new();
             var move_transitions = ConvertTransitions(track, legacy.Move, legacy.X);
             foreach(var transition in move_transitions)
@@ -148,8 +146,8 @@ public static class LegacyParser
                 {
                     start_time = transition.start_time,
                     end_time = transition.end_time,
-                    start_value = Mathf.RoundToInt(CommonExtensions.MapRange(transition.start_value, -12f, 112f, 0f, 100f)), // ConvertTransitions multiplies to 100, that's why we're converting from -12 to 112
-                    end_value = Mathf.RoundToInt(CommonExtensions.MapRange(transition.end_value, -12f, 112f, 0f, 100f)),
+                    start_value = transition.start_value * 100f,
+                    end_value = transition.start_value * 100f,
                     easing = transition.easing
                 });
             }
@@ -163,8 +161,8 @@ public static class LegacyParser
                 {
                     start_time = transition.start_time,
                     end_time = transition.end_time,
-                    start_value = LegacyColors.ElementAtOrDefault(Mathf.RoundToInt(transition.start_value / 100)) ?? "#FFFFFF",
-                    end_value = LegacyColors.ElementAtOrDefault(Mathf.RoundToInt(transition.end_value / 100)) ?? "#FFFFFF",
+                    start_value = LegacyColors.ElementAtOrDefault((int)transition.start_value) ?? "#FFFFFF",
+                    end_value = LegacyColors.ElementAtOrDefault((int)transition.end_value) ?? "#FFFFFF",
                     easing = transition.easing
                 });
             }
@@ -193,7 +191,6 @@ public static class LegacyParser
     public static List<ChartModel.TransitionModel> ConvertTransitions(ChartModel.TrackModel track, List<TrackTransitionLegacyModel> legacy, float initialValue)
     {
         var transitions = new List<ChartModel.TransitionModel>();
-        int value = Mathf.RoundToInt(initialValue * 100);
 
         // No transitions, so we create one transition with just the initial values
         if (legacy.Count < 1)
@@ -202,8 +199,8 @@ public static class LegacyParser
             {
                 start_time = track.spawn_time,
                 end_time = track.despawn_time,
-                start_value = value,
-                end_value = value,
+                start_value = initialValue,
+                end_value = initialValue,
                 easing = (int)TransitionEase.NONE
             });
 
@@ -218,8 +215,8 @@ public static class LegacyParser
             {
                 start_time = track.spawn_time,
                 end_time = Mathf.RoundToInt(transition.Start * 1000),
-                start_value = value,
-                end_value = value,
+                start_value = initialValue,
+                end_value = initialValue,
                 easing = (int)TransitionEase.NONE
             });
         }
@@ -231,42 +228,42 @@ public static class LegacyParser
 
             // If this is not the first legacy transition, we get the value from the previous transition
             if (i > 0)
-                value = transitions[transitions.Count - 1].end_value;
+                initialValue = transitions[^1].end_value;
 
             // Convert from legacy
             transitions.Add(new()
             {
                 start_time = Mathf.RoundToInt(transition.Start * 1000),
                 end_time = Mathf.RoundToInt(transition.End * 1000),
-                start_value = value,
-                end_value = Mathf.RoundToInt(transition.To * 100),
+                start_value = initialValue,
+                end_value = transition.To,
                 easing = LegacyEasings.TryGetValue(transition.Ease, out var result) ? (int)result : (int)TransitionEase.NONE
             });
 
             // Fix gap between this transition to the next one
-            if(i < legacy.Count - 1 && transition.End != legacy[i + 1].Start)
+            if (i < legacy.Count - 1 && transition.End != legacy[i + 1].Start)
             {
                 transitions.Add(new()
                 {
                     start_time = Mathf.RoundToInt(transition.End * 1000),
                     end_time = Mathf.RoundToInt(legacy[i + 1].Start * 1000),
-                    start_value = Mathf.RoundToInt(transition.To * 100),
-                    end_value = Mathf.RoundToInt(transition.To * 100),
+                    start_value = transition.To,
+                    end_value = transition.To,
                     easing = (int)TransitionEase.NONE
                 });
             }
         }
 
         // Fix gap between last transition and track despawn
-        transition = legacy[legacy.Count - 1];
-        if(Mathf.RoundToInt(transition.End * 1000) != track.despawn_time)
+        transition = legacy[^1];
+        if (Mathf.RoundToInt(transition.End * 1000) != track.despawn_time)
         {
             transitions.Add(new()
             {
                 start_time = Mathf.RoundToInt(transition.End * 1000),
                 end_time = track.despawn_time,
-                start_value = Mathf.RoundToInt(transition.To * 100),
-                end_value = Mathf.RoundToInt(transition.To * 100),
+                start_value = transition.To,
+                end_value = transition.To,
                 easing = (int)TransitionEase.NONE
             });
         }

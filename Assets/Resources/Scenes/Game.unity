@@ -199,6 +199,52 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &248756918
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1486429439}
+    m_Modifications:
+    - target: {fileID: -2853300815504126783, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990128, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_Name
+      value: Track
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990128, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990129, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990129, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 113.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990129, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990129, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368140372281990129, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+--- !u!4 &248756919 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5368140372281990129, guid: 7ef6945478189d345b7ba146a5804db0, type: 3}
+  m_PrefabInstance: {fileID: 248756918}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &805100939
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,7 +472,7 @@ MonoBehaviour:
     music_override: 
     bpms: []
     tracks: []
-  EditorLevelDirectory: a13092021a
+  EditorLevelDirectory: test
   OnGameLoaded:
     m_PersistentCalls:
       m_Calls: []
@@ -583,7 +629,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 912402504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.56277, y: 3.1352038, z: -0.06254557}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -786,7 +832,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 248756919}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -843,7 +890,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.8
+  orthographic size: 64
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

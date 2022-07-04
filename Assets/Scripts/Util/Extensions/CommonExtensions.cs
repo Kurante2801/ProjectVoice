@@ -84,4 +84,6 @@ public static class CommonExtensions
     {
         return min <= value && value <= max;
     }
+
+    public static Vector3 WithX(this Vector3 vector, float x) => new(x, vector.y, vector.z);
 }

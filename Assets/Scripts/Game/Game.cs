@@ -186,7 +186,9 @@ public class Game : SingletonMonoBehavior<Game>
     private void ScreenSizeChanged(int w, int h)
     {
         OnScreenSizeChanged?.Invoke(w, h);
-        Track.ScreenWorldWidth = w / (float)h * Camera.orthographicSize;
+
+        Track.ScreenMargin = 120f / Context.ReferenceWidth * w;
+        Track.ScreenWorldWidth = (w - Track.ScreenMargin * 2) / h * Camera.orthographicSize;
     }
 
     private bool TrackExists(ChartModel.TrackModel track)

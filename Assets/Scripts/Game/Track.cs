@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class Track : MonoBehaviour
 {
-    public static float DefaultYScale = 2.5f;
-    public static float ScreenWorldWidth = 6.4f;
+    public static float ScreenWorldWidth = 113.8f;
+    public static float ScreenMargin = 120f;
+    
 
     public ChartModel.TrackModel Model;
     public List<MoveTransition> MoveTransitions = new();
@@ -42,16 +43,12 @@ public class Track : MonoBehaviour
         }
 
         int time = Conductor.Instance.Time;
-        float x = GetPositionValue(time).MapRange(0f, 100f, -ScreenWorldWidth, ScreenWorldWidth);
 
-        var pos = transform.position;
-        pos.x = x;
-        transform.position = pos;
+        float pos = GetPositionValue(time).MapRange(0f, 100f, -ScreenWorldWidth, ScreenWorldWidth);
+        transform.position = transform.position.WithX(pos);
 
-        var w = GetScaleValue(time) / Context.ReferenceWidth * Context.ScreenWidth;
-        var scale = transform.localScale;
-        scale.x = w;
-        transform.localScale = scale;
+        var scale = GetScaleValue(time) / Context.ReferenceWidth * Context.ScreenWidth * 1.05f;
+        background.transform.localScale = background.transform.localScale.WithX(scale);
 
         var color = GetColorValue(time);
         background.color = color;
@@ -118,8 +115,8 @@ public class Track : MonoBehaviour
         {
             StartTime = model.start_time;
             EndTime = model.end_time;
-            StartValue = model.start_value / 100f;
-            EndValue = model.end_value / 100f;
+            StartValue = model.start_value;
+            EndValue = model.end_value;
             TransitionEase = (TransitionEase)model.easing;
         }
     }
