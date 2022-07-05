@@ -327,10 +327,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3471090311586869470, guid: 27b1a08c9fd07f04ea7e9d3ca347acf7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3471090311706233748, guid: 27b1a08c9fd07f04ea7e9d3ca347acf7, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -434,7 +430,7 @@ MonoBehaviour:
     music_override: 
     bpms: []
     tracks: []
-  EditorLevelDirectory: test
+  EditorLevelDirectory: a13092021a
   OnGameLoaded:
     m_PersistentCalls:
       m_Calls: []
@@ -456,6 +452,165 @@ MonoBehaviour:
   TransitionTime: 0.5
   StartTime: 0
   EndTime: 0
+  TrackSpawnCurveWidth:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4.334057
+      outSlope: 4.334057
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.28773588
+      value: 1.2470636
+      inSlope: -5.4798946
+      outSlope: -5.4798946
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.03468251
+    - serializedVersion: 3
+      time: 0.5877359
+      value: 1.0970637
+      inSlope: -2.5090153
+      outSlope: -2.5090153
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14129972
+      outWeight: 0.06758486
+    - serializedVersion: 3
+      time: 0.8
+      value: 1
+      inSlope: 0.3595284
+      outSlope: 0
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.048794765
+      outSlope: -0.048794765
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.17802377
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TrackSpawnCurveHeight:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 7.944703
+      outSlope: 7.944703
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.049790356
+    - serializedVersion: 3
+      time: 0.4
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TrackDespawnCurveWidth:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1
+      value: 1
+      inSlope: -0
+      outSlope: -3.2075467
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.44444445
+      outWeight: 0.056250002
+    - serializedVersion: 3
+      time: 0.65
+      value: 0
+      inSlope: -0.056603767
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.50000006
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: -0.69922316
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.7023809
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TrackDespawnCurveHeight:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -2.5471687
+      outSlope: -2.5471687
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.1
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.5
+      inSlope: -0.05660367
+      outSlope: -3.0360196
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.5
+      outWeight: 0.0916667
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.7018869
+      outSlope: -0.7018869
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.41666663
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!82 &911827307
 AudioSource:
   m_ObjectHideFlags: 0

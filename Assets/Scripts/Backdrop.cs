@@ -8,12 +8,12 @@ using UnityEngine.UI;
 public class Backdrop : SingletonMonoBehavior<Backdrop>
 {
     public Canvas Canvas;
-    public RawImage Background;
-    public RawImage BackgroundBlurred;
+    public RawImage Background, BackgroundBlurred;
+    public Image BackgroundOverlay;
     public AspectRatioFitter AspectRatioFitter;
     private string backdropPath;
 
-    public async void SetBackdrop(string path, float? aspect = null)
+    public async void SetBackdrop(string path, float? aspect = null, bool blurred = false, float overlay = 0f)
     {
         if (path == backdropPath) return;
         backdropPath = path;
@@ -29,14 +29,33 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         Background.DOKill();
 
         if (!valid)
+        {
             Background.DOFade(0f, 0.25f);
+            BackgroundBlurred.DOFade(0f, 0.25f);
+        }
         else
         {
             Background.color = Color.white.WithAlpha(0f);
-            Background.texture = await TextureExtensions.LoadTexture(path);
-            Background.DOColor(Color.white, 0.25f);
+
+            var tex = await TextureExtensions.LoadTexture(path);
+            Background.texture = tex;
+            Background.DOFade(1f, 0.25f);
+
+            BackgroundBlurred.texture = tex.Blurred(24);
+            BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
+            BackgroundOverlay.DOFade(overlay, 0.25f);
 
             AspectRatioFitter.aspectRatio = aspect ?? Background.texture.width / (float)Background.texture.height;
         }
+    }
+
+    public void SetBlurred(bool blurred)
+    {
+        BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
+    }
+
+    public void SetOverlay(float opacity)
+    {
+        BackgroundOverlay.DOFade(opacity, 0.25f);
     }
 }

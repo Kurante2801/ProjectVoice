@@ -138,29 +138,32 @@ public static class LegacyParser
 
             // Fix EXITs easings
             var move_transitions = ConvertTransitions(track, legacy.Move, legacy.X);
-            foreach(var transition in move_transitions)
+            for (int i = 0; i < move_transitions.Count; i++)
             {
+                var transition = move_transitions[i];
                 if (transition.easing == (int)TransitionEase.EXIT)
                     transition.easing = (int)TransitionEase.EXIT_MOVE;
-                move_transitions.Add(transition);
+                track.move_transitions.Add(transition);
             }
 
             var scale_transitions = ConvertTransitions(track, legacy.Scale, legacy.Size);
-            foreach (var transition in scale_transitions)
+            for (int i = 0; i < scale_transitions.Count; i++)
             {
+                var transition = scale_transitions[i];
                 if (transition.easing == (int)TransitionEase.EXIT)
                     transition.easing = (int)TransitionEase.EXIT_SCALE;
-                scale_transitions.Add(transition);
+                track.scale_transitions.Add(transition);
             }
 
             // Turn color numbers into hex codes
             track.color_transitions = new();
             var color_transitions = ConvertTransitions(track, legacy.ColorChange, legacy.Color);
-            foreach(var transition in color_transitions)
+            for (int i = 0; i < color_transitions.Count; i++)
             {
+                var transition = color_transitions[i];
                 if (transition.easing == (int)TransitionEase.EXIT)
                     transition.easing = (int)TransitionEase.EXIT_COLOR;
-                track.color_transitions.Add(new()
+                track.color_transitions.Add(new ChartModel.ColorTransitionModel()
                 {
                     start_time = transition.start_time,
                     end_time = transition.end_time,

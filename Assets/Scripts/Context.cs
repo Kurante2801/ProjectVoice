@@ -55,6 +55,8 @@ public class Context : SingletonMonoBehavior<Context>
     public static float ColorPickerModalHeight = 638f;
     public GameObject ColorPickerModalPrefab;
 
+    public Material BlurMaterial;
+
     public static bool IsInitialized = false;
 
     protected override void Awake()

@@ -6,6 +6,7 @@
     "ACCEPT": "Accept",
     "RESET": "Reset",
     "CANCEL": "Cancel",
+    "GO": "GO",
 
     "OPTIONS_TRUE_BOOLEAN": "Yes",
     "OPTIONS_FALSE_BOOLEAN": "No",

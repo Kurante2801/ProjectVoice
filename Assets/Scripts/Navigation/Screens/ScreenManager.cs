@@ -96,6 +96,8 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
                 oldScreen.gameObject.SetActive(false);
         }
 
+        if (string.IsNullOrEmpty(screen_id)) return;
+
         var newScreen = CreatedScreens.Find(screen => screen.GetID() == screen_id) ?? CreateScreen(screen_id);
         newScreen.CanvasGroup.alpha = 0f;
         newScreen.gameObject.SetActive(true);
@@ -123,8 +125,18 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
         return null;
     }
 
-    public void ReturnScreen(float duration = 0.25f, bool destroy = false)
+    public void ReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
     {
-        ChangeScreen(PopAndPeekHistory(), default, duration, false, destroy, default);
+        ChangeScreen(PopAndPeekHistory(), default, duration, false, destroy, simultaneous);
+    }
+
+    public bool TryReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
+    {
+        if (History.Count > 1)
+        {
+            ReturnScreen(duration, destroy, simultaneous);
+            return true;
+        }
+        return false;
     }
 }

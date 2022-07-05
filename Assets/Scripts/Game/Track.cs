@@ -14,14 +14,14 @@ public class Track : MonoBehaviour
     public static float BackgroundWorldWidth = (Context.ScreenWidth / 136f) * ScreenWidth;
     public static float LineWorldWidth = (Context.ScreenWidth / 6f) * ScreenWidth;
 
-    public float BackgroundSizeMultiplier = 1f;
-
     public ChartModel.TrackModel Model;
     public List<MoveTransition> MoveTransitions = new();
     public List<ScaleTransition> ScaleTransitions = new();
     public List<ColorTransition> ColorTransitions = new();
 
-    [SerializeField] private SpriteRenderer background, leftLine, centerLine, rightLine, leftGlow, rightGlow;
+    [SerializeField] private SpriteRenderer background, leftLine, centerLine, rightLine, leftGlow, rightGlow, judgement, bottom;
+
+    public bool IsAnimating = false;
 
     public void Initialize()
     {
@@ -34,6 +34,13 @@ public class Track : MonoBehaviour
             ScaleTransitions.Add(new ScaleTransition(transition));
         foreach (var transition in Model.color_transitions)
             ColorTransitions.Add(new ColorTransition(transition));
+
+        // Ensure despawn_time isn't lower than spawn_time + spawn_duration
+        if (Model.spawn_duration > 0f)
+            Model.despawn_time = Model.spawn_time + Mathf.Max(Model.despawn_time - Model.spawn_time, Model.spawn_duration);
+
+        background.sortingOrder = Model.spawn_time;
+        centerLine.sortingOrder = 3;
 
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         Update();
@@ -55,7 +62,7 @@ public class Track : MonoBehaviour
         if (Model == null) return;
 
         // Despawn
-        if (Conductor.Instance.Time > Model.despawn_time/* + Model.despawn_duration*/)
+        if (Conductor.Instance.Time > Model.despawn_time + Model.despawn_duration)
         {
             Game.Instance.DisposeTrack(this);
             return;
@@ -63,14 +70,57 @@ public class Track : MonoBehaviour
 
         int time = Conductor.Instance.Time;
 
+        float scaleX = BackgroundWorldWidth * GetScaleValue(time);
+        float scaleY = 1f.ScreenScaledY();
+        var judgement_scale = 1f;
+
+        // Despawn animation
+        IsAnimating = false;
+        float sinceDespawnTime = time - Model.despawn_time;
+        if (sinceDespawnTime >= 0)
+        {
+            float animationTime = Mathf.Clamp01(sinceDespawnTime / Model.despawn_duration);
+            centerLine.color = Color.black.WithAlpha(Game.Instance.TrackDespawnCurveWidth.Evaluate(animationTime));
+            scaleX *= centerLine.color.a;
+            scaleY *= Game.Instance.TrackDespawnCurveHeight.Evaluate(animationTime);
+            judgement_scale *= 1f - animationTime;
+
+            IsAnimating = true;
+            time = Model.despawn_time;
+        }
+
+        // Spawn animation
+        if (!IsAnimating && Model.spawn_duration > 0)
+        {
+            float sinceSpawnTime = time - Model.spawn_time;
+            if (sinceSpawnTime >= 0)
+            {
+                float animationTime = Mathf.Clamp01(sinceSpawnTime / Model.spawn_duration);
+                centerLine.color = Color.black.WithAlpha(Game.Instance.TrackSpawnCurveWidth.Evaluate(animationTime));
+                scaleX *= centerLine.color.a;
+                scaleY *= Game.Instance.TrackSpawnCurveHeight.Evaluate(animationTime);
+                judgement_scale *= animationTime;
+
+                IsAnimating = true;
+            }
+        }
+
+        if (!IsAnimating)
+            centerLine.color = Color.black;
+
+        judgement_scale *= 0.3f.ScreenScaledX();
+        judgement.transform.localScale = new Vector3(judgement_scale, judgement_scale / Mathf.Max(scaleY, 0.001f), 1); // This makes the judgement diamond stay square depending on device width, and not height
+
         float pos = ScreenMargin + MarginPosition * GetPositionValue(time);
         transform.position = new Vector3(pos, WorldY, 0f);
         transform.localScale = transform.localScale.WithY(ScaleY);
 
-        var scale = GetScaleValue(time);
-        background.transform.localScale = background.transform.localScale.WithX(BackgroundWorldWidth * scale - 0.1f.ScreenScaledX());
+        scaleX = Mathf.Max(scaleX - 0.1f.ScreenScaledX(), 0.025f);
+        // Active glow set scale here
+        background.transform.localScale = bottom.transform.localScale = background.transform.localScale.WithX(scaleX);
+        transform.localScale = transform.localScale.WithY(scaleY);
 
-        float width = 13.6f * background.transform.localScale.x * 0.5f;
+        float width = 13.6f * scaleX * 0.5f;
         leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - width + 0.1f.ScreenScaledX());
         rightLine.transform.position = rightLine.transform.position.WithX(transform.position.x + width - 0.1f.ScreenScaledX());
         leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - width);

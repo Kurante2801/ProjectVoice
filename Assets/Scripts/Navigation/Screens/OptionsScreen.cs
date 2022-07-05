@@ -105,6 +105,7 @@ public class OptionsScreen : Screen
 
     public void ReturnButton()
     {
-        Context.ScreenManager.ReturnScreen();
+        if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
+            Context.ScreenManager.ChangeScreen("SongSelectionScreen", simultaneous: true);
     }
 }

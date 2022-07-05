@@ -21,4 +21,39 @@ public static class TextureExtensions
 
         return texture;
     }
+
+    public static Texture2D Copy(this Texture2D source)
+    {
+        var tex = new Texture2D(source.width, source.height, source.format, source.mipmapCount, false);
+        tex.wrapMode = source.wrapMode;
+        Graphics.CopyTexture(source, tex);
+        return tex;
+    }
+
+    /// <summary>
+    /// Applies Gaussian blur to a texture.
+    /// </summary>
+    /// <param name="tex"></param>
+    /// <param name="ammount"></param>
+    public static void Blur(this Texture2D tex, int ammount)
+    {
+        Context.Instance.BlurMaterial.SetFloat("_KernelSize", ammount);
+        var rt = new RenderTexture(tex.width, tex.height, 0);
+        Graphics.Blit(tex, rt, Context.Instance.BlurMaterial);
+        tex.ReadPixels(new Rect(0f, 0f, rt.width, rt.height), 0, 0, false);
+        tex.Apply();
+    }
+
+    /// <summary>
+    /// Returns a blurred copy of the texture.
+    /// </summary>
+    /// <param name="tex"></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    public static Texture2D Blurred(this Texture2D original, int ammount)
+    {
+        var tex = original.Copy();
+        tex.Blur(ammount);
+        return tex;
+    }
 }

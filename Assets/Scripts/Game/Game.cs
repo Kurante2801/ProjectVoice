@@ -34,6 +34,8 @@ public class Game : SingletonMonoBehavior<Game>
     public int StartTime = 0, EndTime = 0;
     private int screenW, screenH;
 
+    public AnimationCurve TrackSpawnCurveWidth, TrackSpawnCurveHeight, TrackDespawnCurveWidth, TrackDespawnCurveHeight;
+
     protected override void Awake()
     {
         base.Awake();
@@ -70,7 +72,7 @@ public class Game : SingletonMonoBehavior<Game>
             }
             Context.SelectedLevel = level;
             Context.SelectedChart = level.Meta.charts.LastOrDefault() ?? level.Meta.charts[0];
-            Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio ?? 4f / 3f);
+            Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
         }
 
         // Make background stay behind sprites
@@ -98,7 +100,11 @@ public class Game : SingletonMonoBehavior<Game>
         EndTime = Mathf.CeilToInt((float)Conductor.Instance.MaxTime * 1000f);
         Chart.tracks.ForEach(track => EndTime = Mathf.Max(EndTime, track.despawn_time + track.despawn_duration + 1000));
         StartTime = Mathf.FloorToInt((float)Conductor.Instance.MinTime * 1000f);
-        
+
+
+        await Context.AudioSource.DOFade(1f, 0.25f).AsyncWaitForCompletion();
+        Context.AudioSource.Stop();
+
         State = new(this);
         OnGameLoaded?.Invoke(this);
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
@@ -139,11 +145,12 @@ public class Game : SingletonMonoBehavior<Game>
         }
     }
 
-    protected virtual void StartGame()
+    private void StartGame()
     {
         State.Started = true;
         State.Playing = true;
 
+        Backdrop.Instance.SetOverlay(PlayerSettings.BackgroundDim);
         Conductor.Instance.Initialize();
         OnGameStarted?.Invoke(this);
     }
@@ -153,6 +160,7 @@ public class Game : SingletonMonoBehavior<Game>
         State.Completed = true;
 
         TransitionTime = 1f;
+        Backdrop.Instance.BackgroundOverlay.DOFade(TransitionTime, 0.25f);
         OnGameEnded?.Invoke(this);
 
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));

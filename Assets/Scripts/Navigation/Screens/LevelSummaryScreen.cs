@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class LevelSummaryScreen : Screen
 {
@@ -19,10 +21,10 @@ public class LevelSummaryScreen : Screen
 
     private List<DifficultyButton> createdButtons = new();
     
-
     public override void OnScreenBecameActive()
     {
         base.OnScreenBecameActive();
+        Backdrop.Instance.SetBlurred(false);
         SetLevel(Context.SelectedLevel);
     }
 
@@ -83,12 +85,16 @@ public class LevelSummaryScreen : Screen
     {
         Backdrop.Instance.SetBackdrop(null);
         Context.StopSongPreview();
-        Context.ScreenManager.ReturnScreen();
+
+        if(!Context.ScreenManager.TryReturnScreen())
+            Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
+
     }
 
     public void OptionsButton()
     {
-        Context.ScreenManager.ChangeScreen("OptionsScreen");
+        Context.ScreenManager.ChangeScreen("OptionsScreen", simultaneous: true);
+        Backdrop.Instance.SetBlurred(true);
     }
 
     public void DifficultyChosen(DifficultyButton button)
@@ -112,5 +118,13 @@ public class LevelSummaryScreen : Screen
         Context.SelectedDifficultyType = button.Chart.type;
         Context.MainColor = button.Chart.type.GetColor();
         Context.OnMainColorChanged?.Invoke();
+    }
+
+    public async void GoButton()
+    {
+        Context.ScreenManager.ChangeScreen(null);
+        Backdrop.Instance.SetBlurred(true);
+        await UniTask.Delay(250);
+        SceneManager.LoadScene("Game");
     }
 }
