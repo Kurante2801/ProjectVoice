@@ -70,10 +70,6 @@ public class Track : MonoBehaviour
         var scale = GetScaleValue(time);
         background.transform.localScale = background.transform.localScale.WithX(BackgroundWorldWidth * scale - 0.1f.ScreenScaledX());
 
-        /*leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - bounds.size.x * 0.5f + 0.1f.ScreenScaledX());
-        rightLine.transform.position = rightLine.transform.position.WithX(transform.position.x + bounds.size.x * 0.5f - 0.1f.ScreenScaledX());
-        leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - bounds.size.x * 0.5f);
-        rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + bounds.size.x * 0.5f);*/
         float width = 13.6f * background.transform.localScale.x * 0.5f;
         leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - width + 0.1f.ScreenScaledX());
         rightLine.transform.position = rightLine.transform.position.WithX(transform.position.x + width - 0.1f.ScreenScaledX());
