@@ -5,17 +5,23 @@ using UnityEngine;
 
 public class Track : MonoBehaviour
 {
-    public static float TrackScreenWidth = 0.115f;
-    public static float TrackWorldY = 11.9f;
-    public static float ScreenMargin = 12f;
+    public static float ScreenWidth = 0.115f;
+    // These values are cached when screen size changes
+    public static float WorldY = 11.9f;
+    public static float ScreenMargin = 12f; // 120px of screen margin at 1280 screen width
     public static float ScaleY = 1f;
+    public static float MarginPosition = (Context.ScreenWidth * 0.1f - ScreenMargin * 2); // This is part of a calculation to get a track's X position
+    public static float BackgroundWorldWidth = (Context.ScreenWidth / 136f) * ScreenWidth;
+    public static float LineWorldWidth = (Context.ScreenWidth / 6f) * ScreenWidth;
+
+    public float BackgroundSizeMultiplier = 1f;
 
     public ChartModel.TrackModel Model;
     public List<MoveTransition> MoveTransitions = new();
     public List<ScaleTransition> ScaleTransitions = new();
     public List<ColorTransition> ColorTransitions = new();
 
-    [SerializeField] private SpriteRenderer background;
+    [SerializeField] private SpriteRenderer background, leftLine, centerLine, rightLine, leftGlow, rightGlow;
 
     public void Initialize()
     {
@@ -29,7 +35,19 @@ public class Track : MonoBehaviour
         foreach (var transition in Model.color_transitions)
             ColorTransitions.Add(new ColorTransition(transition));
 
+        ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         Update();
+    }
+
+    private void OnEnable()
+    {
+        Game.Instance.OnScreenSizeChanged.AddListener(ScreenSizeChanged);
+    }
+
+    private void OnDisable()
+    {
+        if(Game.Instance != null)
+            Game.Instance.OnScreenSizeChanged.RemoveListener(ScreenSizeChanged);
     }
 
     private void Update()
@@ -45,15 +63,32 @@ public class Track : MonoBehaviour
 
         int time = Conductor.Instance.Time;
 
-        float pos = ScreenMargin + (Context.ScreenWidth * 0.1f - ScreenMargin * 2) * GetPositionValue(time);
-        transform.position = new Vector3(pos, TrackWorldY, 0f);
+        float pos = ScreenMargin + MarginPosition * GetPositionValue(time);
+        transform.position = new Vector3(pos, WorldY, 0f);
         transform.localScale = transform.localScale.WithY(ScaleY);
 
-        var scale = (Context.ScreenWidth / background.sprite.rect.size.x) * TrackScreenWidth * GetScaleValue(time); // I need to cache values from here later
-        background.transform.localScale = background.transform.localScale.WithX(scale);
+        var scale = GetScaleValue(time);
+        background.transform.localScale = background.transform.localScale.WithX(BackgroundWorldWidth * scale - 0.1f.ScreenScaledX());
+
+        /*leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - bounds.size.x * 0.5f + 0.1f.ScreenScaledX());
+        rightLine.transform.position = rightLine.transform.position.WithX(transform.position.x + bounds.size.x * 0.5f - 0.1f.ScreenScaledX());
+        leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - bounds.size.x * 0.5f);
+        rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + bounds.size.x * 0.5f);*/
+        float width = 13.6f * background.transform.localScale.x * 0.5f;
+        leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - width + 0.1f.ScreenScaledX());
+        rightLine.transform.position = rightLine.transform.position.WithX(transform.position.x + width - 0.1f.ScreenScaledX());
+        leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - width);
+        rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + width);
+
 
         var color = GetColorValue(time);
-        background.color = color;
+        background.color = leftGlow.color = rightGlow.color = color;
+    }
+
+    private void ScreenSizeChanged(int w, int h)
+    {
+        leftLine.transform.localScale = rightLine.transform.localScale = centerLine.transform.localScale = new(Mathf.Max(1f, 1f.ScreenScaledX()) * 0.5f, 1f, 1f);
+        leftGlow.transform.localScale = rightGlow.transform.localScale = new(Mathf.Max(1f, 1f.ScreenScaledX()), 1f, 1f);
     }
 
     private float GetPositionValue(int time)

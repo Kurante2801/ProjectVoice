@@ -191,9 +191,13 @@ public class Game : SingletonMonoBehavior<Game>
         // so I'm making it screen / 10f just in case it does have a performance impact.
         Camera.orthographicSize = h * 0.05f;
         Camera.transform.position = new Vector3(w * 0.05f, h * 0.05f, -10f);
-        Track.ScreenMargin = 12f / Context.ReferenceWidth * w;
-        Track.ScaleY = 1f / Context.ReferenceHeight * h;
-        Track.TrackWorldY = 11.9f / Context.ReferenceHeight * h;
+        
+        Track.ScreenMargin = 12f.ScreenScaledX();
+        Track.ScaleY = 1f.ScreenScaledY();
+        Track.WorldY = 11.9f.ScreenScaledY();
+        Track.MarginPosition = (Context.ScreenWidth * 0.1f - Track.ScreenMargin * 2);
+        Track.BackgroundWorldWidth = (Context.ScreenWidth / 136f) * Track.ScreenWidth;
+        Track.LineWorldWidth = (Context.ScreenWidth / 6f) * Track.ScreenWidth;
     }
 
     private bool TrackExists(ChartModel.TrackModel track)
