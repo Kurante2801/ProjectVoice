@@ -42,11 +42,11 @@ public class Track : MonoBehaviour
         background.sortingOrder = Model.spawn_time;
         centerLine.sortingOrder = 3;
 
-        ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
+        //ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         Update();
     }
 
-    private void OnEnable()
+    /*private void OnEnable()
     {
         Game.Instance.OnScreenSizeChanged.AddListener(ScreenSizeChanged);
     }
@@ -55,7 +55,7 @@ public class Track : MonoBehaviour
     {
         if(Game.Instance != null)
             Game.Instance.OnScreenSizeChanged.RemoveListener(ScreenSizeChanged);
-    }
+    }*/
 
     private void Update()
     {
@@ -109,16 +109,14 @@ public class Track : MonoBehaviour
             centerLine.color = Color.black;
 
         judgement_scale *= 0.3f.ScreenScaledX();
-        judgement.transform.localScale = new Vector3(judgement_scale, judgement_scale / Mathf.Max(scaleY, 0.001f), 1); // This makes the judgement diamond stay square depending on device width, and not height
+        judgement.transform.localScale = new Vector3(judgement_scale, judgement_scale, 1);
 
         float pos = ScreenMargin + MarginPosition * GetPositionValue(time);
         transform.position = new Vector3(pos, WorldY, 0f);
-        transform.localScale = transform.localScale.WithY(ScaleY);
 
         scaleX = Mathf.Max(scaleX - 0.1f.ScreenScaledX(), 0.025f);
         // Active glow set scale here
-        background.transform.localScale = bottom.transform.localScale = background.transform.localScale.WithX(scaleX);
-        transform.localScale = transform.localScale.WithY(scaleY);
+        background.transform.localScale = bottom.transform.localScale = new Vector3(scaleX, scaleY, 1f);
 
         float width = 13.6f * scaleX * 0.5f;
         leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - width + 0.1f.ScreenScaledX());
@@ -126,16 +124,14 @@ public class Track : MonoBehaviour
         leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - width);
         rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + width);
 
+        leftLine.transform.localScale = centerLine.transform.localScale = rightLine.transform.localScale = new Vector3(Mathf.Max(1f, 1f.ScreenScaledX()) * 0.5f, scaleY, 1f);
+        leftGlow.transform.localScale = rightGlow.transform.localScale = new(Mathf.Max(1f, 1f.ScreenScaledX()), scaleY, 1f);
 
         var color = GetColorValue(time);
         background.color = leftGlow.color = rightGlow.color = color;
     }
 
-    private void ScreenSizeChanged(int w, int h)
-    {
-        leftLine.transform.localScale = rightLine.transform.localScale = centerLine.transform.localScale = new(Mathf.Max(1f, 1f.ScreenScaledX()) * 0.5f, 1f, 1f);
-        leftGlow.transform.localScale = rightGlow.transform.localScale = new(Mathf.Max(1f, 1f.ScreenScaledX()), 1f, 1f);
-    }
+    //private void ScreenSizeChanged(int w, int h) { }
 
     private float GetPositionValue(int time)
     {

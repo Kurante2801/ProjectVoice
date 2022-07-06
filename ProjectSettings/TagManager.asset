@@ -48,3 +48,6 @@ TagManager:
   - name: Track Decorations
     uniqueID: 2229497477
     locked: 0
+  - name: Notes
+    uniqueID: 320583117
+    locked: 0
