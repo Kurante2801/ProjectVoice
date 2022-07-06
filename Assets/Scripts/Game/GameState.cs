@@ -22,6 +22,17 @@ public sealed class GameState
         NoteJugdements = new();
         game.Chart.tracks.ForEach(track => track.notes.ForEach(note => NoteJugdements.Add(note.id, new(NoteGrade.None, 0))));
     }
+
+    public bool NoteIsJudged(int id)
+    {
+        foreach(KeyValuePair<int, JudgeData> judgement in NoteJugdements)
+        {
+            if (judgement.Key == id)
+                return judgement.Value.Grade != NoteGrade.None;
+        }
+
+        return false;
+    }
 }
 
 public class JudgeData

@@ -90,4 +90,6 @@ public static class CommonExtensions
 
     public static float ScreenScaledX(this float x) => x / Context.ReferenceWidth * Context.ScreenWidth;
     public static float ScreenScaledY(this float y) => y / Context.ReferenceHeight * Context.ScreenHeight;
+
+    public static bool IsWithin(this float value, float min, float max) => min <= value && value <= max;
 }

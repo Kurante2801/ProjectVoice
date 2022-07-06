@@ -24,15 +24,22 @@ public class Game : SingletonMonoBehavior<Game>
     public UnityEvent<Game> OnGameRestarted = new();
     public UnityEvent<Game> OnGameEnded = new();
     public UnityEvent<int, int> OnScreenSizeChanged = new();
-
-    private List<Track> createdTracks = new();
+    
+    public List<Track> CreatedTracks = new();
     private ObjectPool<Track> tracksPool;
+
+    // Custom ObjectPool for notes
+    private List<Note> notesPool = new();
+
     [SerializeField] private Transform tracksContainer, poolContainer;
     [SerializeField] private Track trackPrefab;
+    [SerializeField] private Note clickNotePrefab;
 
     public float TransitionTime = 0.5f;
     public int StartTime = 0, EndTime = 0;
     private int screenW, screenH;
+
+    public bool IsPaused = false;
 
     public AnimationCurve TrackSpawnCurveWidth, TrackSpawnCurveHeight, TrackDespawnCurveWidth, TrackDespawnCurveHeight;
 
@@ -111,12 +118,21 @@ public class Game : SingletonMonoBehavior<Game>
         StartGame();
     }
 
+    private void OnDisable()
+    {
+        for (int i = 0; i < notesPool.Count; i++)
+            DestroyImmediate(notesPool[i].gameObject);
+    }
+
     private void Update()
     {
         if (State == null || !State.Started) return;
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             Conductor.Instance.Toggle();
+            IsPaused = !IsPaused;
+        }
 #endif
         // Handle screen size
         if (Context.ScreenWidth != screenW || Context.ScreenHeight != screenH)
@@ -141,7 +157,7 @@ public class Game : SingletonMonoBehavior<Game>
             var obj = tracksPool.Get();
             obj.Model = track;
             obj.Initialize();
-            createdTracks.Add(obj);
+            CreatedTracks.Add(obj);
         }
     }
 
@@ -187,8 +203,38 @@ public class Game : SingletonMonoBehavior<Game>
 
     public void DisposeTrack(Track track)
     {
-        createdTracks.Remove(track);
+        CreatedTracks.Remove(track);
         tracksPool.Release(track);
+    }
+
+    public void DisposeNote(Note note)
+    {
+        note.gameObject.SetActive(false);
+        note.transform.parent = poolContainer;
+        note.Model = null;
+        notesPool.Add(note);
+    }
+
+    public Note GetPooledNote(NoteType type, Transform parent)
+    {
+        for (int i = 0; i < notesPool.Count; i++)
+        {
+            var note = notesPool[i];
+            if(note.Type == type)
+            {
+                note.transform.parent = parent;
+                note.gameObject.SetActive(true);
+                notesPool.Remove(note);
+                return note;
+            }
+        }
+
+        var prefab = type switch
+        {
+            _ => clickNotePrefab
+        };
+
+        return Instantiate(prefab, parent);
     }
 
     private void ScreenSizeChanged(int w, int h)
@@ -210,7 +256,7 @@ public class Game : SingletonMonoBehavior<Game>
 
     private bool TrackExists(ChartModel.TrackModel track)
     {
-        foreach (var created in createdTracks)
+        foreach (var created in CreatedTracks)
             if (created.Model.id == track.id) return true;
         return false;
     }

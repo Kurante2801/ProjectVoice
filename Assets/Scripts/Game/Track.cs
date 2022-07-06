@@ -19,9 +19,16 @@ public class Track : MonoBehaviour
     public List<ScaleTransition> ScaleTransitions = new();
     public List<ColorTransition> ColorTransitions = new();
 
-    [SerializeField] private SpriteRenderer background, leftLine, centerLine, rightLine, leftGlow, rightGlow, judgement, bottom;
+    [SerializeField] private SpriteRenderer background, leftLine, centerLine, rightLine, leftGlow, rightGlow, judgement, bottom, overlay;
+
+    [SerializeField] private Transform notesContainer;
+    public List<Note> CreatedNotes = new();
 
     public bool IsAnimating = false;
+    public float CurrentMoveValue = 0f, CurrentScaleValue = 0f;
+    public float ActiveTime = -10000f;
+
+    public HashSet<int> Fingers = new();
 
     public void Initialize()
     {
@@ -43,19 +50,25 @@ public class Track : MonoBehaviour
         centerLine.sortingOrder = 3;
 
         //ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
+        CreatedNotes.Clear();
+        Fingers.Clear();
+        ActiveTime = -10000;
         Update();
     }
 
     /*private void OnEnable()
     {
         Game.Instance.OnScreenSizeChanged.AddListener(ScreenSizeChanged);
-    }
+    }*/
 
     private void OnDisable()
     {
-        if(Game.Instance != null)
-            Game.Instance.OnScreenSizeChanged.RemoveListener(ScreenSizeChanged);
-    }*/
+        if (Game.Instance == null) return;
+
+        foreach (var note in CreatedNotes)
+            Game.Instance.DisposeNote(note);
+        CreatedNotes.Clear();
+    }
 
     private void Update()
     {
@@ -71,6 +84,7 @@ public class Track : MonoBehaviour
         int time = Conductor.Instance.Time;
 
         float scaleX = BackgroundWorldWidth * GetScaleValue(time);
+        CurrentScaleValue = scaleX;
         float scaleY = 1f.ScreenScaledY();
         var judgement_scale = 1f;
 
@@ -106,16 +120,28 @@ public class Track : MonoBehaviour
         }
 
         if (!IsAnimating)
+        {
             centerLine.color = Color.black;
+            if (Fingers.Count > 0)
+            {
+                ActiveTime = time;
+                overlay.color = Color.white;
+            }
+            else
+                overlay.color = Color.white.WithAlpha(1f - Mathf.Clamp01((time - ActiveTime) / 250));
+        }
+        else
+            overlay.color = Color.clear;
 
         judgement_scale *= 0.3f.ScreenScaledX();
         judgement.transform.localScale = new Vector3(judgement_scale, judgement_scale, 1);
 
         float pos = ScreenMargin + MarginPosition * GetPositionValue(time);
+        CurrentMoveValue = pos;
         transform.position = new Vector3(pos, WorldY, 0f);
 
+        overlay.transform.localScale = new Vector3(scaleX, scaleY, 1f);
         scaleX = Mathf.Max(scaleX - 0.1f.ScreenScaledX(), 0.025f);
-        // Active glow set scale here
         background.transform.localScale = bottom.transform.localScale = new Vector3(scaleX, scaleY, 1f);
 
         float width = 13.6f * scaleX * 0.5f;
@@ -125,10 +151,28 @@ public class Track : MonoBehaviour
         rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + width);
 
         leftLine.transform.localScale = centerLine.transform.localScale = rightLine.transform.localScale = new Vector3(Mathf.Max(1f, 1f.ScreenScaledX()) * 0.5f, scaleY, 1f);
-        leftGlow.transform.localScale = rightGlow.transform.localScale = new(Mathf.Max(1f, 1f.ScreenScaledX()), scaleY, 1f);
+        leftGlow.transform.localScale = rightGlow.transform.localScale = new Vector3(Mathf.Max(1f, 1f.ScreenScaledX()), scaleY, 1f);
 
         var color = GetColorValue(time);
         background.color = leftGlow.color = rightGlow.color = color;
+
+        // Spawn notes
+        foreach(var model in Model.notes)
+        {
+            if (NoteExists(model.id) || Game.Instance.State.NoteIsJudged(model.id) || Note.GetPosition(time, model) > Context.ScreenHeight * 0.1f) continue;
+
+            var note = Game.Instance.GetPooledNote((NoteType)model.type, notesContainer);
+            CreatedNotes.Add(note);
+            note.Track = this;
+            note.Model = model;
+            note.Initialize();
+        }
+    }
+
+    public void DisposeNote(Note note)
+    {
+        CreatedNotes.Remove(note);
+        Game.Instance.DisposeNote(note);
     }
 
     //private void ScreenSizeChanged(int w, int h) { }
@@ -141,7 +185,7 @@ public class Track : MonoBehaviour
                 return transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue);
         }
 
-        var fallback = MoveTransitions[0];
+        var fallback = MoveTransitions[^1];
         return fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), fallback.StartValue, fallback.EndValue);
     }
 
@@ -153,7 +197,7 @@ public class Track : MonoBehaviour
                 return transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue);
         }
 
-        var fallback = ScaleTransitions[0];
+        var fallback = ScaleTransitions[^1];
         return fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), fallback.StartValue, fallback.EndValue);
     }
 
@@ -165,8 +209,15 @@ public class Track : MonoBehaviour
                 return Color.Lerp(transition.StartValue, transition.EndValue, transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), 0f, 1f));
         }
 
-        var fallback = ColorTransitions[0];
+        var fallback = ColorTransitions[^1];
         return Color.Lerp(fallback.StartValue, fallback.EndValue, fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), 0f, 1f));
+    }
+
+    private bool NoteExists(int id)
+    {
+        foreach (var note in CreatedNotes)
+            if (note.ID == id) return true;
+        return false;
     }
 
     public class MoveTransition

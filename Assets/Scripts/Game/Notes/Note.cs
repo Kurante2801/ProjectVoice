@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class NoteRenderer : MonoBehaviour
+public class Note : MonoBehaviour
 {
-    public static int SpeedIndex = 6;
+    public static int SpeedIndex = 2;
     // https://github.com/AndrewFM/VoezEditor/blob/master/Assets/Scripts/Note.cs#L18
-    public static readonly float[] ScrollDurations =
+    public static readonly int[] ScrollDurations =
     {
-        1.5f,   // 1x
-        1.3f,   // 2x
-        1.1f,   // 3x
-        0.9f,   // 4x
-        0.8f,   // 5x
-        0.7f,   // 6x
-        0.55f,  // 7x
-        0.425f, // 8x
-        0.3f,   // 9x
-        0.2f,   // 10x
+        1500, // 1x
+        1300, // 2x
+        1100, // 3x
+        0900, // 4x
+        0800, // 5x
+        0700, // 6x
+        0550, // 7x
+        0425, // 8x
+        0300, // 9x
+        0200, // 10x
     };
 
     public static float Speed => ScrollDurations[SpeedIndex];
@@ -28,12 +28,13 @@ public class NoteRenderer : MonoBehaviour
 
     public ChartModel.NoteModel Model;
     public int ID => Model.id;
-    public NoteType Type => (NoteType)Model.type;
+    public NoteType Type = NoteType.Click;
 
     public bool IsCollected = false;
     public SortingGroup SortingGroup;
 
     public SpriteRenderer Background, Foreground;
+    public Track Track;
 
     private void OnEnable()
     {
@@ -52,6 +53,7 @@ public class NoteRenderer : MonoBehaviour
         IsCollected = false;
         SortingGroup.sortingOrder = -Model.time;
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
+        Update();
     }
 
     public virtual void SetAlpha(float alpha)
@@ -60,9 +62,17 @@ public class NoteRenderer : MonoBehaviour
         Foreground.color = Foreground.color.WithAlpha(alpha);
     }
 
-    private void ScreenSizeChanged(int w, int h)
+    public virtual void ScreenSizeChanged(int w, int h)
     {
-        
+        float multiplier = 1f.ScreenScaledX();
+        Background.transform.localScale = Foreground.transform.localScale = Vector3.one * multiplier;
     }
 
+    protected virtual void Update()
+    {
+        int time = Conductor.Instance.Time;
+        transform.localPosition = transform.localPosition.WithY(GetPosition(time, Model));
+    }
+
+    public static float GetPosition(int time, ChartModel.NoteModel model) => Context.ScreenHeight * 0.1f * (model.time - time) / Speed;
 }

@@ -408,7 +408,13 @@ MonoBehaviour:
   rightGlow: {fileID: 2348768990417516101}
   judgement: {fileID: 9071826634524523230}
   bottom: {fileID: 6296911591377563264}
+  overlay: {fileID: 3103975628683979796}
+  notesContainer: {fileID: 4484042296858847636}
+  CreatedNotes: []
   IsAnimating: 0
+  CurrentMoveValue: 0
+  CurrentScaleValue: 0
+  ActiveTime: -10000
 --- !u!1 &5368140373144825845
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,7 +599,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3466951797487146875
 Transform:
   m_ObjectHideFlags: 0
