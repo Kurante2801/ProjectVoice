@@ -56,4 +56,6 @@ public static class TextureExtensions
         tex.Blur(ammount);
         return tex;
     }
+
+    public static Texture2D Blurred(this Texture original, int ammount) => Blurred((Texture2D)original, ammount);
 }

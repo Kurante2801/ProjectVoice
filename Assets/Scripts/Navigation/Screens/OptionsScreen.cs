@@ -79,23 +79,21 @@ public class OptionsScreen : Screen
         dim.OnValueChanged.AddListener(value => PlayerSettings.BackgroundDim = value / 100f);
         GeneralSettings.Add(dim);
 
+        var blur = Instantiate(SettingSliderElementPrefab, GeneralContent).GetComponent<SettingSliderElement>();
+        blur.SetValues(PlayerSettings.BackgroundBlur, 0f, 24f, 6f, 0, true, false);
+        blur.SetLocalizationKeys("OPTIONS_BACKGROUNDBLUR_NAME", "OPTIONS_BACKGROUNDBLUR_DESC");
+        blur.OnValueChanged.AddListener(value =>
+        {
+            PlayerSettings.BackgroundBlur = (int)value;
+            Backdrop.Instance.SetBlur((int)value);
+        });
+        GeneralSettings.Add(blur);
+
         var offset = Instantiate(SettingNumberElementPrefab, GeneralContent).GetComponent<SettingNumberElement>();
         offset.SetValues(PlayerSettings.AudioOffset, 4);
         offset.SetLocalizationKeys("OPTIONS_AUDIOOFFSET_NAME", "OPTIONS_AUDIOOFFSET_DESC");
         offset.OnValueChanged.AddListener(value => PlayerSettings.AudioOffset = value);
         GeneralSettings.Add(offset);
-
-        var test = Instantiate(SettingColorElementPrefab, GeneralContent).GetComponent<SettingColorElement>();
-        test.SetValues(PlayerSettings.TestColor, false, "Test Color");
-        test.SetLocalizationKeys("Test Color", "");
-        test.OnValueChanged.AddListener(value => PlayerSettings.TestColor = value);
-        GeneralSettings.Add(test);
-
-        var testAlpha = Instantiate(SettingColorElementPrefab, GeneralContent).GetComponent<SettingColorElement>();
-        testAlpha.SetValues(PlayerSettings.TestColorAlpha, true, "Test Color with Alpha");
-        testAlpha.SetLocalizationKeys("Test Color with Alpha", "");
-        testAlpha.OnValueChanged.AddListener(value => PlayerSettings.TestColorAlpha = value);
-        GeneralSettings.Add(testAlpha);
     }
 
     private void PopulateNotes()

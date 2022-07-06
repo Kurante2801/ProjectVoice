@@ -22,6 +22,8 @@
     "OPTIONS_MUSICVOLUME_DESC": "",
     "OPTIONS_BACKGROUNDDIM_NAME": "Atenuación del Fondo",
     "OPTIONS_BACKGROUNDDIM_DESC": "Un número más alto significa un fondo más oscuro dentro del juego.",
+    "OPTIONS_BACKGROUNDBLUR_NAME": "Desenfoque de Fondo",
+    "OPTIONS_BACKGROUNDBLUR_DESC": "No afecta al rendimiento.",
     "OPTIONS_AUDIOOFFSET_NAME": "Audio Offset",
     "OPTIONS_AUDIOOFFSET_DESC": "En segundos, un número alto retrasará la música.",
 

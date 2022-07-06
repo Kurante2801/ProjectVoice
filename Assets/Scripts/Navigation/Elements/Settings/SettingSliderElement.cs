@@ -38,7 +38,7 @@ public class SettingSliderElement : SettingElement
         Slider.value = (float)Math.Round(value, decimals);
         Slider.wholeNumbers = wholeNumbers;
 
-        InputField.enabled = textEntryEnable;
+        InputField.interactable = textEntryEnable;
 
         Step = step;
     }

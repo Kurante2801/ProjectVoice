@@ -24,7 +24,7 @@ public class LevelSummaryScreen : Screen
     public override void OnScreenBecameActive()
     {
         base.OnScreenBecameActive();
-        Backdrop.Instance.SetBlurred(false);
+        Backdrop.Instance.DisplayBlurImage(false);
         SetLevel(Context.SelectedLevel);
     }
 
@@ -94,7 +94,7 @@ public class LevelSummaryScreen : Screen
     public void OptionsButton()
     {
         Context.ScreenManager.ChangeScreen("OptionsScreen", simultaneous: true);
-        Backdrop.Instance.SetBlurred(true);
+        Backdrop.Instance.DisplayBlurImage(true);
     }
 
     public void DifficultyChosen(DifficultyButton button)
@@ -123,7 +123,7 @@ public class LevelSummaryScreen : Screen
     public async void GoButton()
     {
         Context.ScreenManager.ChangeScreen(null);
-        Backdrop.Instance.SetBlurred(true);
+        Backdrop.Instance.DisplayBlurImage(true);
         await UniTask.Delay(250);
         SceneManager.LoadScene("Game");
     }

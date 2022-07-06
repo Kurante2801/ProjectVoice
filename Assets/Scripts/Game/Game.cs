@@ -106,8 +106,8 @@ public class Game : SingletonMonoBehavior<Game>
         Context.AudioSource.Stop();
 
         State = new(this);
-        OnGameLoaded?.Invoke(this);
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
+        OnGameLoaded?.Invoke(this);
         StartGame();
     }
 

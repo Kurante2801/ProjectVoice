@@ -42,21 +42,15 @@ public class PlayerSettings
         set => PlayerPrefs.SetFloat("backgrounddim", Mathf.Clamp01(value));
     }
 
+    public static int BackgroundBlur
+    {
+        get => PlayerPrefs.GetInt("backgroundblur", 24);
+        set => PlayerPrefs.SetInt("backgroundblur", value);
+    }
+
     public static float AudioOffset
     {
         get => PlayerPrefs.GetFloat("audiooffset_float", 0f);
         set => PlayerPrefs.SetFloat("audiooffset_float", value);
-    }
-
-    public static Color TestColor
-    {
-        get => PlayerPrefsExtensions.GetColor("testcolor", Color.white, false);
-        set => PlayerPrefsExtensions.SetColor("testcolor", value, false);
-    }
-
-    public static Color TestColorAlpha
-    {
-        get => PlayerPrefsExtensions.GetColor("testcoloralpha", Color.white, true);
-        set => PlayerPrefsExtensions.SetColor("testcoloralpha", value, true);
     }
 }

@@ -41,7 +41,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
             Background.texture = tex;
             Background.DOFade(1f, 0.25f);
 
-            BackgroundBlurred.texture = tex.Blurred(24);
+            BackgroundBlurred.texture = tex.Blurred(PlayerSettings.BackgroundBlur);
             BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
             BackgroundOverlay.DOFade(overlay, 0.25f);
 
@@ -49,9 +49,15 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         }
     }
 
-    public void SetBlurred(bool blurred)
+    public void DisplayBlurImage(bool blurred)
     {
         BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
+    }
+
+    public void SetBlur(int blur)
+    {
+        if (Background.texture == null) return;
+        BackgroundBlurred.texture = Background.texture.Blurred(blur);
     }
 
     public void SetOverlay(float opacity)
