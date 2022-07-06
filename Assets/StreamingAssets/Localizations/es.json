@@ -27,5 +27,8 @@
     "OPTIONS_AUDIOOFFSET_NAME": "Audio Offset",
     "OPTIONS_AUDIOOFFSET_DESC": "En segundos, un número alto retrasará la música.",
 
+    "OPTIONS_NOTESPEED_NAME": "Velocidad de Nota",
+    "OPTIONS_NOTESPEED_DESC": "",
+
     "OPTIONS_NOTES_TAB": "Notas"
 }

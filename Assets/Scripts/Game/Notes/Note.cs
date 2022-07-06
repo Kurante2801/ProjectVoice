@@ -71,8 +71,42 @@ public class Note : MonoBehaviour
     protected virtual void Update()
     {
         int time = Conductor.Instance.Time;
-        transform.localPosition = transform.localPosition.WithY(GetPosition(time, Model));
+
+        float y = Mathf.Max(0f, GetPosition(time, Model));
+        transform.localPosition = new Vector3(0f, y, 0f);
+
+        if (Model.time - time < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
+            OnTrackDown(time); // Miss
+    }
+
+    public virtual void OnTrackDown(int time)
+    {
+        var grade = JudgeGrade(time, Model);
+        if (grade != NoteGrade.None)
+        {
+            Game.Instance.State.Judge(this, grade, Model.time - time);
+            Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
+            print($"{grade} - {Game.Instance.State.Score}");
+            Collect();
+        }
+    }
+
+    public virtual void Collect()
+    {
+        Track.DisposeNote(this);
     }
 
     public static float GetPosition(int time, ChartModel.NoteModel model) => Context.ScreenHeight * 0.1f * (model.time - time) / Speed;
+    public static NoteGrade JudgeGrade(int time, ChartModel.NoteModel model)
+    {
+        var difference = model.time - time;
+        if (difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good]) return NoteGrade.Miss;
+        difference = Mathf.Abs(difference);
+
+        if (difference <= NoteGradeExtensions.Timings[(int)NoteGrade.Perfect]) return NoteGrade.Perfect;
+        if (difference <= NoteGradeExtensions.Timings[(int)NoteGrade.Great]) return NoteGrade.Great;
+        if (difference <= NoteGradeExtensions.Timings[(int)NoteGrade.Good]) return NoteGrade.Good;
+
+        return NoteGrade.None;
+    }
 }

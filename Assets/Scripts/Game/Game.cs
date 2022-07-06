@@ -23,6 +23,7 @@ public class Game : SingletonMonoBehavior<Game>
     public UnityEvent<Game> OnGameStarted = new();
     public UnityEvent<Game> OnGameRestarted = new();
     public UnityEvent<Game> OnGameEnded = new();
+    public UnityEvent<Game, int> OnNoteJudged = new();
     public UnityEvent<int, int> OnScreenSizeChanged = new();
     
     public List<Track> CreatedTracks = new();
@@ -78,7 +79,7 @@ public class Game : SingletonMonoBehavior<Game>
                     }
             }
             Context.SelectedLevel = level;
-            Context.SelectedChart = level.Meta.charts.LastOrDefault() ?? level.Meta.charts[0];
+            Context.SelectedChart = level.Meta.charts.FirstOrDefault() ?? level.Meta.charts[0];
             Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
         }
 
@@ -112,16 +113,12 @@ public class Game : SingletonMonoBehavior<Game>
         await Context.AudioSource.DOFade(1f, 0.25f).AsyncWaitForCompletion();
         Context.AudioSource.Stop();
 
+        Note.SpeedIndex = Math.Clamp(PlayerSettings.NoteSpeedIndex, 0, 9);
+
         State = new(this);
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         OnGameLoaded?.Invoke(this);
         StartGame();
-    }
-
-    private void OnDisable()
-    {
-        for (int i = 0; i < notesPool.Count; i++)
-            DestroyImmediate(notesPool[i].gameObject);
     }
 
     private void Update()

@@ -1514,6 +1514,7 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   GraphicRaycaster: {fileID: 0}
   GeneralContent: {fileID: 266147993040454110}
+  NoteContent: {fileID: 5571512681469747209}
   SettingDropdownElementPrefab: {fileID: 1255245514706986519, guid: 40d14da11bbc4144cbc538fdf6d4d582, type: 3}
   SettingBooleanElementPrefab: {fileID: 9212161596157886014, guid: c82620477dc363447b630dc501951e69, type: 3}
   SettingSliderElementPrefab: {fileID: 976505642649918697, guid: 07d17988238d8e4488b0610cb0fb8931, type: 3}

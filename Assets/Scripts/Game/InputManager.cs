@@ -21,15 +21,29 @@ public class InputManager : SingletonMonoBehavior<InputManager>
 
     private void OnFingerDown(LeanFinger finger)
     {
+        if (Game.Instance.IsPaused) return;
+
+        Note closest = null;
         foreach (var track in Game.Instance.CreatedTracks)
         {
-            if (IsTrackWithin(track, finger.StartScreenPosition.x * 0.1f))
-                track.Fingers.Add(finger.Index);
+            if (track.IsAnimating || !IsTrackWithin(track, finger.StartScreenPosition.x * 0.1f)) continue;
+            track.Fingers.Add(finger.Index);
+            
+            foreach(var note in track.CreatedNotes)
+            {
+                if (!Game.Instance.State.NoteIsJudged(note.ID) && (closest == null || closest.Model.time > note.Model.time))
+                    closest = note;
+            }
         }
+
+        if (closest != null)
+            closest.OnTrackDown(Conductor.Instance.Time);
     }
 
     private void OnFingerUp(LeanFinger finger)
     {
+        if (Game.Instance.IsPaused) return;
+
         foreach(var track in Game.Instance.CreatedTracks)
         {
             if (track.Fingers.Contains(finger.Index))
@@ -39,6 +53,8 @@ public class InputManager : SingletonMonoBehavior<InputManager>
 
     private void OnFingerUpdate(LeanFinger finger)
     {
+        if (Game.Instance.IsPaused) return;
+
         foreach (var track in Game.Instance.CreatedTracks)
         {
             if (finger.IsActive && IsTrackWithin(track, finger.ScreenPosition.x * 0.1f))

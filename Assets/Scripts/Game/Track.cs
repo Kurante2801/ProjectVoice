@@ -175,6 +175,13 @@ public class Track : MonoBehaviour
         Game.Instance.DisposeNote(note);
     }
 
+    private bool NoteExists(int id)
+    {
+        foreach (var note in CreatedNotes)
+            if (note.ID == id) return true;
+        return false;
+    }
+
     //private void ScreenSizeChanged(int w, int h) { }
 
     private float GetPositionValue(int time)
@@ -211,13 +218,6 @@ public class Track : MonoBehaviour
 
         var fallback = ColorTransitions[^1];
         return Color.Lerp(fallback.StartValue, fallback.EndValue, fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), 0f, 1f));
-    }
-
-    private bool NoteExists(int id)
-    {
-        foreach (var note in CreatedNotes)
-            if (note.ID == id) return true;
-        return false;
     }
 
     public class MoveTransition

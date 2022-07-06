@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerSettings
 {
+    // General settings
     public static string LanguageString
     {
         get => PlayerPrefs.GetString("localizationstring", "en");
@@ -52,5 +53,12 @@ public class PlayerSettings
     {
         get => PlayerPrefs.GetFloat("audiooffset_float", 0f);
         set => PlayerPrefs.SetFloat("audiooffset_float", value);
+    }
+
+    // Note settings
+    public static int NoteSpeedIndex
+    {
+        get => PlayerPrefs.GetInt("notespeedindex", 2);
+        set => PlayerPrefs.SetInt("notespeedindex", value);
     }
 }

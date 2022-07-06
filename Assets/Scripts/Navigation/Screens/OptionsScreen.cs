@@ -13,14 +13,14 @@ public class OptionsScreen : Screen
 {
     public override string GetID() => "OptionsScreen";
 
-    public RectTransform GeneralContent;
+    public RectTransform GeneralContent, NoteContent;
 
     public SettingDropdownElement SettingDropdownElementPrefab;
     public SettingBooleanElement SettingBooleanElementPrefab;
     public SettingSliderElement SettingSliderElementPrefab;
     public SettingNumberElement SettingNumberElementPrefab;
     public SettingColorElement SettingColorElementPrefab;
-
+    
     public List<SettingElement> GeneralSettings = new();
     public List<SettingElement> NoteSettings = new();
 
@@ -35,8 +35,7 @@ public class OptionsScreen : Screen
     private void PopulateGeneral()
     {
         foreach (Transform child in GeneralContent)
-            Destroy(child);
-
+            Destroy(child.gameObject);
         GeneralSettings.Clear();
 
         var lang = Instantiate(SettingDropdownElementPrefab, GeneralContent).GetComponent<SettingDropdownElement>();
@@ -98,7 +97,15 @@ public class OptionsScreen : Screen
 
     private void PopulateNotes()
     {
-        
+        foreach (Transform child in NoteContent)
+            Destroy(child.gameObject);
+        NoteSettings.Clear();
+
+        var speed = Instantiate(SettingSliderElementPrefab, NoteContent).GetComponent<SettingSliderElement>();
+        speed.SetValues(PlayerSettings.NoteSpeedIndex + 1, 1, 10, 1, 1, true, false);
+        speed.SetLocalizationKeys("OPTIONS_NOTESPEED_NAME", "OPTIONS_NOTESPEED_DESC");
+        speed.OnValueChanged.AddListener(value => PlayerSettings.NoteSpeedIndex = (int)value - 1);
+        NoteSettings.Add(speed);
     }
 
     public void ReturnButton()

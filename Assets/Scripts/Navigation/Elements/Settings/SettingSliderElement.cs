@@ -35,10 +35,11 @@ public class SettingSliderElement : SettingElement
     {
         Slider.minValue = min;
         Slider.maxValue = max;
-        Slider.value = (float)Math.Round(value, decimals);
+        Slider.SetValueWithoutNotify((float)Math.Round(value, decimals));
         Slider.wholeNumbers = wholeNumbers;
 
         InputField.interactable = textEntryEnable;
+        InputField.SetTextWithoutNotify(value.ToString("F" + Decimals));
 
         Step = step;
     }
