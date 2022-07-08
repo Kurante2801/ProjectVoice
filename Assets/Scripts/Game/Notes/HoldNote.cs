@@ -61,7 +61,7 @@ public class HoldNote : Note
                 difference = Model.time + HoldTime - time;
 
                 if (!hasFingers || difference <= 0)
-                    JudgeNote(difference);
+                    JudgeNote(difference, time);
             }
             else
             {
@@ -71,7 +71,7 @@ public class HoldNote : Note
                         StartHold(time);
                 }
                 else if (difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
-                    StartHold(time);
+                    JudgeNote(time);
             }
         }
         else
@@ -127,10 +127,17 @@ public class HoldNote : Note
             ParticleManager.Instance.SpawnEffect(Shape, grade, Track.transform.position);
             Track.DisposeNote(this);
         }
-
     }
 
-    public override void JudgeNote(int endDifference)
+    // This only gets called for misses
+    public override void JudgeNote(int time)
+    {
+        initialDifference = Model.time - time; // This makes the hold note shorten properly when releasing too early
+        base.JudgeNote(time);
+    }
+
+    // This gets called when the hold ends or it is released early
+    public void JudgeNote(int endDifference, int time)
     {
         var grade = initialGrade;
         if (IsAuto)
@@ -138,8 +145,9 @@ public class HoldNote : Note
         else if (endDifference > ReleaseMissThreshold)
             grade = NoteGrade.Miss;
 
-        Game.Instance.State.Judge(this, grade, endDifference);
+        Game.Instance.State.Judge(this, grade, initialDifference);
         Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
+        initialDifference = Model.time - time;
         Collect(grade);
     }
 

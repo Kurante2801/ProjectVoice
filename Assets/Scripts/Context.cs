@@ -72,10 +72,12 @@ public class Context : SingletonMonoBehavior<Context>
         base.Awake();
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = PlayerSettings.TargetFPS;
+        Application.runInBackground = false;
         BetterStreamingAssets.Initialize();
 
         ScreenRealWidth = UnityEngine.Screen.width;
         ScreenRealHeight = UnityEngine.Screen.height;
+
 
 #if UNITY_EDITOR
         Application.runInBackground = true;

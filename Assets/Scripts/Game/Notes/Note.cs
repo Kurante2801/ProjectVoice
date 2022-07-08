@@ -102,23 +102,22 @@ public class Note : MonoBehaviour
     public virtual void JudgeNote(int time)
     {
         var grade = JudgeGrade(time, Model);
-        if (grade != NoteGrade.None)
-        {
-            if (IsAuto)
-            {
-                grade = NoteGrade.Perfect;
-                // Activate tracks behind this note's track (including this note's track)
-                foreach (var track in Game.Instance.CreatedTracks)
-                {
-                    if (InputManager.IsTrackWithin(track, Track.transform.position.x))
-                        track.ActiveTime = time;
-                }
-            }
+        if (grade == NoteGrade.None) return;
 
-            Game.Instance.State.Judge(this, grade, Model.time - time);
-            Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
-            Collect(grade);
+        if (IsAuto)
+        {
+            grade = NoteGrade.Perfect;
+            // Activate tracks behind this note's track (including this note's track)
+            foreach (var track in Game.Instance.CreatedTracks)
+            {
+                if (InputManager.IsTrackWithin(track, Track.transform.position.x))
+                    track.ActiveTime = time;
+            }
         }
+
+        Game.Instance.State.Judge(this, grade, Model.time - time);
+        Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
+        Collect(grade);
     }
 
     public virtual void OnTrackDown(int time) { }
