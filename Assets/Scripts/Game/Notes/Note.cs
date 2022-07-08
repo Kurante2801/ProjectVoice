@@ -73,12 +73,29 @@ public class Note : MonoBehaviour
     protected virtual void Update()
     {
         int time = Conductor.Instance.Time;
+        int difference = Model.time - time;
+        int missThreshold = -NoteGradeExtensions.Timings[(int)NoteGrade.Good];
+
+        // Miss animation
+        if (IsCollected)
+        {         
+            if (difference > -1000)
+            {
+                float sinceMiss = (difference - missThreshold) / 1000f;
+                
+                transform.localPosition = new Vector3(0f, sinceMiss * Context.ScreenHeight * 0.025f, 0f);
+                SetAlpha(0.5f + sinceMiss * 0.5f);
+            }
+            else
+                Track.DisposeNote(this);
+
+            return;
+        }
 
         float y = Mathf.Max(0f, GetPosition(time, Model));
         transform.localPosition = new Vector3(0f, y, 0f);
 
-        var difference = Model.time - time;
-        if ((IsAuto && difference <= 0) || difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
+        if ((IsAuto && difference <= 0) || difference < missThreshold)
             JudgeNote(time);
     }
 
@@ -90,7 +107,12 @@ public class Note : MonoBehaviour
             if (IsAuto)
             {
                 grade = NoteGrade.Perfect;
-                Track.ActiveTime = time;
+                // Activate tracks behind this note's track (including this note's track)
+                foreach (var track in Game.Instance.CreatedTracks)
+                {
+                    if (InputManager.IsTrackWithin(track, Track.transform.position.x))
+                        track.ActiveTime = time;
+                }
             }
 
             Game.Instance.State.Judge(this, grade, Model.time - time);
@@ -101,13 +123,17 @@ public class Note : MonoBehaviour
 
     public virtual void OnTrackDown(int time) { }
 
-    public virtual void OnTrackSwiped(int time, int delta) { }
+    public virtual void OnTrackSwiped(int time, float delta) { }
 
     public virtual void Collect(NoteGrade grade)
     {
-        if(grade != NoteGrade.Miss)
+        IsCollected = true;
+
+        if (grade != NoteGrade.Miss)
+        {
             ParticleManager.Instance.SpawnEffect(Shape, grade, Track.transform.position);
-        Track.DisposeNote(this);
+            Track.DisposeNote(this);
+        }
     }
 
     public static float GetPosition(int time, ChartModel.NoteModel model) => Context.ScreenHeight * 0.1f * (model.time - time) / Speed;

@@ -24,8 +24,9 @@ public class SwipeNote : Note
         base.Initialize();
     }
 
-    public override void OnTrackSwiped(int time, int delta)
+    public override void OnTrackSwiped(int time, float delta)
     {
-        if (delta == SwipeDelta) JudgeNote(time);
+        if ((delta < 0 && SwipeDelta < 0) || (delta > 0 && SwipeDelta > 0))
+            JudgeNote(time);
     }
 }
