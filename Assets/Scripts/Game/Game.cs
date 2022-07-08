@@ -156,10 +156,10 @@ public class Game : SingletonMonoBehavior<Game>
             if (!Conductor.Instance.Time.IsBetween(track.spawn_time, track.despawn_time)) continue;
             if (TrackExists(track)) continue;
 
-            var obj = tracksPool.Get();
-            obj.Model = track;
-            obj.Initialize();
-            CreatedTracks.Add(obj);
+            var spawned = tracksPool.Get();
+            CreatedTracks.Add(spawned);
+            spawned.Model = track;
+            spawned.Initialize();
         }
     }
 

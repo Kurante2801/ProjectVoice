@@ -107,7 +107,7 @@ public class Track : MonoBehaviour
         if (!IsAnimating && Model.spawn_duration > 0)
         {
             float sinceSpawnTime = time - Model.spawn_time;
-            if (sinceSpawnTime >= 0)
+            if (sinceSpawnTime <= Model.spawn_duration)
             {
                 float animationTime = Mathf.Clamp01(sinceSpawnTime / Model.spawn_duration);
                 centerLine.color = Color.black.WithAlpha(Game.Instance.TrackSpawnCurveWidth.Evaluate(animationTime));
