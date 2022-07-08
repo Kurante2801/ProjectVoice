@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hexagon Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 1
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 3a47eb92bb4e3cc469454505bb18a5c0, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f3d804223a722194b9054233e12ea9c8, type: 3}
+  - {fileID: 21300000, guid: c36d3a13a03ced444b4b84da3ea2844d, type: 3}
+  - {fileID: 21300000, guid: cd57bf335a23a234db7fab53157a5dfc, type: 3}
+  - {fileID: 21300000, guid: b40de5c339e07da448b0ee21f6a47412, type: 3}
+  - {fileID: 21300000, guid: f4ccb1a8b3a340242a4abc665c10f829, type: 3}
+  - {fileID: 21300000, guid: 046e51b891ec05e4a98e5d5364f73a77, type: 3}
+  - {fileID: 21300000, guid: 0e0ab1bce9848764c950b0f05e16c2dd, type: 3}
+  - {fileID: 21300000, guid: 7efe22dd1722ab043b7fc90c85198b4c, type: 3}
+  - {fileID: 21300000, guid: 6c9bb80eff7b2484eb02d793e6fbcb42, type: 3}
+  - {fileID: 21300000, guid: 0c38808fa38a0e340b5479829562cbde, type: 3}
+  - {fileID: 21300000, guid: b334009f29a82b54aa449eadd55e8a72, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - click_fore
+  - hold_sustain
+  - click_back
+  - grade_perfect
+  - grade_good
+  - swipe_fore
+  - hold_back
+  - grade_great
+  - slide_back
+  - swipe_back
+  - slide_fore
+  m_RenderDataMap: {}
+  m_Tag: Hexagon Atlas
+  m_IsVariant: 0

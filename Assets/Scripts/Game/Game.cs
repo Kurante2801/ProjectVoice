@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
+using UnityEngine.U2D;
 
 public class Game : SingletonMonoBehavior<Game>
 {
@@ -34,7 +35,7 @@ public class Game : SingletonMonoBehavior<Game>
 
     [SerializeField] private Transform tracksContainer, poolContainer;
     [SerializeField] private Track trackPrefab;
-    [SerializeField] private Note clickNotePrefab;
+    [SerializeField] private Note clickNotePrefab, swipeNotePrefab, slideNotePrefab, holdNotePrefab;
 
     public float TransitionTime = 0.5f;
     public int StartTime = 0, EndTime = 0;
@@ -43,6 +44,8 @@ public class Game : SingletonMonoBehavior<Game>
     public bool IsPaused = false;
 
     public AnimationCurve TrackSpawnCurveWidth, TrackSpawnCurveHeight, TrackDespawnCurveWidth, TrackDespawnCurveHeight;
+    public SpriteAtlas GameAtlas;
+    public List<SpriteAtlas> ShapesAtlas;
 
     protected override void Awake()
     {
@@ -79,8 +82,10 @@ public class Game : SingletonMonoBehavior<Game>
                     }
             }
             Context.SelectedLevel = level;
-            Context.SelectedChart = level.Meta.charts.FirstOrDefault() ?? level.Meta.charts[0];
+            Context.SelectedChart = level.Meta.charts.LastOrDefault() ?? level.Meta.charts[0];
             Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
+
+            Context.Modifiers.Add(Modifer.Auto);
         }
 
         // Make background stay behind sprites
@@ -228,6 +233,9 @@ public class Game : SingletonMonoBehavior<Game>
 
         var prefab = type switch
         {
+            NoteType.Slide => slideNotePrefab,
+            NoteType.Swipe => swipeNotePrefab,
+            NoteType.Hold => holdNotePrefab,
             _ => clickNotePrefab
         };
 

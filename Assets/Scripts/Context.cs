@@ -59,6 +59,8 @@ public class Context : SingletonMonoBehavior<Context>
 
     public static bool IsInitialized = false;
 
+    public static HashSet<Modifer> Modifiers = new();
+
     protected override void Awake()
     {
         if (GameObject.FindGameObjectsWithTag("Context").Length > 1) // This is 1 instead of 0 because 'this' has the tag too
@@ -206,4 +208,9 @@ public class Context : SingletonMonoBehavior<Context>
         }
 
     }
+}
+
+public enum Modifer
+{
+    Auto, AutoClick, AutoHold, AutoSwipe, AutoSlide
 }

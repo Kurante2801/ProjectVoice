@@ -23,18 +23,20 @@ public class Note : MonoBehaviour
 
     public static float Speed => ScrollDurations[SpeedIndex];
 
-    public static Color DefaultForegroundColor = new Color32(220, 75, 75, 255);
-    public static Color DefaultBackgroundColor = new Color(0, 0, 0, 255);
-
     public ChartModel.NoteModel Model;
     public int ID => Model.id;
-    public NoteType Type = NoteType.Click;
 
     public bool IsCollected = false;
     public SortingGroup SortingGroup;
 
     public SpriteRenderer Background, Foreground;
     public Track Track;
+
+    public NoteType Type = NoteType.Click;
+    public static bool IsAuto => Context.Modifiers.Contains(Modifer.Auto) || Context.Modifiers.Contains(Modifer.AutoClick);
+    public static NoteShape Shape => PlayerSettings.ClickShape;
+
+    protected virtual void Start() { }
 
     private void OnEnable()
     {
@@ -75,24 +77,36 @@ public class Note : MonoBehaviour
         float y = Mathf.Max(0f, GetPosition(time, Model));
         transform.localPosition = new Vector3(0f, y, 0f);
 
-        if (Model.time - time < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
-            OnTrackDown(time); // Miss
+        var difference = Model.time - time;
+        if ((IsAuto && difference <= 0) || difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
+            JudgeNote(time);
     }
 
-    public virtual void OnTrackDown(int time)
+    public virtual void JudgeNote(int time)
     {
         var grade = JudgeGrade(time, Model);
         if (grade != NoteGrade.None)
         {
+            if (IsAuto)
+            {
+                grade = NoteGrade.Perfect;
+                Track.ActiveTime = time;
+            }
+
             Game.Instance.State.Judge(this, grade, Model.time - time);
             Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
-            print($"{grade} - {Game.Instance.State.Score}");
-            Collect();
+            Collect(grade);
         }
     }
 
-    public virtual void Collect()
+    public virtual void OnTrackDown(int time) { }
+
+    public virtual void OnTrackSwiped(int time, int delta) { }
+
+    public virtual void Collect(NoteGrade grade)
     {
+        if(grade != NoteGrade.Miss)
+            ParticleManager.Instance.SpawnEffect(Shape, grade, Track.transform.position);
         Track.DisposeNote(this);
     }
 

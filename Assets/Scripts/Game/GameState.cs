@@ -67,8 +67,8 @@ public sealed class GameState
         Accuracy /= Accuracies.Count;
 
         // Ensure million score
-        /*if (Score > 995000 && ClearCount == NoteCount && IsFullScorePossible)
-            Score = 1000000D;*/
+        if (Score > 995000 && ClearCount == NoteCount && IsFullScorePossible)
+            Score = 1000000D;
     }
 }
 

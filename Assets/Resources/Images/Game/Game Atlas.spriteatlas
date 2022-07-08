@@ -44,7 +44,6 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 102900000, guid: 640a31854e7602f40b76cbf572ffe799, type: 3}
     - {fileID: 102900000, guid: b880d94dd31d29f4d9cc11b8c85699ca, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
@@ -54,18 +53,18 @@ SpriteAtlas:
   - {fileID: 21300000, guid: efca8132acafc6f46abfc1a65aca4c82, type: 3}
   - {fileID: 21300000, guid: 32011d921e8597c4986435dd727098ef, type: 3}
   - {fileID: 21300000, guid: 4b934ac278285ad4f9c6ad719142bc34, type: 3}
-  - {fileID: 21300000, guid: 4bb6d4f9ef2cb6246a20289be7c87c89, type: 3}
+  - {fileID: 21300000, guid: 7060d06560d80e245a9b606f25965924, type: 3}
+  - {fileID: 21300000, guid: 1e1c5477cce72e141b43e0e30aaf956a, type: 3}
   - {fileID: 21300000, guid: e17e8f3a8a9565b46b0780bf1f8934a4, type: 3}
   - {fileID: 21300000, guid: f08069abfdb1b1c4ca8b1e2ee8ebd69f, type: 3}
-  - {fileID: 21300000, guid: bfa4d56c0bddb1a48a9f887f99dce140, type: 3}
   m_PackedSpriteNamesToIndex:
   - track_background
-  - judgementdiamond
+  - judgement_diamond
   - track_line
-  - notediamondclickfore
+  - judgement_hexagon
+  - judgement_circle
   - track_bottom
   - track_glow
-  - notediamondclickback
   m_RenderDataMap: {}
   m_Tag: Game Atlas
   m_IsVariant: 0

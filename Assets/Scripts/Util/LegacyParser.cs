@@ -181,7 +181,7 @@ public static class LegacyParser
             var track = model.tracks.FirstOrDefault(track => track.id == legacy.Track);
             if (track == null) continue;
 
-            var type = Enum.TryParse<NoteType>(legacy.Type, out var parsed) ? parsed : NoteType.Click;
+            var type = Enum.TryParse<NoteType>(legacy.Type, true, out var parsed) ? parsed : NoteType.Click;
             track.notes.Add(new()
             {
                 id = legacy.Id,
