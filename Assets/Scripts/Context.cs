@@ -125,6 +125,7 @@ public class Context : SingletonMonoBehavior<Context>
 
     public static async void PlaySongPreview(Level level)
     {
+        AudioListener.pause = false;
         bool useMusic = string.IsNullOrWhiteSpace(level.Meta.preview_path);
         string path;
 

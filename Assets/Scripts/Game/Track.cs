@@ -61,14 +61,14 @@ public class Track : MonoBehaviour
         Game.Instance.OnScreenSizeChanged.AddListener(ScreenSizeChanged);
     }*/
 
-    private void OnDisable()
+    /*private void OnDisable()
     {
         if (Game.Instance == null) return;
 
         foreach (var note in CreatedNotes)
             Game.Instance.DisposeNote(note);
         CreatedNotes.Clear();
-    }
+    }*/
 
     private void Update()
     {

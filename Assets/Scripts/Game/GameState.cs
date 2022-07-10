@@ -9,9 +9,9 @@ public sealed class GameState
     public ChartSection Chart { get; }
 
     public Dictionary<int, JudgeData> NoteJugdements { get; } = new();
-    public bool Started = false;
-    public bool Playing = false;
-    public bool Completed = false;
+    public bool HasStarted = false;
+    public bool IsPlaying = false;
+    public bool IsCompleted = false;
 
     public double Score { get; private set; } = 0D;
     public double Accuracy { get; private set; } = 0D;
@@ -34,7 +34,7 @@ public sealed class GameState
 
     public void Judge(Note note, NoteGrade grade, int difference)
     {
-        if (Completed || NoteIsJudged(note.Model.id)) return;
+        if (IsCompleted || NoteIsJudged(note.Model.id)) return;
 
         NoteJugdements[note.ID] = new JudgeData(grade, difference);
         if (grade != NoteGrade.Perfect)

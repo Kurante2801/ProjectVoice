@@ -60,8 +60,8 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         BackgroundBlurred.texture = Background.texture.Blurred(blur);
     }
 
-    public void SetOverlay(float opacity)
+    public void SetOverlay(float opacity, float duration = 0.25f)
     {
-        BackgroundOverlay.DOFade(opacity, 0.25f);
+        BackgroundOverlay.DOFade(opacity, duration);
     }
 }

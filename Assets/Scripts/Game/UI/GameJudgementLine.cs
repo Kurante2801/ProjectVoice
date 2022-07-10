@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JudgementLine : MonoBehaviour
+public class GameJudgementLine : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
 
@@ -55,6 +55,6 @@ public class JudgementLine : MonoBehaviour
     private void TransitionOut(Game game)
     {
         spriteRenderer.DOKill();
-        spriteRenderer.DOFade(1f, game.TransitionTime);
+        spriteRenderer.DOFade(0f, game.TransitionTime);
     }
 }

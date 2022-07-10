@@ -51,7 +51,7 @@ public class Conductor : SingletonMonoBehavior<Conductor>
         else
             Source.PlayScheduled(dspTime);
 
-
+        AudioPos = (float)StartTime;
         AudioListener.pause = false;
         Initialized = true;
     }

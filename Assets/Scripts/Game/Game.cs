@@ -14,7 +14,7 @@ using UnityEngine.U2D;
 
 public class Game : SingletonMonoBehavior<Game>
 {
-    public Camera Camera;
+    private new Camera camera;
     public ChartModel Chart;
     public GameState State;
     
@@ -50,7 +50,7 @@ public class Game : SingletonMonoBehavior<Game>
     protected override void Awake()
     {
         base.Awake();
-        Camera = Camera.main;
+        camera = Camera.main;
         tracksPool = new(CreateTrack, OnGetTrack, OnReleaseTrack);
     }
 
@@ -85,12 +85,12 @@ public class Game : SingletonMonoBehavior<Game>
             Context.SelectedChart = level.Meta.charts.LastOrDefault() ?? level.Meta.charts[0];
             Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
 
-            //Context.Modifiers.Add(Modifer.Auto);
+            Context.Modifiers.Add(Modifer.Auto);
         }
 
         // Make background stay behind sprites
         Backdrop.Instance.Canvas.renderMode = RenderMode.ScreenSpaceCamera;
-        Backdrop.Instance.Canvas.worldCamera = Camera;
+        Backdrop.Instance.Canvas.worldCamera = camera;
 
         await Resources.UnloadUnusedAssets();
 
@@ -103,7 +103,6 @@ public class Game : SingletonMonoBehavior<Game>
             Chart = LegacyParser.ParseChart(path + selected.path, path + selected.path.Replace("track_", "note_"));
         else
             Chart = JsonConvert.DeserializeObject<ChartModel>(File.ReadAllText(path + selected.path));
-
 
         // Load audio
         await UniTask.WaitUntil(() => Conductor.Instance != null);
@@ -128,12 +127,14 @@ public class Game : SingletonMonoBehavior<Game>
 
     private void Update()
     {
-        if (State == null || !State.Started) return;
+        if (State == null || !State.HasStarted) return;
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Conductor.Instance.Toggle();
-            IsPaused = !IsPaused;
+            RestartGame();
+            return;
+            //Conductor.Instance.Toggle();
+            //IsPaused = !IsPaused;
         }
 #endif
         // Handle screen size
@@ -144,11 +145,13 @@ public class Game : SingletonMonoBehavior<Game>
             ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         }
         // End game
-        if(!State.Completed && Conductor.Instance.Time > EndTime)
+        if(!State.IsCompleted && Conductor.Instance.Time > EndTime)
         {
             EndGame();
             return;
         }
+
+        if (IsPaused) return;
 
         // Spawn notes
         foreach(var track in Chart.tracks)
@@ -163,22 +166,56 @@ public class Game : SingletonMonoBehavior<Game>
         }
     }
 
-    private void StartGame()
+    public async void StartGame()
     {
-        State.Started = true;
-        State.Playing = true;
+        State.HasStarted = true;
+        State.IsPlaying = true;
 
-        Backdrop.Instance.SetOverlay(PlayerSettings.BackgroundDim);
-        Conductor.Instance.Initialize();
+        TransitionTime = 0.5f;
         OnGameStarted?.Invoke(this);
+        Backdrop.Instance.SetOverlay(PlayerSettings.BackgroundDim, TransitionTime);
+
+        await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
+        Conductor.Instance.Initialize();
+        IsPaused = false;
+    }
+
+    public async void RestartGame()
+    {
+        ParticleManager.Instance.WipeEffects();
+
+        TransitionTime = 0.25f;
+        State = null;
+        OnGameRestarted?.Invoke(this);
+
+        AudioListener.pause = true;
+        IsPaused = true;
+
+        // Yeet all tracks and notes
+        for (int i = 0; i < CreatedTracks.Count; i++)
+        {
+            var track = CreatedTracks[i];
+            for (int ii = 0; ii < track.CreatedNotes.Count; ii++)
+            {
+                DisposeNote(track.CreatedNotes[ii]);
+            }
+            track.CreatedNotes.Clear();
+            tracksPool.Release(track);
+        }
+        CreatedTracks.Clear();
+        
+        await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
+        State = new(this);
+        StartGame();
     }
 
     private async void EndGame()
     {
-        State.Completed = true;
+        ParticleManager.Instance.WipeEffects();
+        State.IsCompleted = true;
 
         TransitionTime = 1f;
-        Backdrop.Instance.BackgroundOverlay.DOFade(TransitionTime, 0.25f);
+        Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);
         OnGameEnded?.Invoke(this);
 
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
@@ -248,8 +285,8 @@ public class Game : SingletonMonoBehavior<Game>
         // To make the track's size accurate, we resize the camera to be the size of the screen / 10f
         // I don't know how much performance it costs to make the camera large since there's no documentation about that...
         // so I'm making it screen / 10f just in case it does have a performance impact.
-        Camera.orthographicSize = h * 0.05f;
-        Camera.transform.position = new Vector3(w * 0.05f, h * 0.05f, -10f);
+        camera.orthographicSize = h * 0.05f;
+        camera.transform.position = new Vector3(w * 0.05f, h * 0.05f, -10f);
         
         Track.ScreenMargin = 12f.ScreenScaledX();
         Track.ScaleY = 1f.ScreenScaledY();

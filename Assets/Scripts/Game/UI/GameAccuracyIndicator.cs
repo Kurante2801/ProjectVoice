@@ -1,12 +1,14 @@
 using DG.Tweening;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 
-public class GameScoreIndicator : MonoBehaviour
+public class GameAccuracyIndicator : MonoBehaviour
 {
     private TMP_Text tmp;
-    private double score = 0D, value = 0D, _value = 0D;
 
     private void Awake()
     {
@@ -31,45 +33,21 @@ public class GameScoreIndicator : MonoBehaviour
         Game.Instance.OnGameEnded.RemoveListener(FadeOut);
         Game.Instance.OnNoteJudged.RemoveListener(NoteJudged);
     }
-    
-    private void Update()
+
+    private void NoteJudged(Game game, int _)
     {
-        if (Game.Instance.IsPaused) return;
-
-        value = MathUtil.Lerp(value, score, 0.6D);
-        if (value == _value) return;
-
-        string text = Mathf.RoundToInt((float)value).ToString("D6");
-
-        if (value >= 100000)
-            tmp.text = "<color=#FFF>" + text;
+        double acc = Math.Round(game.State.Accuracy * 100D, 2);
+        if (acc == 100D)
+            tmp.text = "100<size=20>%";
         else
-        {
-            // Insert white tag when leading zeros stop
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] != '0')
-                {
-                    tmp.text = text.Insert(i, "<color=#FFF>");
-                    break;
-                }
-            }
-        }
-
-        _value = value;
+            tmp.text = acc.ToString("F2", CultureInfo.InvariantCulture) + "<size=20>%";
     }
-
-    private void NoteJudged(Game game, int _) => score = game.State.Score;
 
     private void FadeIn(Game game)
     {
-        score = 0D;
-        value = 0D;
-        _value = 0D;
-        tmp.text = "000000";
-
+        tmp.text = "100<size=20>%";
         tmp.DOKill();
-        tmp.color = new Color32(150, 150, 150, 0);
+        tmp.color = new Color32(200, 200, 200, 0);
         tmp.DOFade(1f, game.TransitionTime);
     }
 

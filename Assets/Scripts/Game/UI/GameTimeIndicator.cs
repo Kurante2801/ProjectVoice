@@ -35,6 +35,7 @@ public class GameTimeIndicator : MonoBehaviour
 
     private void Update()
     {
+        if (Game.Instance.IsPaused) return;
         slider.value = Conductor.Instance.Time;
     }
     
@@ -47,8 +48,9 @@ public class GameTimeIndicator : MonoBehaviour
 
     private void FadeIn(Game game)
     {
+        slider.value = 0f;
         image.DOKill();
-        image.DOColor(Color.white, game.TransitionTime);
+        image.color = Color.white;
     }
 
     private void FadeOut(Game game)

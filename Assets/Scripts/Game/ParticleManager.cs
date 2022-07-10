@@ -10,6 +10,7 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
     public ObjectPool<CollectionFX> pool;
     [SerializeField] private Transform poolContainer;
     [SerializeField] private CollectionFX collectionPrefab;
+    public List<CollectionFX> CreatedFX = new();
 
     public AnimationCurve SizeCurve;
     public AnimationCurve AlphaCurve;
@@ -37,9 +38,9 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
         fx.gameObject.transform.parent = poolContainer;
     }
 
-
     public void DisposeEffect(CollectionFX effect)
     {
+        CreatedFX.Remove(effect);
         pool.Release(effect);
     }
 
@@ -51,6 +52,15 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
         fx.SpriteRenderer.sprite = Game.Instance.ShapesAtlas[(int)shape].GetSprite("grade_" + grade.ToString().ToLower());
         fx.transform.position = pos;
         fx.SpawnTime = Conductor.Instance.Time;
+
+        CreatedFX.Add(fx);
+    }
+
+    public void WipeEffects()
+    {
+        foreach(var fx in CreatedFX)
+            pool.Release(fx);
+        CreatedFX.Clear();
     }
 }   
 
