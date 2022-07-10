@@ -8,6 +8,11 @@ public class GamePauseButton : MonoBehaviour
 {
     [SerializeField] private Image icon;
 
+    private void Awake()
+    {
+        icon.color = Color.white.WithAlpha(0f);
+    }
+
     private void OnEnable()
     {
         Game.Instance.OnGameStarted.AddListener(FadeIn);

@@ -10,6 +10,11 @@ public class GameComboIndicator : MonoBehaviour
     [SerializeField] private TMP_Text combo_tmp;
     private Sequence sequence;
 
+    private void Awake()
+    {
+        combo_tmp.color = Color.white.WithAlpha(0f);
+    }
+
     private void OnEnable()
     {
         Game.Instance.OnGameStarted.AddListener(FadeIn);
