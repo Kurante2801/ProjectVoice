@@ -30,5 +30,9 @@
     "OPTIONS_NOTESPEED_NAME": "Velocidad de Nota",
     "OPTIONS_NOTESPEED_DESC": "",
 
-    "OPTIONS_NOTES_TAB": "Notas"
+    "OPTIONS_NOTES_TAB": "Notas",
+
+    "PAUSE_CONTINUE": "Continuar",
+    "PAUSE_RETRY": "Reíntentar",
+    "PAUSE_EXIT": "Salir"
 }
