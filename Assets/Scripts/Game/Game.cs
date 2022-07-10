@@ -180,18 +180,10 @@ public class Game : SingletonMonoBehavior<Game>
         IsPaused = false;
     }
 
-    public async void RestartGame()
+    private void ClearGameplayElements()
     {
         ParticleManager.Instance.WipeEffects();
 
-        TransitionTime = 0.25f;
-        State = null;
-        OnGameRestarted?.Invoke(this);
-
-        AudioListener.pause = true;
-        IsPaused = true;
-
-        // Yeet all tracks and notes
         for (int i = 0; i < CreatedTracks.Count; i++)
         {
             var track = CreatedTracks[i];
@@ -203,6 +195,17 @@ public class Game : SingletonMonoBehavior<Game>
             tracksPool.Release(track);
         }
         CreatedTracks.Clear();
+    }
+
+    public async void RestartGame()
+    {
+        ClearGameplayElements();
+        TransitionTime = 0.25f;
+        State = null;
+        OnGameRestarted?.Invoke(this);
+
+        AudioListener.pause = true;
+        IsPaused = true;
         
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
         State = new(this);
@@ -211,8 +214,21 @@ public class Game : SingletonMonoBehavior<Game>
 
     private async void EndGame()
     {
-        ParticleManager.Instance.WipeEffects();
+        ClearGameplayElements();
         State.IsCompleted = true;
+
+        TransitionTime = 1f;
+        Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);
+        OnGameEnded?.Invoke(this);
+
+        await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
+        SceneManager.LoadScene("Navigation");
+    }
+
+    public async void ExitGame()
+    {
+        ClearGameplayElements();
+        State = null;
 
         TransitionTime = 1f;
         Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);
@@ -301,5 +317,11 @@ public class Game : SingletonMonoBehavior<Game>
         foreach (var created in CreatedTracks)
             if (created.Model.id == track.id) return true;
         return false;
+    }
+
+    public void SetPaused(bool paused)
+    {
+        IsPaused = paused;
+        AudioListener.pause = paused;
     }
 }

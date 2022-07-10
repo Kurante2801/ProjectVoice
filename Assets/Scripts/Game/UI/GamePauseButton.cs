@@ -40,10 +40,4 @@ public class GamePauseButton : MonoBehaviour
         icon.DOKill();
         icon.DOFade(0f, game.TransitionTime);
     }
-
-    public void DoClick()
-    {
-        if (Game.Instance.IsPaused) return;
-        print("PAUSE");
-    }
 }

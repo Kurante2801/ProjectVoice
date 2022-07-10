@@ -8,9 +8,15 @@ public class InitializationScreen : Screen
     public override string GetID() => "InitializationScreen";
     public bool IsInitialized { get; protected set; }
 
-    public async override void OnScreenBecameActive()
+    public async override void OnScreenTransitionInEnded()
     {
-        base.OnScreenBecameActive();
+        base.OnScreenTransitionInEnded();
+
+        if (Context.SelectedLevel != null)
+        {
+            Context.ScreenManager.ChangeScreen("LevelSummaryScreen");
+            return;
+        }
 
         await Context.LevelManager.LoadLevels();
         await Context.LocalizationManager.Initialize();

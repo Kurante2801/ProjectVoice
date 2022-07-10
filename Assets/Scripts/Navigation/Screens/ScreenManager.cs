@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 {
-    public string InitialScreenId = "TestScreen1";
+    public string InitialScreenId = "InitializationScreen";
     public Canvas RootCanvas;
     [Space]
     public List<Screen> ScreenPrefabs = new();
@@ -132,7 +132,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
     public bool TryReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
     {
-        if (History.Count > 1)
+        if (History.Count > 2)
         {
             ReturnScreen(duration, destroy, simultaneous);
             return true;
