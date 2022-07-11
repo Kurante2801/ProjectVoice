@@ -801,7 +801,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd5d3b84d8dfb146b55d59580ccc18c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingType: 0
+  SettingType: 4
   Name: {fileID: 6281679071028370943}
   Description: {fileID: 5728685688475442528}
   NameLocalizationKey: 

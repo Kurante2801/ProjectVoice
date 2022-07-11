@@ -655,7 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62757be289999e74eacff77681fe54e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingType: 0
+  SettingType: 2
   Name: {fileID: 3911886416254039662}
   Description: {fileID: 3379018469913196273}
   NameLocalizationKey: 
@@ -669,9 +669,6 @@ MonoBehaviour:
   TrueLocalizationKey: OPTIONS_TRUE_BOOLEAN
   FalseLocalizationKey: OPTIONS_FALSE_BOOLEAN
   OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnLocaleChanged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &3379018469913196273 stripped

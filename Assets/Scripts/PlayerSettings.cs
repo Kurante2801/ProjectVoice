@@ -125,8 +125,8 @@ public class PlayerSettings
 
     public static NoteShape HoldShape
     {
-        get => PlayerPrefsExtensions.GetShape("noteshapeclick", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("noteshapeclick", value);
+        get => PlayerPrefsExtensions.GetShape("noteshapehold", NoteShape.Diamond);
+        set => PlayerPrefsExtensions.SetShape("noteshapehold", value);
     }
 
     public static Color HoldBackgroundColor
@@ -149,8 +149,8 @@ public class PlayerSettings
 
     public static NoteShape SlideShape
     {
-        get => PlayerPrefsExtensions.GetShape("noteshapeclick", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("noteshapeclick", value);
+        get => PlayerPrefsExtensions.GetShape("noteshapeslide", NoteShape.Diamond);
+        set => PlayerPrefsExtensions.SetShape("noteshapeslide", value);
     }
 
     public static Color SlideBackgroundColor

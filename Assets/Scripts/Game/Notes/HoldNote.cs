@@ -15,6 +15,17 @@ public class HoldNote : Note
 
     [SerializeField] private SpriteRenderer backgroundTop, foregroundTop, sustain;
 
+    protected override void Start()
+    {
+        backgroundTop.color = sustain.color = Background.color = PlayerSettings.HoldBackgroundColor;
+        Foreground.color = PlayerSettings.HoldBottomForegroundColor;
+        foregroundTop.color = PlayerSettings.HoldTopForegroundColor;
+
+        backgroundTop.sprite = Background.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("hold_back");
+        sustain.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("hold_sustain");
+        foregroundTop.sprite = Foreground.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("click_fore");
+    }
+
     protected override void Update()
     {
         if (Game.Instance.IsPaused) return;

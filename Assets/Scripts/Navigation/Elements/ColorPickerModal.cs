@@ -161,7 +161,7 @@ public class ColorPickerModal : MonoBehaviour
         if (string.IsNullOrWhiteSpace(text))
             TextBar.gameObject.SetActive(false);
         else
-            PropertyText.text = text;
+            PropertyText.text = text.Get();
 
         Color.RGBToHSV(value, out _hue, out _saturation, out _value);
         Alpha = value.a;

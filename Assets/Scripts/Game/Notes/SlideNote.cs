@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SlideNote : Note
 {
+    public new NoteShape Shape => PlayerSettings.SlideShape;
+
     protected override void Start()
     {
         Background.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("slide_back");

@@ -52,7 +52,7 @@ public class SettingDropdownElement : SettingElement
         }
     }
 
-    private void ItemSelected(int index)
+    protected virtual void ItemSelected(int index)
     {
         OnValueChanged?.Invoke(index, _values[index], _data[index]);
     }

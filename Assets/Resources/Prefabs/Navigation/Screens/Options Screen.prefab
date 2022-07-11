@@ -1515,13 +1515,21 @@ MonoBehaviour:
   GraphicRaycaster: {fileID: 0}
   GeneralContent: {fileID: 266147993040454110}
   NoteContent: {fileID: 5571512681469747209}
-  SettingDropdownElementPrefab: {fileID: 1255245514706986519, guid: 40d14da11bbc4144cbc538fdf6d4d582, type: 3}
-  SettingBooleanElementPrefab: {fileID: 9212161596157886014, guid: c82620477dc363447b630dc501951e69, type: 3}
-  SettingSliderElementPrefab: {fileID: 976505642649918697, guid: 07d17988238d8e4488b0610cb0fb8931, type: 3}
-  SettingNumberElementPrefab: {fileID: 1213460569606501249, guid: 932eafc532755304bb2279814069a2fc, type: 3}
-  SettingColorElementPrefab: {fileID: 3945014803961439558, guid: 4dc0807f76aa4244a83d5ea10e26b992, type: 3}
-  GeneralSettings: []
-  NoteSettings: []
+  Prefabs:
+  - {fileID: 9212161596157886014, guid: c82620477dc363447b630dc501951e69, type: 3}
+  - {fileID: 3945014803961439558, guid: 4dc0807f76aa4244a83d5ea10e26b992, type: 3}
+  - {fileID: 1255245514706986519, guid: 40d14da11bbc4144cbc538fdf6d4d582, type: 3}
+  - {fileID: 3236472310112854614, guid: 87461d62b8a9e7942a5d48a4d09f4d4d, type: 3}
+  - {fileID: 1213460569606501249, guid: 932eafc532755304bb2279814069a2fc, type: 3}
+  - {fileID: 976505642649918697, guid: 07d17988238d8e4488b0610cb0fb8931, type: 3}
+  - {fileID: 2985055689291940556, guid: 1f35d0346f2679447b0303c656cdaa9a, type: 3}
+  NoteSettingsPrefabs:
+  - {fileID: 4405619051754967952, guid: 6ff7e3d118afc2c4f9fda3e8a1a7e1a4, type: 3}
+  - {fileID: 3845056499714386540, guid: a33b18083ecb3574ba76ea66a6bf1ebc, type: 3}
+  - {fileID: 3845056499714386540, guid: 7e047f745225e3b40b2b994e38598a8d, type: 3}
+  - {fileID: 5158130018968340861, guid: 4ac6c715db8c7b246a30977f28e88570, type: 3}
+  - {fileID: 4792010550876360754, guid: b4ed0de0da3f89040a95c399b8dca0aa, type: 3}
+  SeparatorPrefab: {fileID: 8239302373705906001, guid: ff3c4ccebb8916a4897a4d3fda33115c, type: 3}
 --- !u!222 &8897631784576322176
 CanvasRenderer:
   m_ObjectHideFlags: 0

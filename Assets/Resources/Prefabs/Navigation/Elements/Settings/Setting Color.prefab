@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2957a87b6279af64fbc2a9a133f60165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingType: 0
+  SettingType: 5
   Name: {fileID: 179003194395040393}
   Description: {fileID: 1933894621595965974}
   NameLocalizationKey: 

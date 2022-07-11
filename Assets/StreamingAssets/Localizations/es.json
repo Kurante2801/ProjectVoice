@@ -27,10 +27,34 @@
     "OPTIONS_AUDIOOFFSET_NAME": "Audio Offset",
     "OPTIONS_AUDIOOFFSET_DESC": "En segundos, un número alto retrasará la música.",
 
+    "OPTIONS_NOTES_TAB": "Notas",
     "OPTIONS_NOTESPEED_NAME": "Velocidad de Nota",
     "OPTIONS_NOTESPEED_DESC": "",
+    "OPTIONS_NOTE_BACKGROUND_NAME": "Color de Fondo",
+    "OPTIONS_NOTE_FOREGROUND_NAME": "Color de Frente",
 
-    "OPTIONS_NOTES_TAB": "Notas",
+    "OPTIONS_NOTECLICK_NAME": "Click Note",
+    "OPTIONS_NOTECLICK_BACK_MODAL": "Color de Fondo (Click)",
+    "OPTIONS_NOTECLICK_FORE_MODAL": "Color de Frente (Click)",
+
+    "OPTIONS_NOTESWIPE_LEFT_NAME": "Swipe Note (Izquierda)",
+    "OPTIONS_NOTESWIPE_LEFT_BACK_MODAL": "Color de Fondo (Swipe Izquierdo)",
+    "OPTIONS_NOTESWIPE_LEFT_FORE_MODAL": "Color de Frente (Swipe Izquierdo)",
+
+    "OPTIONS_NOTESWIPE_RIGHT_NAME": "Swipe Note (Derecha)",
+    "OPTIONS_NOTESWIPE_RIGHT_BACK_MODAL": "Color de Fondo (Swipe Derecho)",
+    "OPTIONS_NOTESWIPE_RIGHT_FORE_MODAL": "Color de Frente (Swipe Derecho)",
+
+    "OPTIONS_NOTESLIDE_NAME": "Slide Note",
+    "OPTIONS_NOTESLIDE_BACK_MODAL": "Color de Fondo (Slide)",
+    "OPTIONS_NOTESLIDE_FORE_MODAL": "Color de Frente (Slide)",
+
+    "OPTIONS_NOTEHOLD_NAME": "Hold Note",
+    "OPTIONS_NOTEHOLD_BACK_MODAL": "Color de Fonto (Hold)",
+    "OPTIONS_NOTEHOLD_BOTTOM_FORE_MODAL": "Color de Frente (Hold abajo)",
+    "OPTIONS_NOTEHOLD_TOP_FORE_MODAL": "Color de Frente (Hold arriba)",
+    "OPTIONS_NOTEHOLD_BOTTOM_FOREGROUND_NAME": "Color de Fondo Abajo",
+    "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Color de Fondo Arriba",
 
     "PAUSE_CONTINUE": "Continuar",
     "PAUSE_RETRY": "Reíntentar",

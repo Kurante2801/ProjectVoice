@@ -27,10 +27,34 @@
     "OPTIONS_AUDIOOFFSET_NAME": "Audio Offset",
     "OPTIONS_AUDIOOFFSET_DESC": "In seconds, a higher number will delay the music.",
 
+    "OPTIONS_NOTES_TAB": "Notes",
     "OPTIONS_NOTESPEED_NAME": "Note Speed",
     "OPTIONS_NOTESPEED_DESC": "",
+    "OPTIONS_NOTE_BACKGROUND_NAME": "Background Color",
+    "OPTIONS_NOTE_FOREGROUND_NAME": "Foreground Color",
 
-    "OPTIONS_NOTES_TAB": "Notes",
+    "OPTIONS_NOTECLICK_NAME": "Click Note",
+    "OPTIONS_NOTECLICK_BACK_MODAL": "Click Note Background",
+    "OPTIONS_NOTECLICK_FORE_MODAL": "Click Note Foreground",
+
+    "OPTIONS_NOTESWIPE_LEFT_NAME": "Swipe Left Note",
+    "OPTIONS_NOTESWIPE_LEFT_BACK_MODAL": "Swipe Left Note Background",
+    "OPTIONS_NOTESWIPE_LEFT_FORE_MODAL": "Swipe Left Note Foreground",
+
+    "OPTIONS_NOTESWIPE_RIGHT_NAME": "Swipe Right Note",
+    "OPTIONS_NOTESWIPE_RIGHT_BACK_MODAL": "Swipe Right Note Background",
+    "OPTIONS_NOTESWIPE_RIGHT_FORE_MODAL": "Swipe Right Note Foreground",
+
+    "OPTIONS_NOTESLIDE_NAME": "Slide Note",
+    "OPTIONS_NOTESLIDE_BACK_MODAL": "Slide Note Background",
+    "OPTIONS_NOTESLIDE_FORE_MODAL": "Slide Note Foreground",
+
+    "OPTIONS_NOTEHOLD_NAME": "Hold Note",
+    "OPTIONS_NOTEHOLD_BACK_MODAL": "Hold Note Background",
+    "OPTIONS_NOTEHOLD_BOTTOM_FORE_MODAL": "Hold Note Bottom Foreground",
+    "OPTIONS_NOTEHOLD_TOP_FORE_MODAL": "Hold Note Top Foreground",
+    "OPTIONS_NOTEHOLD_BOTTOM_FOREGROUND_NAME": "Bottom Foreground Color",
+    "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Top Foreground Color",
 
     "PAUSE_CONTINUE": "Continue",
     "PAUSE_RETRY": "Retry",
