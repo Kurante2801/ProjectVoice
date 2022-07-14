@@ -20,7 +20,11 @@ public class LevelSummaryScreen : Screen
     public DifficultyButton DifficultyButtonPrefab;
 
     private List<DifficultyButton> createdButtons = new();
-    
+
+    [SerializeField] private CanvasGroup modifiers;
+    [SerializeField] private Transform infoContent;
+    [SerializeField] private LevelInfoLine infoLinePrefab;
+
     public override void OnScreenBecameActive()
     {
         base.OnScreenBecameActive();
@@ -50,6 +54,16 @@ public class LevelSummaryScreen : Screen
         }
         else
             ArtistLocalized.gameObject.SetActive(false);
+
+        // Info tab
+        foreach (Transform child in infoContent)
+            Destroy(child.gameObject);
+
+        AddInfoLine("Artist", level.Meta.artist, level.Meta.artist_source);
+        AddInfoLine("Illustrator", level.Meta.illustrator, level.Meta.illustrator_source);
+        AddInfoLine("Charter", level.Meta.charter);
+        infoContent.transform.RebuildLayout();
+        infoContent.transform.RebuildLayout();
 
         createdButtons.Clear();
         foreach (Transform child in ChartsContainer)
@@ -126,5 +140,13 @@ public class LevelSummaryScreen : Screen
         Backdrop.Instance.DisplayBlurImage(true);
         await UniTask.Delay(250);
         SceneManager.LoadScene("Game");
+    }
+
+    private void AddInfoLine(string name, string text, string url = default)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return;
+        text = text.SanitizeTMP();
+
+        Instantiate(infoLinePrefab.gameObject, infoContent).GetComponent<LevelInfoLine>().SetInfo(name, text, url);
     }
 }

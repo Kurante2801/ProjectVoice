@@ -5,7 +5,7 @@ using UnityEngine;
 public class SwipeNote : Note
 {
     public int SwipeDelta => Model.data;
-    public static new bool IsAuto => Context.Modifiers.Contains(Modifer.Auto) || Context.Modifiers.Contains(Modifer.AutoSwipe);
+    public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoSwipe);
     public new NoteShape Shape => SwipeDelta < 0 ? PlayerSettings.SwipeLeftShape : PlayerSettings.SwipeRightShape;
 
     protected override void Start() { }

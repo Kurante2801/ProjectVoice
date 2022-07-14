@@ -2,11 +2,19 @@
     "LANGUAGE_NAME": "english",
 
     "OPTIONS": "Options",
+    "INFO": "Info",
+    "MODIFIERS": "Modifiers",
     "RETURN": "Return",
     "ACCEPT": "Accept",
     "RESET": "Reset",
     "CANCEL": "Cancel",
     "GO": "GO",
+
+    "MODIFIER_AUTO_DESC": "The level plays by itself",
+    "MODIFIER_AUTOCLICK_DESC": "Click Notes are played automatically",
+    "MODIFIER_AUTOHOLD_DESC": "Hold Notes are played automatically",
+    "MODIFIER_AUTOSWIPE_DESC": "Swipe Notes are played automatically",
+    "MODIFIER_AUTOSLIDE_DESC": "Slide Notes are played automatically",
 
     "OPTIONS_TRUE_BOOLEAN": "Yes",
     "OPTIONS_FALSE_BOOLEAN": "No",

@@ -59,7 +59,8 @@ public class Context : SingletonMonoBehavior<Context>
 
     public static bool IsInitialized = false;
 
-    public static HashSet<Modifer> Modifiers = new();
+    public static HashSet<Modifier> Modifiers = new();
+    public static UnityEvent OnModifiersChanged = new();
 
     protected override void Awake()
     {
@@ -211,9 +212,4 @@ public class Context : SingletonMonoBehavior<Context>
         }
 
     }
-}
-
-public enum Modifer
-{
-    Auto, AutoClick, AutoHold, AutoSwipe, AutoSlide
 }

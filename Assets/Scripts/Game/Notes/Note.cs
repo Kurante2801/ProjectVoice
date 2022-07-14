@@ -33,7 +33,7 @@ public class Note : MonoBehaviour
     public Track Track;
 
     public NoteType Type = NoteType.Click;
-    public static bool IsAuto => Context.Modifiers.Contains(Modifer.Auto) || Context.Modifiers.Contains(Modifer.AutoClick);
+    public static bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoClick);
     public static NoteShape Shape => PlayerSettings.ClickShape;
 
     protected virtual void Start() { }

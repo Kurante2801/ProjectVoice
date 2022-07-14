@@ -85,7 +85,7 @@ public class Game : SingletonMonoBehavior<Game>
             Context.SelectedChart = level.Meta.charts.LastOrDefault() ?? level.Meta.charts[0];
             Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
 
-            Context.Modifiers.Add(Modifer.Auto);
+            Context.Modifiers.Add(Modifier.Auto);
         }
 
         // Make background stay behind sprites

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ClickNote : Note
 {
-    public static new bool IsAuto => Context.Modifiers.Contains(Modifer.Auto) || Context.Modifiers.Contains(Modifer.AutoClick);
+    public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoClick);
     public static new NoteShape Shape => PlayerSettings.ClickShape;
 
     protected override void Start()

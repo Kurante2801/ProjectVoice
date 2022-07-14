@@ -10,10 +10,13 @@ public class TabSystem : MonoBehaviour
     public List<CanvasGroup> Targets = new();
     public int InitialTab = 0;
     private int activeTab = 0;
+    public bool AllowNoneSelected = false;
 
     private void Awake()
     {
-        for(int i = 0; i < Buttons.Count; i++)
+        activeTab = InitialTab;
+
+        for (int i = 0; i < Buttons.Count; i++)
         {
             int index = i;
             Buttons[i].onClick.AddListener(() => ChangeTab(index));
@@ -41,7 +44,7 @@ public class TabSystem : MonoBehaviour
 
     public void ChangeTab(int index)
     {
-        activeTab = index;
+        activeTab = activeTab == index && AllowNoneSelected ? -1 : index;
 
         for (int i = 0; i < Targets.Count; i++)
         {
@@ -50,12 +53,12 @@ public class TabSystem : MonoBehaviour
 
             if (target.gameObject.activeInHierarchy)
             {
-                if (i == index)
+                if (i == activeTab)
                     target.DOFade(1f, 0.25f);
                 else
                     target.DOFade(0f, 0.25f).OnComplete(() => target.gameObject.SetActive(false));
             }
-            else if (i == index)
+            else if (i == activeTab)
             {
                 target.DOKill();
                 target.alpha = 0f;
@@ -68,7 +71,7 @@ public class TabSystem : MonoBehaviour
         {
             var button = Buttons[i];
             button.image.DOKill();
-            button.image.DOColor(i == index ? Context.MainColor : Context.Foreground1Color, 0.25f);
+            button.image.DOColor(i == activeTab ? Context.MainColor : Context.Foreground1Color, 0.25f);
         }
     }
 

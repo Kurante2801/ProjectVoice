@@ -16,7 +16,6 @@ namespace SRF.UI
 	[ExecuteInEditMode]
 	public class CopyLayoutElement : UIBehaviour, ILayoutElement
 	{
-
 		public RectTransform CopySource;
 
 		public bool CopyPreferredWidth;
@@ -84,5 +83,16 @@ namespace SRF.UI
 
 		public void CalculateLayoutInputVertical() { }
 
-	}
+#if UNITY_EDITOR
+		protected override void OnValidate()
+        {
+			if (CopySource == transform)
+			{
+				Debug.LogError("Copy Source is the same as current transform!");
+				CopySource = null;
+			}
+			base.OnValidate();
+        }
+#endif
+    }
 }

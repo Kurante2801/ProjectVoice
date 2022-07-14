@@ -97,9 +97,6 @@ public static class LegacyParser
                 case "illustrator_source":
                     meta.illustrator_source = entry.Value;
                     break;
-                case "illustrator_localized":
-                    meta.illustrator_localized = entry.Value;
-                    break;
                 case "charter":
                     meta.charter = entry.Value;
                     break;

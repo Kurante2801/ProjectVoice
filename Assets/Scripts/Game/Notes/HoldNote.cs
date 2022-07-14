@@ -5,7 +5,7 @@ using UnityEngine;
 public class HoldNote : Note
 {
     public int HoldTime => Model.data;
-    public static new bool IsAuto => Context.Modifiers.Contains(Modifer.Auto) || Context.Modifiers.Contains(Modifer.AutoHold);
+    public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoHold);
     public new NoteShape Shape => PlayerSettings.HoldShape;
     
     public static int ReleaseMissThreshold = 100;

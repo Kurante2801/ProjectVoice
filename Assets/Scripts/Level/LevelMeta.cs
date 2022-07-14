@@ -12,7 +12,6 @@ public class LevelMeta
 	public string artist_source;
 	public string illustrator;
 	public string illustrator_source;
-	public string illustrator_localized;
 	public string charter;
 
 	public string music_path;

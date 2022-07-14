@@ -43,7 +43,7 @@ public class GameModifiersList : MonoBehaviour
             image.color = image.color.WithAlpha(0f);
 
             var tmp = obj.GetComponentInChildren<TMPro.TMP_Text>();
-            tmp.text = modifier.ToString();
+            tmp.text = modifier.GetName();
             tmp.color = tmp.color.WithAlpha(0f);
 
             image.DOFade(0.5f, game.TransitionTime);
@@ -53,6 +53,7 @@ public class GameModifiersList : MonoBehaviour
             graphics.Add(tmp);
         }
 
+        transform.RebuildLayout();
         transform.RebuildLayout();
     }
 
