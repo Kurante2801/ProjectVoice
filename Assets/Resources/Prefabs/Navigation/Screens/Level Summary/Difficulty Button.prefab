@@ -174,7 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CopySource: {fileID: 8562736289237253795}
   CopyPreferredWidth: 1
-  CopyPreferredHeight: 1
+  CopyPreferredHeight: 0
   CopyMinWidth: 0
   CopyMinHeight: 0
   PaddingPreferredWidth: 28
@@ -364,6 +364,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adjustWidth: 1
-  adjustHeight: 1
+  adjustHeight: 0
   minWidth: 0
   minHeight: 0
