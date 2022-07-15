@@ -12,7 +12,7 @@ public class CollectionFX : MonoBehaviour
     {
         int time = Conductor.Instance.Time - SpawnTime;
         float perc = time / (float)lifetime;
-        float scale = 0.75f.ScreenScaledX() * ParticleManager.Instance.SizeCurve.Evaluate(perc);
+        float scale = 1f.ScreenScaledX() * ParticleManager.Instance.SizeCurve.Evaluate(perc);
 
         transform.localScale = new Vector3(scale, scale, 1f);
         SpriteRenderer.color = SpriteRenderer.color.WithAlpha(ParticleManager.Instance.AlphaCurve.Evaluate(perc));

@@ -6,7 +6,7 @@ public class HoldNote : Note
 {
     public int HoldTime => Model.data;
     public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoHold);
-    public new NoteShape Shape => PlayerSettings.HoldShape;
+    public override NoteShape GetShape() => PlayerSettings.HoldShape;
     
     public static int ReleaseMissThreshold = 100;
     public bool IsBeingHeld = false;
@@ -14,6 +14,7 @@ public class HoldNote : Note
     private int initialDifference = 0;
 
     [SerializeField] private SpriteRenderer backgroundTop, foregroundTop, sustain;
+    private ParticleSystem holdParticleSystem;
 
     protected override void Start()
     {
@@ -21,9 +22,9 @@ public class HoldNote : Note
         Foreground.color = PlayerSettings.HoldBottomForegroundColor;
         foregroundTop.color = PlayerSettings.HoldTopForegroundColor;
 
-        backgroundTop.sprite = Background.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("hold_back");
-        sustain.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("hold_sustain");
-        foregroundTop.sprite = Foreground.sprite = Game.Instance.ShapesAtlas[(int)Shape].GetSprite("click_fore");
+        backgroundTop.sprite = Background.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("hold_back");
+        sustain.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("hold_sustain");
+        foregroundTop.sprite = Foreground.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("click_fore");
     }
 
     protected override void Update()
@@ -123,8 +124,9 @@ public class HoldNote : Note
             JudgeNote(initialDifference);
         else
         {
-            ParticleManager.Instance.SpawnEffect(Shape, initialGrade, Track.transform.position);
             IsBeingHeld = true;
+            //ParticleManager.Instance.SpawnEffect(GetShape(), initialGrade, Track.transform.position);
+            holdParticleSystem = ParticleManager.Instance.SpawnHold(initialGrade, Track.transform);
         }
     }
 
@@ -132,10 +134,17 @@ public class HoldNote : Note
     {
         IsCollected = true;
         if (grade == NoteGrade.Miss)
+        {
             SetAlpha(0.5f);
+
+            if (holdParticleSystem != null)
+                ParticleManager.Instance.DisposeHold(holdParticleSystem);
+        }
         else
         {
-            ParticleManager.Instance.SpawnEffect(Shape, grade, Track.transform.position);
+            //ParticleManager.Instance.SpawnEffect(GetShape(), grade, Track.transform.position);
+            if (holdParticleSystem != null)
+                ParticleManager.Instance.EndHold(holdParticleSystem);
             Track.DisposeNote(this);
         }
     }
