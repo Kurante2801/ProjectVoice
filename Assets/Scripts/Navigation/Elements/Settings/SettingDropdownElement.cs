@@ -8,7 +8,7 @@ public class SettingDropdownElement : SettingElement
 {
     public TMP_Dropdown Dropdown;
     public UnityEvent<int, string, object> OnValueChanged = new();
-    public UnityEvent OnLocaleChanged = new();
+    public UnityEvent OnLocalizationChanged = new();
 
     private string[] _values;
     private object[] _data;
@@ -52,6 +52,23 @@ public class SettingDropdownElement : SettingElement
         }
     }
 
+    public void SetNames(string[] names)
+    {
+        Debug.Assert(names.Length == Dropdown.options.Count, $"Names' length is not the same as Dropdown's options ({names.Length} vs {Dropdown.options.Count})");
+
+        for(int i = 0; i < names.Length; i++)
+        {
+            var option = Dropdown.options[i];
+            var text = names[i];
+            option.text = text;
+
+            if (i == Dropdown.value)
+                Dropdown.captionText.text = text;
+        }
+
+        transform.RebuildLayout();
+    }
+
     protected virtual void ItemSelected(int index)
     {
         OnValueChanged?.Invoke(index, _values[index], _data[index]);
@@ -67,6 +84,6 @@ public class SettingDropdownElement : SettingElement
     protected override void LocalizationChanged()
     {
         base.LocalizationChanged();
-        OnLocaleChanged?.Invoke();
+        OnLocalizationChanged?.Invoke();
     }
 }

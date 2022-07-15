@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,8 +5,8 @@ using UnityEngine.UI;
 
 public class SettingNoteHoldElement : SettingNoteElement
 {
-    public Image TopBackground, TopForeground, Sustain;
-    [SerializeField] private List<Sprite> sustainSprites = new();
+    public RawImage TopBackground, TopForeground, Sustain;
+    [SerializeField] private List<Texture2D> sustainTextures = new();
     private string topForegroundKey;
     [SerializeField] private ColorPicker topForegroundPicker;
 
@@ -16,9 +15,9 @@ public class SettingNoteHoldElement : SettingNoteElement
 
     public void SetValues(NoteShape shape, Color back, Color bottomFore, Color topFore)
     {
-        TopBackground.sprite = backgroundSprites[(int)shape];
-        TopForeground.sprite = foregroundSprites[(int)shape];
-        Sustain.sprite = sustainSprites[(int)shape];
+        TopBackground.texture = backgroundTextures[(int)shape];
+        TopForeground.texture = foregroundTextures[(int)shape];
+        Sustain.texture = sustainTextures[(int)shape];
 
         TopForeground.color = topFore;
         topForegroundPicker.SetValues(topFore, false, topForegroundKey);
@@ -38,9 +37,9 @@ public class SettingNoteHoldElement : SettingNoteElement
 
     protected override void ItemSelected(int index)
     {
-        TopBackground.sprite = backgroundSprites[index];
-        TopForeground.sprite = foregroundSprites[index];
-        Sustain.sprite = sustainSprites[index];
+        TopBackground.texture = backgroundTextures[index];
+        TopForeground.texture = foregroundTextures[index];
+        Sustain.texture = sustainTextures[index];
         base.ItemSelected(index);
     }
 

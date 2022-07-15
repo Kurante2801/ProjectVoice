@@ -10,6 +10,10 @@
     "CANCEL": "Cancel",
     "GO": "GO",
 
+    "NOTESHAPE_DIAMOND": "Diamond",
+    "NOTESHAPE_CIRCLE": "Circle",
+    "NOTESHAPE_HEXAGON": "Hexagon",
+
     "MODIFIER_AUTO_DESC": "The level plays by itself",
     "MODIFIER_AUTOCLICK_DESC": "Click Notes are played automatically",
     "MODIFIER_AUTOHOLD_DESC": "Hold Notes are played automatically",

@@ -10,6 +10,10 @@
     "CANCEL": "Cancelar",
     "GO": "Comenzar",
 
+    "NOTESHAPE_DIAMOND": "Rombo",
+    "NOTESHAPE_CIRCLE": "Círculo",
+    "NOTESHAPE_HEXAGON": "Hexágono",
+
     "OPTIONS_TRUE_BOOLEAN": "Sí",
     "OPTIONS_FALSE_BOOLEAN": "No",
 

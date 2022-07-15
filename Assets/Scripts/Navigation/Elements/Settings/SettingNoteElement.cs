@@ -7,17 +7,17 @@ using UnityEngine.UI;
 
 public class SettingNoteElement : SettingDropdownElement
 {
-    public Image Background, Foreground;
-    [SerializeField] internal List<Sprite> backgroundSprites = new(), foregroundSprites = new();
+    public RawImage Background, Foreground;
+    [SerializeField] internal List<Texture2D> backgroundTextures = new(), foregroundTextures = new();
     [SerializeField] internal ColorPicker backgroundPicker, foregroundPicker;
     private string backgroundKey, foregroundKey;
 
     public UnityEvent<Color> OnBackgroundChanged = new(), OnForegroundChanged = new();
     public UnityEvent<NoteShape> OnShapeChanged = new();
-
-    public void SetValues(NoteShape shape, Color back, Color fore)
+    
+    public void SetValues(NoteShape selected, Color back, Color fore)
     {
-        Background.sprite = backgroundSprites[(int)shape];
+        Background.texture = backgroundTextures[(int)selected];
         Background.color = back;
         backgroundPicker.SetValues(back, false, backgroundKey);
         backgroundPicker.OnValueChanged.AddListener(value =>
@@ -26,7 +26,7 @@ public class SettingNoteElement : SettingDropdownElement
             OnBackgroundChanged?.Invoke(value);
         });
 
-        Foreground.sprite = foregroundSprites[(int)shape];
+        Foreground.texture = foregroundTextures[(int)selected];
         Foreground.color = fore;
         foregroundPicker.SetValues(fore, false, foregroundKey);
         foregroundPicker.OnValueChanged.AddListener(value =>
@@ -34,14 +34,17 @@ public class SettingNoteElement : SettingDropdownElement
             Foreground.color = value;
             OnForegroundChanged?.Invoke(value);
         });
-        
-        SetValues(Enum.GetNames(typeof(NoteShape)), Enum.GetValues(typeof(NoteShape)).Cast<object>().ToArray(), shape);
+
+        var shapes = Enum.GetValues(typeof(NoteShape)).Cast<object>().ToArray();
+        var names = shapes.Cast<NoteShape>().Select(shape => shape.GetLocalized()).ToArray();
+
+        SetValues(names, shapes, selected);
     }
 
     protected override void ItemSelected(int index)
     {
-        Background.sprite = backgroundSprites[index];
-        Foreground.sprite = foregroundSprites[index];
+        Background.texture = backgroundTextures[index];
+        Foreground.texture = foregroundTextures[index];
         OnShapeChanged?.Invoke((NoteShape)index);
     }
 
@@ -50,5 +53,11 @@ public class SettingNoteElement : SettingDropdownElement
         SetLocalizationKeys(name, description);
         backgroundKey = backgroundModal;
         foregroundKey = foregroundModal;
+    }
+
+    protected override void LocalizationChanged()
+    {
+        base.LocalizationChanged();
+        SetNames(Enum.GetValues(typeof(NoteShape)).Cast<NoteShape>().Select(shape => shape.GetLocalized()).ToArray());
     }
 }

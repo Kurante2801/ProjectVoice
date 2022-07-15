@@ -130,7 +130,7 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
         hold.transform.parent = parent;
         hold.transform.localPosition = Vector3.zero;
 #pragma warning disable CS0618
-        hold.startSize = 60f.ScreenScaledX();
+        hold.startSize = 55f.ScreenScaledX();
         hold.gameObject.GetComponent<ParticleSystemRenderer>().material = holdMaterials[grade];
         hold.time = 0f;
         hold.Play();
@@ -138,7 +138,7 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
         return hold;
     }
 
-    public void EndHold(/*Track track,*/ ParticleSystem hold)
+    public void EndHold(ParticleSystem hold)
     {
         hold.transform.parent = transform;
         hold.Stop();
@@ -171,9 +171,4 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
         public ParticleSystem.MinMaxCurve Curve;
         public float Time;
     }
-}   
-
-public enum NoteShape
-{
-    Diamond, Circle, Hexagon
 }

@@ -777,6 +777,9 @@ GameObject:
   - component: {fileID: 8542069727129134022}
   - component: {fileID: 2073299620661075680}
   - component: {fileID: 5215790386612292496}
+  - component: {fileID: 5916629313185052994}
+  - component: {fileID: 616261343360127602}
+  - component: {fileID: 3257545666835817617}
   m_Layer: 5
   m_Name: Dropdown
   m_TagString: Untagged
@@ -805,7 +808,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 220, y: 42}
+  m_SizeDelta: {x: 0, y: 42}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8542069727129134022
 CanvasRenderer:
@@ -905,6 +908,61 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AlphaFadeSpeed: 0.15
+--- !u!114 &5916629313185052994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921245938024042249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
+--- !u!114 &616261343360127602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921245938024042249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: 220
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
+--- !u!114 &3257545666835817617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921245938024042249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7c3ccdbe8ebda24eb9246fa2f32b904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CopySource: {fileID: 3065256801378928745}
+  CopyPreferredWidth: 1
+  CopyPreferredHeight: 0
+  CopyMinWidth: 0
+  CopyMinHeight: 0
+  PaddingPreferredWidth: 50
+  PaddingPreferredHeight: 0
+  PaddingMinWidth: 0
+  PaddingMinHeight: 0
 --- !u!1 &6974286223057946322
 GameObject:
   m_ObjectHideFlags: 0
