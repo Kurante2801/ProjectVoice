@@ -51,6 +51,9 @@ TagManager:
   - name: Notes
     uniqueID: 320583117
     locked: 0
+  - name: Hold Ticks
+    uniqueID: 2906459921
+    locked: 0
   - name: Effects
     uniqueID: 3282276279
     locked: 0

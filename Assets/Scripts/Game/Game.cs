@@ -29,6 +29,7 @@ public class Game : SingletonMonoBehavior<Game>
     
     public List<Track> CreatedTracks = new();
     private ObjectPool<Track> tracksPool;
+    private ObjectPool<HoldTick> ticksPool;
 
     // Custom ObjectPool for notes
     private List<Note> notesPool = new();
@@ -36,6 +37,7 @@ public class Game : SingletonMonoBehavior<Game>
     [SerializeField] private Transform tracksContainer, poolContainer;
     [SerializeField] private Track trackPrefab;
     [SerializeField] private Note clickNotePrefab, swipeNotePrefab, slideNotePrefab, holdNotePrefab;
+    [SerializeField] private HoldTick holdTickPrefab;
 
     public float TransitionTime = 0.5f;
     public int StartTime = 0, EndTime = 0;
@@ -52,6 +54,7 @@ public class Game : SingletonMonoBehavior<Game>
         base.Awake();
         camera = Camera.main;
         tracksPool = new(CreateTrack, OnGetTrack, OnReleaseTrack);
+        ticksPool = new(CreateTick, OnGetTick, OnReleaseTick);
     }
 
     protected async void Start()
@@ -131,10 +134,8 @@ public class Game : SingletonMonoBehavior<Game>
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            RestartGame();
-            return;
-            //Conductor.Instance.Toggle();
-            //IsPaused = !IsPaused;
+            Conductor.Instance.Toggle();
+            IsPaused = !IsPaused;
         }
 #endif
         // Handle screen size
@@ -243,10 +244,20 @@ public class Game : SingletonMonoBehavior<Game>
         return Instantiate(trackPrefab.gameObject, tracksContainer).GetComponent<Track>();
     }
 
+    private HoldTick CreateTick()
+    {
+        return Instantiate(holdTickPrefab.gameObject).GetComponent<HoldTick>();
+    }
+
     private void OnGetTrack(Track track)
     {
         track.transform.parent = tracksContainer;
         track.gameObject.SetActive(true);
+    }
+
+    private void OnGetTick(HoldTick tick)
+    {
+        tick.gameObject.SetActive(true);
     }
 
     private void OnReleaseTrack(Track track)
@@ -254,6 +265,12 @@ public class Game : SingletonMonoBehavior<Game>
         track.gameObject.SetActive(false);
         track.transform.parent = poolContainer;
         track.Model = null;
+    }
+
+    private void OnReleaseTick(HoldTick tick)
+    {
+        tick.gameObject.SetActive(false);
+        tick.transform.parent = poolContainer;
     }
 
     public void DisposeTrack(Track track)
@@ -268,6 +285,13 @@ public class Game : SingletonMonoBehavior<Game>
         note.transform.parent = poolContainer;
         note.Model = null;
         notesPool.Add(note);
+    }
+
+    public void DisposeTick(HoldTick tick)
+    {
+        tick.gameObject.SetActive(false);
+        tick.transform.parent = poolContainer;
+        ticksPool.Release(tick);
     }
 
     public Note GetPooledNote(NoteType type, Transform parent)
@@ -294,6 +318,8 @@ public class Game : SingletonMonoBehavior<Game>
 
         return Instantiate(prefab, parent);
     }
+
+    public HoldTick GetPooledTick() => ticksPool.Get();
 
     private void ScreenSizeChanged(int w, int h)
     {

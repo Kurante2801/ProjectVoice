@@ -902,6 +902,10 @@ PrefabInstance:
       propertyPath: FallbackText
       value: Top Background Color
       objectReference: {fileID: 0}
+    - target: {fileID: 8721738620403553733, guid: 87461d62b8a9e7942a5d48a4d09f4d4d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8797055240264481054, guid: 87461d62b8a9e7942a5d48a4d09f4d4d, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1010,7 +1014,7 @@ MonoBehaviour:
   OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  OnLocaleChanged:
+  OnLocalizationChanged:
     m_PersistentCalls:
       m_Calls: []
   Background: {fileID: 6425329763407436982}

@@ -14,7 +14,12 @@ public class HoldNote : Note
     private int initialDifference = 0;
 
     [SerializeField] private SpriteRenderer backgroundTop, foregroundTop, sustain;
+    [SerializeField] private Transform ticksContainer;
     private ParticleSystem holdParticleSystem;
+
+    private bool moves = false;
+    private List<(float, int)> ticks = new(); // x, time
+    private List<HoldTick> createdTicks = new();
 
     protected override void Start()
     {
@@ -32,17 +37,19 @@ public class HoldNote : Note
         if (Game.Instance.IsPaused) return;
 
         int time = Conductor.Instance.Time;
-        float y;
         int difference = Model.time - time;
 
         // Despawn
         if (IsCollected && backgroundTop.bounds.max.y < 0f)
         {
+            foreach (var tick in createdTicks)
+                DisposeTick(tick);
             Track.DisposeNote(this);
             return;
         }
 
         // Clamp the note to the judgement line
+        float y;
         if (!IsCollected)
         {
             y = Mathf.Max(0f, GetPosition(time, Model));
@@ -95,6 +102,35 @@ public class HoldNote : Note
     public override void Initialize()
     {
         IsBeingHeld = false;
+
+        // Magic number, ensures we create ticks at around the same vertical distance independent of speed
+        float offset = Speed * 0.015625f;
+        float startX = Track.GetPositionValue(Model.time);
+        moves = false;
+
+        ticks.Clear();
+        for (float i = Model.time; i <= Model.time + HoldTime; i += offset)
+        {
+            float x = Track.GetPositionValue(Mathf.RoundToInt(i));
+            if (x != startX)
+                moves = true;
+
+            ticks.Add((x, Mathf.RoundToInt(i)));
+        }
+
+        if (moves)
+        {
+            foreach (var tuple in ticks)
+            {
+                var tick = Game.Instance.GetPooledTick();
+                tick.Initialize(this, tuple.Item1, tuple.Item2);
+                tick.transform.parent = ticksContainer;
+                createdTicks.Add(tick);
+            }
+        }
+        else
+            ticks.Clear();
+
         base.Initialize();
     }
 
@@ -145,6 +181,9 @@ public class HoldNote : Note
             //ParticleManager.Instance.SpawnEffect(GetShape(), grade, Track.transform.position);
             if (holdParticleSystem != null)
                 ParticleManager.Instance.EndHold(holdParticleSystem);
+            for (int i = createdTicks.Count - 1; i > -1; i--)
+                DisposeTick(createdTicks[i]);
+
             Track.DisposeNote(this);
         }
     }
@@ -171,8 +210,13 @@ public class HoldNote : Note
         Collect(grade);
     }
 
+    public void DisposeTick(HoldTick tick)
+    {
+        createdTicks.Remove(tick);
+        Game.Instance.DisposeTick(tick);
+    }
+
     public override void OnTrackDown(int time) => StartHold(time);
 
     public static float GetEndPosition(int duration) => Context.ScreenHeight * 0.1f * duration / Speed;
-
 }

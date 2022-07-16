@@ -184,7 +184,7 @@ public class Track : MonoBehaviour
 
     //private void ScreenSizeChanged(int w, int h) { }
 
-    private float GetPositionValue(int time)
+    public float GetPositionValue(int time)
     {
         foreach (var transition in MoveTransitions)
         {

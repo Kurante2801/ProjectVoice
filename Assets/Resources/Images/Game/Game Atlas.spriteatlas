@@ -45,6 +45,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: b880d94dd31d29f4d9cc11b8c85699ca, type: 3}
+    - {fileID: 2800000, guid: 926e2263f96633146a0d586a140232a4, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -53,6 +54,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: efca8132acafc6f46abfc1a65aca4c82, type: 3}
   - {fileID: 21300000, guid: 32011d921e8597c4986435dd727098ef, type: 3}
   - {fileID: 21300000, guid: 4b934ac278285ad4f9c6ad719142bc34, type: 3}
+  - {fileID: 21300000, guid: 926e2263f96633146a0d586a140232a4, type: 3}
   - {fileID: 21300000, guid: 7060d06560d80e245a9b606f25965924, type: 3}
   - {fileID: 21300000, guid: 1e1c5477cce72e141b43e0e30aaf956a, type: 3}
   - {fileID: 21300000, guid: e17e8f3a8a9565b46b0780bf1f8934a4, type: 3}
@@ -61,6 +63,7 @@ SpriteAtlas:
   - track_background
   - judgement_diamond
   - track_line
+  - white
   - judgement_hexagon
   - judgement_circle
   - track_bottom

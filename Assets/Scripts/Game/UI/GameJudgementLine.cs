@@ -39,14 +39,14 @@ public class GameJudgementLine : MonoBehaviour
     private void ScreenSizeChanged(int w, int h)
     {
         transform.position = new Vector3(w * 0.05f, 11.9f.ScreenScaledY(), 1f);
-        transform.localScale = new Vector3(w * 0.1f, 0.2f.ScreenScaledY(), 1f);
+        transform.localScale = new Vector3(3200f.ScreenScaledX(), 5f.ScreenScaledY(), 1f);
     }
 
     private void TransitionIn(Game game)
     {
         transform.DOKill();
-        transform.localScale = new Vector3(0f, 0.2f.ScreenScaledY(), 1f);
-        transform.DOScaleX(Context.ScreenWidth * 0.1f, game.TransitionTime);
+        transform.localScale = new Vector3(0f, 5f.ScreenScaledY(), 1f);
+        transform.DOScaleX(3200f.ScreenScaledX(), game.TransitionTime);
 
         spriteRenderer.DOKill();
         spriteRenderer.color = Color.white;

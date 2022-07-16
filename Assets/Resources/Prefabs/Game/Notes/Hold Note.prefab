@@ -119,6 +119,7 @@ Transform:
   - {fileID: 3129875023838970969}
   - {fileID: 358035961555855437}
   - {fileID: 6171500370316178539}
+  - {fileID: 218633194908285961}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -156,9 +157,11 @@ MonoBehaviour:
   Foreground: {fileID: 358035961555855436}
   Track: {fileID: 0}
   Type: 2
+  IsBeingHeld: 0
   backgroundTop: {fileID: 2484638952059791911}
   foregroundTop: {fileID: 338010660360516163}
   sustain: {fileID: 682814963044668257}
+  ticksContainer: {fileID: 218633194908285961}
 --- !u!1 &358035961555855434
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,3 +498,34 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &4977671339560002781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 218633194908285961}
+  m_Layer: 0
+  m_Name: Ticks Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &218633194908285961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4977671339560002781}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 358035961436668836}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
