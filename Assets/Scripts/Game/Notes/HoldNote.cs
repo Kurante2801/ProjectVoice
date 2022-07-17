@@ -204,7 +204,7 @@ public class HoldNote : Note
         else if (endDifference > ReleaseMissThreshold)
             grade = NoteGrade.Miss;
 
-        Game.Instance.State.Judge(this, grade, initialDifference);
+        Game.Instance.State.Judge(Model, grade, initialDifference);
         Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
         initialDifference = Model.time - time;
         Collect(grade);

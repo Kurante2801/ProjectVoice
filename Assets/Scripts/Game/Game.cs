@@ -118,7 +118,7 @@ public class Game : SingletonMonoBehavior<Game>
 
 
         await Context.AudioSource.DOFade(1f, 0.25f).AsyncWaitForCompletion();
-        Context.AudioSource.Stop();
+        Context.StopSongPreview();
 
         Note.SpeedIndex = Math.Clamp(PlayerSettings.NoteSpeedIndex, 0, 9);
 

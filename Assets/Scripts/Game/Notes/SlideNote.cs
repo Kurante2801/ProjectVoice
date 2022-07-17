@@ -63,7 +63,7 @@ public class SlideNote : Note
                 }
             }
 
-            Game.Instance.State.Judge(this, grade, Model.time - time);
+            Game.Instance.State.Judge(Model, grade, Model.time - time);
             Game.Instance.OnNoteJudged?.Invoke(Game.Instance, Model.id);
             Collect(grade);
         }

@@ -162,14 +162,14 @@ public class Context : SingletonMonoBehavior<Context>
 
         AudioSource.volume = 0f;
         AudioSource.loop = true;
+        AudioSource.Play();
         AudioSource.DOKill();
         AudioSource.DOFade(PlayerSettings.MusicVolume, 1.25f);
-        AudioSource.Play();
 
         audioPath = path;
     }
 
-    public static void StopSongPreview()
+    public static void FadeOutSongPreview()
     {
         audioToken?.Cancel();
         AudioSource.DOKill();
@@ -177,6 +177,12 @@ public class Context : SingletonMonoBehavior<Context>
         audioPath = "";
     }
 
+    public static void StopSongPreview()
+    {
+        audioToken?.Cancel();
+        AudioSource.Stop();
+        audioPath = "";
+    }
 
     // This is a copy paste of https://github.com/Cytoid/Cytoid/blob/1ce07d83628aef0fd5afbc450ecd4fed0600e47b/Assets/Scripts/Context.cs#L740
     public string GetAndroidLegacyStoragePath()

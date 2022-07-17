@@ -31,12 +31,12 @@ public sealed class GameState
     }
 
     public bool NoteIsJudged(int id) => NoteJudgements[id].Grade != NoteGrade.None;
-
-    public void Judge(Note note, NoteGrade grade, int difference)
+    
+    public void Judge(ChartModel.NoteModel model, NoteGrade grade, int difference)
     {
-        if (IsCompleted || NoteIsJudged(note.Model.id)) return;
+        if (IsCompleted || NoteIsJudged(model.id)) return;
 
-        NoteJudgements[note.ID] = new JudgeData(grade, difference);
+        NoteJudgements[model.id] = new JudgeData(grade, difference);
         if (grade != NoteGrade.Perfect)
             IsFullScorePossible = false;
 

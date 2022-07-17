@@ -98,7 +98,7 @@ public class LevelSummaryScreen : Screen
     public void ReturnButton()
     {
         Backdrop.Instance.SetBackdrop(null);
-        Context.StopSongPreview();
+        Context.FadeOutSongPreview();
 
         if(!Context.ScreenManager.TryReturnScreen())
             Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
