@@ -76,6 +76,7 @@ public static class TransitionEaseExtensions
 		else
 			x = 1f - Mathf.Sqrt(perc - perc * perc);
 		return (end - start) * x + start;
+	
 	}
 
 	public static float LerpExpEaseInOut(float start, float end, float perc)
@@ -173,8 +174,8 @@ public static class TransitionEaseExtensions
 			TransitionEase.QUAD_OUTIN => LerpQuadEaseOutIn(start, end, perc),
             TransitionEase.CIRC_IN => (end - start) * (1f - Mathf.Sqrt(1f - perc * perc)) + start,
             TransitionEase.CIRC_OUT => (end - start) * (-(1f - Mathf.Sqrt(1f - (1f - perc) * (1f - perc))) + 1f) + start,
-			TransitionEase.CIRC_OUTIN => LerpCircEaseInOut(start, end, perc),
-            TransitionEase.CIRC_INOUT => LerpCircEaseOutIn(start, end, perc),
+            TransitionEase.CIRC_INOUT => LerpCircEaseInOut(start, end, perc),
+			TransitionEase.CIRC_OUTIN => LerpCircEaseOutIn(start, end, perc),
             TransitionEase.EXP_IN => (end - start) * Mathf.Pow(2, 10f * (perc - 1)) + start,
             TransitionEase.EXP_OUT => (end - start) * (-Mathf.Pow(2, 10f * -perc) + 1f) + start,
             TransitionEase.EXP_INOUT => LerpExpEaseInOut(start, end, perc),

@@ -57,3 +57,6 @@ TagManager:
   - name: Effects
     uniqueID: 3282276279
     locked: 0
+  - name: Debug
+    uniqueID: 1583943545
+    locked: 0

@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System.Linq;
+using System.Globalization;
 
 public class Track : MonoBehaviour
 {
@@ -30,8 +33,29 @@ public class Track : MonoBehaviour
 
     public HashSet<int> Fingers = new();
 
+    [SerializeField] private TMP_Text tmpID;
+    [SerializeField] private List<TMP_Text> tmpMove = new(), tmpScale = new(), tmpColor = new();
+
+    private bool isDebugTextEnabled = false;
+
+    private void Start()
+    {
+        isDebugTextEnabled = PlayerSettings.DebugTracks;
+
+        tmpID.gameObject.SetActive(isDebugTextEnabled);
+        tmpID.fontSize = 18f.ScreenScaledY();
+
+        foreach(var tmp in tmpMove.Concat(tmpScale).Concat(tmpColor))
+        {
+            tmp.gameObject.SetActive(isDebugTextEnabled);
+            tmp.transform.position = tmp.transform.position.WithY(tmp.transform.position.y.ScreenScaledY());
+            tmp.fontSize = 18f.ScreenScaledY();
+        }
+    }
+
     public void Initialize()
     {
+
         MoveTransitions.Clear();
         ScaleTransitions.Clear();
         ColorTransitions.Clear();
@@ -54,6 +78,9 @@ public class Track : MonoBehaviour
         Fingers.Clear();
         ActiveTime = -10000;
         Update();
+
+        if (isDebugTextEnabled)
+            tmpID.text = Model.id.ToString();
     }
 
     /*private void OnEnable()
@@ -82,6 +109,26 @@ public class Track : MonoBehaviour
         }
 
         int time = Conductor.Instance.Time;
+
+        // DEBUG INFO
+        if (PlayerSettings.DebugTracks)
+        {
+            var moveTrans = GetPositionTransition(time);
+            tmpMove[0].text = "MOVE: " + moveTrans.TransitionEase.ToString();
+            tmpMove[1].text = $"TIME: {Mathf.Round(moveTrans.StartTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)} - {Mathf.Round(moveTrans.EndTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)}";
+            tmpMove[2].text = $"VALUE: {moveTrans.StartValue.ToString("F2", CultureInfo.InvariantCulture)} - {moveTrans.EndValue.ToString("F2", CultureInfo.InvariantCulture)} ({moveTrans.TransitionEase.GetValue(time.MapRange(moveTrans.StartTime, moveTrans.EndTime, 0f, 1f), moveTrans.StartValue, moveTrans.EndValue)})";
+
+            var scaleTrans = GetScaleTransition(time);
+            tmpScale[0].text = "SCALE: " + scaleTrans.TransitionEase.ToString();
+            tmpScale[1].text = $"TIME: {Mathf.Round(scaleTrans.StartTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)} - {Mathf.Round(scaleTrans.EndTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)}";
+            tmpScale[2].text = $"VALUE: {scaleTrans.StartValue.ToString("F2", CultureInfo.InvariantCulture)} - {scaleTrans.EndValue.ToString("F2", CultureInfo.InvariantCulture)} ({scaleTrans.TransitionEase.GetValue(time.MapRange(scaleTrans.StartTime, scaleTrans.EndTime, 0f, 1f), scaleTrans.StartValue, scaleTrans.EndValue)})";
+
+            var colorTrans = GetColorTransition(time);
+            tmpColor[0].text = "COLOR: " + colorTrans.TransitionEase.ToString();
+            tmpColor[1].text = $"TIME: {Mathf.Round(colorTrans.StartTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)} - {Mathf.Round(colorTrans.EndTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)}";
+            tmpColor[2].text = $"VALUE: {colorTrans.StartValue.ToHex()} - {colorTrans.EndValue.ToHex()}\n({Color.Lerp(colorTrans.StartValue, colorTrans.EndValue, colorTrans.TransitionEase.GetValue(time.MapRange(colorTrans.StartTime, colorTrans.EndTime, 0f, 1f), 0f, 1f)).ToHex()})";
+        }
+
 
         float scaleX = BackgroundWorldWidth * GetScaleValue(time);
         CurrentScaleValue = scaleX;
@@ -167,6 +214,12 @@ public class Track : MonoBehaviour
             note.Model = model;
             note.Initialize();
         }
+
+        // Debug info
+        if (PlayerSettings.DebugTracks)
+        {
+            tmpID.text = "ID: " + Model.id.ToString();
+        }
     }
 
     public void DisposeNote(Note note)
@@ -196,6 +249,17 @@ public class Track : MonoBehaviour
         return fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), fallback.StartValue, fallback.EndValue);
     }
 
+    public MoveTransition GetPositionTransition(int time)
+    {
+        foreach (var transition in MoveTransitions)
+        {
+            if (time.IsBetween(transition.StartTime, transition.EndTime))
+                return transition;
+        }
+
+        return MoveTransitions[^1];
+    }
+
     private float GetScaleValue(int time)
     {
         foreach (var transition in ScaleTransitions)
@@ -208,6 +272,17 @@ public class Track : MonoBehaviour
         return fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), fallback.StartValue, fallback.EndValue);
     }
 
+    public ScaleTransition GetScaleTransition(int time)
+    {
+        foreach (var transition in ScaleTransitions)
+        {
+            if (time.IsBetween(transition.StartTime, transition.EndTime))
+                return transition;
+        }
+
+        return ScaleTransitions[^1];
+    }
+
     private Color GetColorValue(int time)
     {
         foreach (var transition in ColorTransitions)
@@ -218,6 +293,17 @@ public class Track : MonoBehaviour
 
         var fallback = ColorTransitions[^1];
         return Color.Lerp(fallback.StartValue, fallback.EndValue, fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), 0f, 1f));
+    }
+
+    public ColorTransition GetColorTransition(int time)
+    {
+        foreach (var transition in ColorTransitions)
+        {
+            if (time.IsBetween(transition.StartTime, transition.EndTime))
+                return transition;
+        }
+
+        return ColorTransitions[^1];
     }
 
     public class MoveTransition

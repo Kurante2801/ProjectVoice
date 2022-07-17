@@ -164,4 +164,10 @@ public class PlayerSettings
         get => PlayerPrefsExtensions.GetColor("slideforecolor", Color.white, false);
         set => PlayerPrefsExtensions.SetColor("slideforecolor", value, false);
     }
+
+    public static bool DebugTracks
+    {
+        get => PlayerPrefsExtensions.GetBool("debugtracks", false);
+        set => PlayerPrefsExtensions.SetBool("debugtracks", value);
+    }
 }
