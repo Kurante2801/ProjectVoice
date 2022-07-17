@@ -42,7 +42,6 @@ public class SlideNote : Note
 
         if ((difference < NoteGradeExtensions.Timings[(int)NoteGrade.Perfect] && Track.Fingers.Count > 0) || (IsAuto && difference <= 0) || difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
             JudgeNote(time);
-                
     }
 
     public override void JudgeNote(int time)

@@ -39,7 +39,7 @@ public class GameScoreIndicator : MonoBehaviour
         value = MathUtil.Lerp(value, score, 0.6D);
         if (value == _value) return;
 
-        string text = Mathf.RoundToInt((float)value).ToString("D6");
+        string text = Mathf.FloorToInt((float)value).ToString("D6");
 
         if (value >= 100000)
             tmp.text = "<color=#FFF>" + text;

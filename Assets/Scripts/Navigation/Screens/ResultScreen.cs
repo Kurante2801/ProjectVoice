@@ -32,7 +32,7 @@ public class ResultScreen : Screen
         }
 
         songInfo.text = $"{level.Meta.title.SanitizeTMP()} {grayText}- <color=#{chart.type.GetColor().ToHex()}>{chart.name.SanitizeTMP()} {chart.difficulty}";
-        score.text = ((int)state.Score).ToString("D6");
+        score.text = Mathf.FloorToInt((float)state.Score).ToString("D6");
         maxCombo.text = $"{grayText}Max Combo: {mediumText}{state.MaxCombo}";
         accuracy.text = $"{grayText}Accuracy: {mediumText}{(state.Accuracy * 100).ToString("F2", CultureInfo.InvariantCulture)}<size=26>%";
 
