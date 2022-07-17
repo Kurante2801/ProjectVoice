@@ -80,7 +80,7 @@ public class Context : SingletonMonoBehavior<Context>
 
         ScreenRealWidth = UnityEngine.Screen.width;
         ScreenRealHeight = UnityEngine.Screen.height;
-
+        SetupResolution();
 
 #if UNITY_EDITOR
         Application.runInBackground = true;
@@ -218,6 +218,11 @@ public class Context : SingletonMonoBehavior<Context>
             UnityEngine.Screen.autorotateToLandscapeLeft = UnityEngine.Screen.orientation == ScreenOrientation.LandscapeLeft;
             UnityEngine.Screen.autorotateToLandscapeRight = UnityEngine.Screen.orientation == ScreenOrientation.LandscapeRight;
         }
+    }
 
+    public static void SetupResolution()
+    {
+        float scale = GraphicsQualityExtensions.GetScale(PlayerSettings.GraphicsQuality);
+        UnityEngine.Screen.SetResolution(Mathf.CeilToInt(ScreenRealWidth * scale), Mathf.CeilToInt(ScreenRealHeight * scale), UnityEngine.Screen.fullScreenMode);
     }
 }

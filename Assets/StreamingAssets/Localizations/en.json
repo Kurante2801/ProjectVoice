@@ -26,6 +26,8 @@
     "OPTIONS_GENERAL_TAB": "General",
     "OPTIONS_LANG_NAME": "Language",
     "OPTIONS_LANG_DESC": "",
+    "OPTIONS_GRAPHICS_NAME": "Graphics Quality",
+    "OPTIONS_GRAPHICS_DESC": "",
     "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",
     "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
     "OPTIONS_TARGETFPS_NAME": "FPS Limit",
@@ -74,5 +76,10 @@
 
     "RESULT_RETRY": "Retry",
     "RESULT_NEXT": "Next",
-    "RESULT_CHARTER": "Charted by {CHARTER}"
+    "RESULT_CHARTER": "Charted by {CHARTER}",
+
+    "GRAPHICS_VERYLOW": "Very Low",
+    "GRAPHICS_LOW": "Low",
+    "GRAPHICS_MEDIUM": "Medium",
+    "GRAPHICS_HIGH": "High"
 }

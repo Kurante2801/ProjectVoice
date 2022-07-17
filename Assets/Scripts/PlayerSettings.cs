@@ -15,6 +15,12 @@ public class PlayerSettings
         }
     }
 
+    public static string GraphicsQuality
+    {
+        get => PlayerPrefs.GetString("graphicsquality", "medium");
+        set => PlayerPrefs.SetString("graphicsquality", value);
+    }
+
     public static bool SafeArea
     {
         get => PlayerPrefsExtensions.GetBool("safearea", true);

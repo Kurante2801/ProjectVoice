@@ -20,6 +20,8 @@
     "OPTIONS_GENERAL_TAB": "General",
     "OPTIONS_LANG_NAME": "Idioma",
     "OPTIONS_LANG_DESC": "Language",
+    "OPTIONS_GRAPHICS_NAME": "Calidad de Gráficos",
+    "OPTIONS_GRAPHICS_DESC": "",
     "OPTIONS_SAFEAREA_NAME": "Habilitar Area Segura",
     "OPTIONS_SAFEAREA_DESC": "La interfaz evitará las cámaras integradas a la pantalla.",
     "OPTIONS_TARGETFPS_NAME": "Límite de FPS",
@@ -68,5 +70,10 @@
 
     "RESULT_RETRY": "Reíntentar",
     "RESULT_NEXT": "Siguiente",
-    "RESULT_CHARTER": "Mapeado por {CHARTER}"
+    "RESULT_CHARTER": "Mapeado por {CHARTER}",
+
+    "GRAPHICS_VERYLOW": "Muy Bajo",
+    "GRAPHICS_LOW": "Bajo",
+    "GRAPHICS_MEDIUM": "Medio",
+    "GRAPHICS_HIGH": "Alto"
 }

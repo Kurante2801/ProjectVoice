@@ -111,7 +111,7 @@ public class Track : MonoBehaviour
         int time = Conductor.Instance.Time;
 
         // DEBUG INFO
-        if (PlayerSettings.DebugTracks)
+        if (isDebugTextEnabled)
         {
             var moveTrans = GetPositionTransition(time);
             tmpMove[0].text = "MOVE: " + moveTrans.TransitionEase.ToString();
@@ -128,7 +128,6 @@ public class Track : MonoBehaviour
             tmpColor[1].text = $"TIME: {Mathf.Round(colorTrans.StartTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)} - {Mathf.Round(colorTrans.EndTime / 1000f).ToString("F2", CultureInfo.InvariantCulture)}";
             tmpColor[2].text = $"VALUE: {colorTrans.StartValue.ToHex()} - {colorTrans.EndValue.ToHex()}\n({Color.Lerp(colorTrans.StartValue, colorTrans.EndValue, colorTrans.TransitionEase.GetValue(time.MapRange(colorTrans.StartTime, colorTrans.EndTime, 0f, 1f), 0f, 1f)).ToHex()})";
         }
-
 
         float scaleX = BackgroundWorldWidth * GetScaleValue(time);
         CurrentScaleValue = scaleX;

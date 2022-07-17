@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using TMPro;
+using System;
+using System.Linq;
 
 public enum SettingType
 {
@@ -59,6 +60,20 @@ public class OptionsScreen : Screen
             if (!Context.LocalizationManager.Localizations.TryGetValue((string)key, out var localization))
                 return;
             PlayerSettings.LanguageString = localization.Identifier;
+        });
+
+        var graphics = Enum.GetValues(typeof(GraphicsQuality)).Cast<GraphicsQuality>().ToArray();
+        var quality = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
+        quality.SetValues(graphics.Select(quality => quality.GetLocalized()).ToArray(), graphics.Select(quality => (object)quality.ToString().ToLower()).ToArray(), (object)PlayerSettings.GraphicsQuality);
+        quality.SetLocalizationKeys("OPTIONS_GRAPHICS_NAME", "OPTIONS_GRAPHICS_DESC");
+        quality.OnValueChanged.AddListener((_, _, value) =>
+        {
+            PlayerSettings.GraphicsQuality = (string)value;
+            Context.SetupResolution();
+        });
+        quality.OnLocalizationChanged.AddListener(() =>
+        {
+            quality.SetNames(graphics.Select(quality => quality.GetLocalized()).ToArray());
         });
 
         var safearea = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
