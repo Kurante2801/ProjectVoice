@@ -64,5 +64,9 @@
 
     "PAUSE_CONTINUE": "Continuar",
     "PAUSE_RETRY": "Reíntentar",
-    "PAUSE_EXIT": "Salir"
+    "PAUSE_EXIT": "Salir",
+
+    "RESULT_RETRY": "Reíntentar",
+    "RESULT_NEXT": "Siguiente",
+    "RESULT_CHARTER": "Mapeado por {CHARTER}"
 }

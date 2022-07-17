@@ -217,6 +217,7 @@ public class Game : SingletonMonoBehavior<Game>
     {
         ClearGameplayElements();
         State.IsCompleted = true;
+        Context.State = State;
 
         TransitionTime = 1f;
         Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);

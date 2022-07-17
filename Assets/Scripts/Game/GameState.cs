@@ -8,7 +8,7 @@ public sealed class GameState
     public Level Level { get; }
     public ChartSection Chart { get; }
 
-    public Dictionary<int, JudgeData> NoteJugdements { get; } = new();
+    public Dictionary<int, JudgeData> NoteJudgements { get; } = new();
     public bool HasStarted = false;
     public bool IsPlaying = false;
     public bool IsCompleted = false;
@@ -26,17 +26,17 @@ public sealed class GameState
 
     public GameState(Game game)
     {
-        game.Chart.tracks.ForEach(track => track.notes.ForEach(note => NoteJugdements.Add(note.id, new(NoteGrade.None, 0))));
-        NoteCount = NoteJugdements.Count;
+        game.Chart.tracks.ForEach(track => track.notes.ForEach(note => NoteJudgements.Add(note.id, new(NoteGrade.None, 0))));
+        NoteCount = NoteJudgements.Count;
     }
 
-    public bool NoteIsJudged(int id) => NoteJugdements[id].Grade != NoteGrade.None;
+    public bool NoteIsJudged(int id) => NoteJudgements[id].Grade != NoteGrade.None;
 
     public void Judge(Note note, NoteGrade grade, int difference)
     {
         if (IsCompleted || NoteIsJudged(note.Model.id)) return;
 
-        NoteJugdements[note.ID] = new JudgeData(grade, difference);
+        NoteJudgements[note.ID] = new JudgeData(grade, difference);
         if (grade != NoteGrade.Perfect)
             IsFullScorePossible = false;
 

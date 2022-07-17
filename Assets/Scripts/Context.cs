@@ -62,6 +62,8 @@ public class Context : SingletonMonoBehavior<Context>
     public static HashSet<Modifier> Modifiers = new();
     public static UnityEvent OnModifiersChanged = new();
 
+    public static GameState State;
+
     protected override void Awake()
     {
         if (GameObject.FindGameObjectsWithTag("Context").Length > 1) // This is 1 instead of 0 because 'this' has the tag too

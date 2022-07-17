@@ -70,5 +70,9 @@
 
     "PAUSE_CONTINUE": "Continue",
     "PAUSE_RETRY": "Retry",
-    "PAUSE_EXIT": "Exit"
+    "PAUSE_EXIT": "Exit",
+
+    "RESULT_RETRY": "Retry",
+    "RESULT_NEXT": "Next",
+    "RESULT_CHARTER": "Charted by {CHARTER}"
 }

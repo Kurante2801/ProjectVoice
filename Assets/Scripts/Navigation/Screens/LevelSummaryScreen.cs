@@ -102,7 +102,6 @@ public class LevelSummaryScreen : Screen
 
         if(!Context.ScreenManager.TryReturnScreen())
             Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
-
     }
 
     public void OptionsButton()
@@ -138,7 +137,7 @@ public class LevelSummaryScreen : Screen
     {
         Context.ScreenManager.ChangeScreen(null);
         Backdrop.Instance.DisplayBlurImage(true);
-        await UniTask.Delay(250);
+        await UniTask.Delay(TimeSpan.FromSeconds(0.3f));
         SceneManager.LoadScene("Game");
     }
 
