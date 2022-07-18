@@ -184,26 +184,9 @@ public class Context : SingletonMonoBehavior<Context>
         audioPath = "";
     }
 
-    // This is a copy paste of https://github.com/Cytoid/Cytoid/blob/1ce07d83628aef0fd5afbc450ecd4fed0600e47b/Assets/Scripts/Context.cs#L740
-    public string GetAndroidLegacyStoragePath()
-    {
-        try
-        {
-            using var javaClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activityClass = javaClass.GetStatic<AndroidJavaObject>("currentActivity");
-            return activityClass.Call<AndroidJavaObject>("getAndroidStorageFile").Call<string>("getAbsolutePath");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("Could not get Android storage path");
-            Debug.LogError(e);
-            return null;
-        }
-    }
-
     public string GetAndroidStoragePath()
     {
-        return AndroidVersionCode <= 29 ? GetAndroidLegacyStoragePath() : Application.persistentDataPath;
+        return Application.persistentDataPath;
     }
 
     public static void SetAutoRotation(bool enabled)
