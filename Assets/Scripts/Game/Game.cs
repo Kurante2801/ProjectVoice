@@ -112,10 +112,9 @@ public class Game : SingletonMonoBehavior<Game>
         await Conductor.Instance.Load(Context.SelectedLevel, Chart);
 
         // Ensure game doesn't end too soon (add 1 second in case I want to add an ending animation for full combo or something)
-        EndTime = Mathf.CeilToInt((float)Conductor.Instance.MaxTime * 1000f);
+        EndTime = Conductor.Instance.MaxTime;
         Chart.tracks.ForEach(track => EndTime = Mathf.Max(EndTime, track.despawn_time + track.despawn_duration + 1000));
-        StartTime = Mathf.FloorToInt((float)Conductor.Instance.MinTime * 1000f);
-
+        StartTime = Conductor.Instance.MinTime;
 
         await Context.AudioSource.DOFade(1f, 0.25f).AsyncWaitForCompletion();
         Context.StopSongPreview();
@@ -205,7 +204,7 @@ public class Game : SingletonMonoBehavior<Game>
         State = null;
         OnGameRestarted?.Invoke(this);
 
-        AudioListener.pause = true;
+        Conductor.Instance.SetPaused(true);
         IsPaused = true;
         
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
@@ -349,6 +348,8 @@ public class Game : SingletonMonoBehavior<Game>
     public void SetPaused(bool paused)
     {
         IsPaused = paused;
-        AudioListener.pause = paused;
+        Conductor.Instance.SetPaused(paused);
+        UnityEngine.Screen.sleepTimeout = paused ? SleepTimeout.SystemSetting : SleepTimeout.NeverSleep;
+        Context.SetAutoRotation(paused);
     }
 }

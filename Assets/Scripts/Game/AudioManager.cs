@@ -1,0 +1,145 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+using DG.Tweening.Plugins.Options;
+using DG.Tweening.Core;
+
+// Based off https://github.com/Cytoid/Cytoid/blob/main/Assets/Scripts/AudioManager.cs
+// but using a free native audio because I'm poor
+public class AudioManager : SingletonMonoBehavior<AudioManager>
+{
+    
+}
+
+public abstract class AudioController
+{
+    public abstract float Volume { get; set; }
+    public abstract int Length { get; }
+    public abstract void Play(int milliseconds);
+    public abstract void PlayScheduled(int delay);
+    public abstract bool Paused { get; set; }
+    public abstract bool Looping { get; set; }
+    public abstract void Unload();
+
+    public TweenerCore<float, float, FloatOptions> DOFade(float volume, float duration)
+    {
+        var t = DOTween.To(() => Volume, value => Volume = value, volume, duration);
+        t.SetTarget(this);
+        return t;
+    }
+}
+
+public class UnityAudioController : AudioController
+{
+    private AudioSource source;
+    public override float Volume { get => source.volume; set => source.volume = value; }
+    private int length = 0;
+    public override int Length => length; // When using MPEGs on Windows, clip.Length may be wrong
+    public override bool Paused { get => AudioListener.pause; set => AudioListener.pause = value; }
+    public override bool Looping { get => source.loop; set => source.loop = value; }
+
+    public UnityAudioController(AudioSource source, AudioClip clip, int length = -1)
+    {
+        this.source = source;
+        this.length = length > 0 ? length : Mathf.CeilToInt(clip.length * 1000f);
+        source.clip = clip;
+    }
+
+    public override void Play(int milliseconds)
+    {
+        source.time = milliseconds / 1000f;
+        source.Play();
+        Paused = false;
+    }
+    public override void PlayScheduled(int delay)
+    {
+        source.time = 0f;
+        Debug.Log(delay);
+        source.PlayScheduled(AudioSettings.dspTime + delay / 1000D);
+        Paused = false;
+    }
+
+    public override void Unload()
+    {
+        source.Stop();
+        source.clip.UnloadAudioData();
+        Object.Destroy(source.clip);
+        source.clip = null;
+    }
+}
+
+public class NativeAudioController : AudioController
+{
+    public int FileID { get; private set; } = -2;
+    private float volume = 1f;
+    public override float Volume
+    {
+        get => volume;
+        set
+        {
+            volume = value;
+            ANAMusic.setVolume(FileID, volume);
+        }
+    }
+    private int length = 0;
+    public override int Length => length;
+
+    private bool paused = true;
+    public override bool Paused
+    {
+        get => paused;
+        set
+        {
+            paused = value;
+            if (!BegunPlaying) return;
+
+            if (value) ANAMusic.pause(FileID);
+            else ANAMusic.play(FileID);
+        }
+    }
+
+    private bool looping = false;
+    public override bool Looping
+    {
+        get => looping;
+        set
+        {
+            looping = value;
+            ANAMusic.setLooping(FileID, value);
+        }
+    }
+
+    public NativeAudioController(int fileID)
+    {
+        FileID = fileID;
+        length = ANAMusic.getDuration(fileID);
+        ANAMusic.setPlayInBackground(fileID, false);
+    }
+
+    public override void Play(int milliseconds)
+    {
+        ANAMusic.seekTo(FileID, milliseconds);
+        ANAMusic.play(FileID);
+        BegunPlaying = true;
+        paused = false;
+    }
+
+    public int ScheduleTime = 0;
+    public bool BegunPlaying = false;
+    // ANAMusic doesn't support scheduled play, so we'll start it manually on Game scene
+    public override void PlayScheduled(int delay)
+    {
+        ScheduleTime = delay;
+        BegunPlaying = false;
+        paused = false;
+
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Game")
+            throw new System.NotImplementedException();
+    }
+
+    public override void Unload()
+    {
+        ANAMusic.release(FileID);
+    }
+}

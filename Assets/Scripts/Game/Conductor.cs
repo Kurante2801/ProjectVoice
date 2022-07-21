@@ -6,69 +6,106 @@ using UnityEngine;
 
 public class Conductor : SingletonMonoBehavior<Conductor>
 {
-    public AudioSource Source { get; private set; }
+    public bool Initialized { get; private set; } = false;
+    public int Time { get; private set; } = 0;
+    public int MinTime { get; private set; } = 0;
+    public int MaxTime { get; private set; } = 1;
+    public AudioController Controller;
 
-    public double AudioPos { get; private set; }
-    private double lastReport;
-    private double dspTime;
-
-    public double AudioOffset = 0.0;
-    public double StartTime = 0.0;
-
-    public double MinTime => StartTime;
-    public double MaxTime = -1;
-
-    public bool Initialized { get; private set; }
-
-    public int Time => (int)(AudioPos * 1000);
+    private bool isNative = false;
+    private double offsetSeconds = 0D;
+    private int offsetMilliseconds = 0;
 
     protected override void Awake()
     {
         base.Awake();
-        Source = gameObject.GetComponent<AudioSource>();
+        isNative = PlayerSettings.NativeAudio && Application.platform == RuntimePlatform.Android;
     }
 
-    private void Update()
+    protected override void OnDestroy()
     {
-        if (AudioListener.pause || !Initialized) return;
-        if (lastReport != AudioSettings.dspTime)
+        Controller.Unload();
+        base.OnDestroy();
+    }
+
+    public async UniTask Load(Level level, ChartModel chart, bool overrideNative = false)
+    {
+        Initialized = false;
+        string path = level.Path + (!string.IsNullOrWhiteSpace(chart.music_override) ? chart.music_override : level.Meta.music_path);
+        MinTime = chart.start_time;
+
+        if (isNative && !overrideNative)
         {
-            AudioPos = AudioSettings.dspTime - dspTime - AudioOffset;
-            lastReport = AudioSettings.dspTime;
+            int fileID = -2;
+            ANAMusic.load(path, true, true, id => fileID = id);
+            await UniTask.WaitUntil(() => fileID != -2);
+            // Failed to load
+            if(fileID == -1)
+            {
+                Debug.LogWarning("Could not load music file with ANAMusic, attempting Unity Audio");
+                await Load(level, chart, true);
+                return;
+            }
+
+            Controller = new NativeAudioController(fileID);
+            this.fileID = fileID;
         }
         else
-            AudioPos += UnityEngine.Time.unscaledDeltaTime;
-    }
+        {
+            var clip = await AudioLoader.LoadClip(path);
+            int length = AudioLoader.MPEGLength > 0 ? Mathf.CeilToInt((float)AudioLoader.MPEGLength * 1000f) : -1;
 
+            Controller = new UnityAudioController(GetComponent<AudioSource>(), clip, length);
+            isNative = false;
+        }
+
+        Controller.Looping = false;
+        offsetSeconds = chart.music_offset / 1000D + PlayerSettings.AudioOffset;
+        offsetMilliseconds = chart.music_offset + Mathf.RoundToInt(PlayerSettings.AudioOffset * 1000f);
+    }
+    
     public void Initialize()
     {
-        dspTime = AudioSettings.dspTime + StartTime;
-        if (StartTime >= 0.0)
-        {
-            Source.time = (float)StartTime;
-            Source.Play();
-        }
-        else
-            Source.PlayScheduled(dspTime);
+        Controller.Volume = PlayerSettings.MusicVolume;
 
-        AudioPos = (float)StartTime;
-        AudioListener.pause = false;
+        dspTime = AudioSettings.dspTime - MinTime / 1000D;
+        if (MinTime >= 0) Controller.Play(MinTime);
+        else Controller.PlayScheduled(-MinTime);
+
+        Time = MinTime;
         Initialized = true;
     }
 
-    public async UniTask Load(Level level, ChartModel chart)
-    {
-        StartTime = chart.start_time / 1000.0;
-        AudioOffset = chart.music_offset / 1000.0 + PlayerSettings.AudioOffset;
-        Source.volume = PlayerSettings.MusicVolume;
-        Source.clip = await AudioLoader.LoadClip(level.Path + (!string.IsNullOrWhiteSpace(chart.music_override) ? chart.music_override : level.Meta.music_path));
+    public void Toggle() => SetPaused(!Controller.Paused);
 
-        // Fix wrong time
-        if (AudioLoader.MPEGLength > 0)
-            MaxTime = AudioLoader.MPEGLength;
+    private double dspTime, dspReport;
+    private int positionReport, fileID;
+
+    private void Update()
+    {
+        if (!Initialized || Controller.Paused) return;
+
+        if (isNative)
+        {
+            if (positionReport != ANAMusic.getCurrentPosition(fileID))
+            {
+                positionReport = ANAMusic.getCurrentPosition(fileID);
+                Time = positionReport + offsetMilliseconds;
+            }
+            else
+                Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
+        }
         else
-            MaxTime = Source.clip.length;
+        {
+            if (dspReport != AudioSettings.dspTime)
+            {
+                dspReport = AudioSettings.dspTime;
+                Time = (int)((AudioSettings.dspTime - dspTime - offsetSeconds) * 1000D);
+            }
+            else
+                Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
+        }
     }
-        
-    public void Toggle() => AudioListener.pause = !AudioListener.pause;
+
+    public void SetPaused(bool paused) => Controller.Paused = paused;
 }

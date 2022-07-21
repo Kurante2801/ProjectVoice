@@ -27,6 +27,12 @@ public class PlayerSettings
         set => PlayerPrefsExtensions.SetBool("safearea", value);
     }
 
+    public static bool NativeAudio
+    {
+        get => PlayerPrefsExtensions.GetBool("nativeaudio", true);
+        set => PlayerPrefsExtensions.SetBool("nativeaudio", value);
+    }
+
     public static int TargetFPS
     {
         get => PlayerPrefs.GetInt("targetfps", 120);

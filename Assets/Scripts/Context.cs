@@ -87,13 +87,12 @@ public class Context : SingletonMonoBehavior<Context>
         UserDataPath = Application.persistentDataPath;
 #endif
 
-        // Android file stuff
         if (Application.platform == RuntimePlatform.Android)
         {
-            using (var version = new AndroidJavaClass("android.os.Build$VERSION"))
+            /*using (var version = new AndroidJavaClass("android.os.Build$VERSION"))
                 AndroidVersionCode = version.GetStatic<int>("SDK_INT");
 
-            print(AndroidVersionCode);
+            print(AndroidVersionCode);*/
 
             var dir = GetAndroidStoragePath();
             if (dir == null)

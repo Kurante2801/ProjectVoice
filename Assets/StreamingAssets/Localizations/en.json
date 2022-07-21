@@ -28,6 +28,8 @@
     "OPTIONS_LANG_DESC": "",
     "OPTIONS_GRAPHICS_NAME": "Graphics Quality",
     "OPTIONS_GRAPHICS_DESC": "",
+    "OPTIONS_NATIVEAUDIO_NAME": "Use Native Audio",
+    "OPTIONS_NATIVEAUDIO_DESC": "Bypasses Unity's audio system and lowers audio latency, but unpausing while playing causes stuttering.",
     "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",
     "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
     "OPTIONS_TARGETFPS_NAME": "FPS Limit",

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
-using System.Linq;
 
 public enum SettingType
 {
@@ -80,6 +79,11 @@ public class OptionsScreen : Screen
         safearea.SetValue(PlayerSettings.SafeArea);
         safearea.SetLocalizationKeys("OPTIONS_SAFEAREA_NAME", "OPTIONS_SAFEAREA_DESC");
         safearea.OnValueChanged.AddListener(value => PlayerSettings.SafeArea = value);
+
+        var nativeaudio = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
+        nativeaudio.SetValue(PlayerSettings.NativeAudio);
+        nativeaudio.SetLocalizationKeys("OPTIONS_NATIVEAUDIO_NAME", "OPTIONS_NATIVEAUDIO_DESC");
+        nativeaudio.OnValueChanged.AddListener(value => PlayerSettings.NativeAudio = value);
 
         var targetfps = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
         targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS" }, new object[] { 30, 60, 120 }, PlayerSettings.TargetFPS);
