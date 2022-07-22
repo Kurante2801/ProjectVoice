@@ -28,36 +28,13 @@ public class Conductor : SingletonMonoBehavior<Conductor>
         base.OnDestroy();
     }
 
-    public async UniTask Load(Level level, ChartModel chart, bool overrideNative = false)
+    public async UniTask Load(Level level, ChartModel chart)
     {
         Initialized = false;
         string path = level.Path + (!string.IsNullOrWhiteSpace(chart.music_override) ? chart.music_override : level.Meta.music_path);
         MinTime = chart.start_time;
-
-        if (isNative && !overrideNative)
-        {
-            int fileID = -2;
-            ANAMusic.load(path, true, true, id => fileID = id);
-            await UniTask.WaitUntil(() => fileID != -2);
-            // Failed to load
-            if(fileID == -1)
-            {
-                Debug.LogWarning("Could not load music file with ANAMusic, attempting Unity Audio");
-                await Load(level, chart, true);
-                return;
-            }
-
-            Controller = new NativeAudioController(fileID);
-            this.fileID = fileID;
-        }
-        else
-        {
-            var clip = await AudioLoader.LoadClip(path);
-            int length = AudioLoader.MPEGLength > 0 ? Mathf.CeilToInt((float)AudioLoader.MPEGLength * 1000f) : -1;
-
-            Controller = new UnityAudioController(GetComponent<AudioSource>(), clip, length);
-            isNative = false;
-        }
+        Controller = await AudioManager.LoadAudio(path, GetComponent<AudioSource>());
+        isNative = Controller is NativeAudioController;
 
         Controller.Looping = false;
         offsetSeconds = chart.music_offset / 1000D + PlayerSettings.AudioOffset;
@@ -79,7 +56,7 @@ public class Conductor : SingletonMonoBehavior<Conductor>
     public void Toggle() => SetPaused(!Controller.Paused);
 
     private double dspTime, dspReport;
-    private int positionReport, fileID;
+    private int positionReport;
 
     private void Update()
     {
@@ -87,13 +64,25 @@ public class Conductor : SingletonMonoBehavior<Conductor>
 
         if (isNative)
         {
-            if (positionReport != ANAMusic.getCurrentPosition(fileID))
+            // Workaround for ANAMusic not having scheduled play
+            var controller = Controller as NativeAudioController;
+            if (!controller.BegunPlaying)
             {
-                positionReport = ANAMusic.getCurrentPosition(fileID);
-                Time = positionReport + offsetMilliseconds;
+                if (Time >= 0)
+                    controller.Play(0);
+                else
+                    Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
             }
             else
-                Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
+            {
+                if (positionReport != ANAMusic.getCurrentPosition(controller.FileID))
+                {
+                    positionReport = ANAMusic.getCurrentPosition(controller.FileID);
+                    Time = positionReport + offsetMilliseconds;
+                }
+                else
+                    Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
+            }
         }
         else
         {

@@ -178,6 +178,8 @@ public class Game : SingletonMonoBehavior<Game>
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
         Conductor.Instance.Initialize();
         IsPaused = false;
+        UnityEngine.Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        Context.SetAutoRotation(false);
     }
 
     private void ClearGameplayElements()
@@ -222,6 +224,9 @@ public class Game : SingletonMonoBehavior<Game>
         Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);
         OnGameEnded?.Invoke(this);
 
+        UnityEngine.Screen.sleepTimeout = SleepTimeout.SystemSetting;
+        Context.SetAutoRotation(true);
+
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
         SceneManager.LoadScene("Navigation");
     }
@@ -234,6 +239,9 @@ public class Game : SingletonMonoBehavior<Game>
         TransitionTime = 1f;
         Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);
         OnGameEnded?.Invoke(this);
+
+        UnityEngine.Screen.sleepTimeout = SleepTimeout.SystemSetting;
+        Context.SetAutoRotation(true);
 
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
         SceneManager.LoadScene("Navigation");

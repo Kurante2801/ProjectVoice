@@ -83,7 +83,15 @@ public class OptionsScreen : Screen
         var nativeaudio = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
         nativeaudio.SetValue(PlayerSettings.NativeAudio);
         nativeaudio.SetLocalizationKeys("OPTIONS_NATIVEAUDIO_NAME", "OPTIONS_NATIVEAUDIO_DESC");
-        nativeaudio.OnValueChanged.AddListener(value => PlayerSettings.NativeAudio = value);
+        nativeaudio.OnValueChanged.AddListener(value =>
+        {
+            PlayerSettings.NativeAudio = value;
+            if(Context.AudioController != null && Context.SelectedLevel != null)
+            {
+                Context.StopSongPreview();
+                Context.PlaySongPreview(Context.SelectedLevel);
+            }
+        });
 
         var targetfps = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
         targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS" }, new object[] { 30, 60, 120 }, PlayerSettings.TargetFPS);
@@ -95,9 +103,10 @@ public class OptionsScreen : Screen
         music.SetLocalizationKeys("OPTIONS_MUSICVOLUME_NAME", "OPTIONS_MUSICVOLUME_DESC");
         music.OnValueChanged.AddListener(value =>
         {
-            Context.AudioSource.DOKill();
-            Context.AudioSource.volume = value / 100f;
             PlayerSettings.MusicVolume = value / 100f;
+            if (Context.AudioController == null) return;
+            Context.AudioController.DOKill();
+            Context.AudioController.Volume = value / 100f;
         });
 
         var dim = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);

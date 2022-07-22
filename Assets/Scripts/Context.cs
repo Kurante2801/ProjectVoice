@@ -29,6 +29,7 @@ public class Context : SingletonMonoBehavior<Context>
     public static Level SelectedLevel;
     
     public static AudioSource AudioSource;
+    public static AudioController AudioController;
     private static string audioPath;
     private static CancellationTokenSource audioToken;
 
@@ -121,6 +122,7 @@ public class Context : SingletonMonoBehavior<Context>
 
         AudioSource = GetComponent<AudioSource>();
         AudioSource.volume = PlayerSettings.MusicVolume;
+        AudioSource.bypassEffects = true;
 
         IsInitialized = true;
     }
@@ -148,22 +150,21 @@ public class Context : SingletonMonoBehavior<Context>
         if (path == audioPath) return;
 
         audioToken?.Cancel();
-        audioToken = null;
+        audioToken = new();
+        
         // Play preview
-        var clip = await AudioLoader.LoadClip(path);
-        AudioSource.Stop();
-        AudioSource.clip = clip;
+        AudioController = await AudioManager.LoadAudio(path, AudioSource);
+        if(audioToken == null || audioToken.IsCancellationRequested)
+        {
+            AudioController.Unload();
+            return;
+        }
 
-        if (useMusic)
-            AudioSource.time = Mathf.Clamp(level.Meta.preview_time / 1000f, 0f, AudioSource.clip.length);
-        else
-            AudioSource.time = 0f; // Not doing this causes an exception
-
-        AudioSource.volume = 0f;
-        AudioSource.loop = true;
-        AudioSource.Play();
-        AudioSource.DOKill();
-        AudioSource.DOFade(PlayerSettings.MusicVolume, 1.25f);
+        AudioController.Play(useMusic ? level.Meta.preview_time : 0);
+        AudioController.Volume = 0f;
+        AudioController.Looping = true;
+        AudioController.DOKill();
+        AudioController.DOFade(PlayerSettings.MusicVolume, 1.25f);
 
         audioPath = path;
     }
@@ -171,15 +172,15 @@ public class Context : SingletonMonoBehavior<Context>
     public static void FadeOutSongPreview()
     {
         audioToken?.Cancel();
-        AudioSource.DOKill();
-        AudioSource.DOFade(0f, 0.25f).OnComplete(() => AudioSource.Stop());
+        AudioController.DOKill();
+        AudioController.DOFade(0f, 0.25f).OnComplete(() => AudioController?.Unload());
         audioPath = "";
     }
 
     public static void StopSongPreview()
     {
         audioToken?.Cancel();
-        AudioSource.Stop();
+        AudioController?.Unload();
         audioPath = "";
     }
 

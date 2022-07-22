@@ -4,12 +4,35 @@ using UnityEngine;
 using DG.Tweening;
 using DG.Tweening.Plugins.Options;
 using DG.Tweening.Core;
+using Cysharp.Threading.Tasks;
 
 // Based off https://github.com/Cytoid/Cytoid/blob/main/Assets/Scripts/AudioManager.cs
 // but using a free native audio because I'm poor
 public class AudioManager : SingletonMonoBehavior<AudioManager>
 {
-    
+    public static async UniTask<AudioController> LoadAudio(string path, AudioSource source, bool overrideNative = false)
+    {
+        // Android native
+        if(PlayerSettings.NativeAudio && !overrideNative && Application.platform == RuntimePlatform.Android)
+        {
+            int fileID = -2;
+            ANAMusic.load(path, true, true, id => fileID = id);
+            await UniTask.WaitUntil(() => fileID != -2);
+            // Failed to load
+            if(fileID == -1)
+            {
+                Debug.LogWarning($"Could not load {path} using ANAMusic. Loading with Unity instead.");
+                return await LoadAudio(path, source, true);
+            }
+
+            return new NativeAudioController(fileID);
+        }
+        else
+        {
+            var clip = await AudioLoader.LoadClip(path);
+            return new UnityAudioController(source, clip, AudioLoader.MPEGLength > 0 ? Mathf.CeilToInt((float)AudioLoader.MPEGLength * 1000f) : -1);
+        }
+    }
 }
 
 public abstract class AudioController
@@ -21,12 +44,18 @@ public abstract class AudioController
     public abstract bool Paused { get; set; }
     public abstract bool Looping { get; set; }
     public abstract void Unload();
+    public abstract void Seek(int milliseconds);
 
     public TweenerCore<float, float, FloatOptions> DOFade(float volume, float duration)
     {
         var t = DOTween.To(() => Volume, value => Volume = value, volume, duration);
         t.SetTarget(this);
         return t;
+    }
+
+    public int DOKill(bool complete = false)
+    {
+        return DOTween.Kill(this, complete);
     }
 }
 
@@ -55,17 +84,22 @@ public class UnityAudioController : AudioController
     public override void PlayScheduled(int delay)
     {
         source.time = 0f;
-        Debug.Log(delay);
         source.PlayScheduled(AudioSettings.dspTime + delay / 1000D);
         Paused = false;
     }
 
     public override void Unload()
     {
+        if (source == null || source.clip == null) return;
         source.Stop();
         source.clip.UnloadAudioData();
         Object.Destroy(source.clip);
         source.clip = null;
+    }
+
+    public override void Seek(int milliseconds)
+    {
+        source.time = milliseconds / 1000f;
     }
 }
 
@@ -141,5 +175,10 @@ public class NativeAudioController : AudioController
     public override void Unload()
     {
         ANAMusic.release(FileID);
+    }
+
+    public override void Seek(int milliseconds)
+    {
+        ANAMusic.seekTo(FileID, milliseconds);
     }
 }
