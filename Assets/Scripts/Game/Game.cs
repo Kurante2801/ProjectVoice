@@ -116,6 +116,22 @@ public class Game : SingletonMonoBehavior<Game>
         Chart.tracks.ForEach(track => EndTime = Mathf.Max(EndTime, track.despawn_time + track.despawn_duration + 1000));
         StartTime = Conductor.Instance.MinTime;
 
+        // Pool tracks beforehand
+        int max = 0;
+        for(int time = StartTime; time <= EndTime; time += 250)
+        {
+            int count = 0;
+            foreach(var track in Chart.tracks)
+            {
+                if (time.IsBetween(track.spawn_time, track.despawn_time + track.despawn_duration))
+                    count++;
+            }
+            max = Mathf.Max(max, count);
+        }
+
+        for (int i = 0; i < max; i++)
+            tracksPool.Release(Instantiate(trackPrefab.gameObject, poolContainer).GetComponent<Track>());
+
         await Context.AudioSource.DOFade(1f, 0.25f).AsyncWaitForCompletion();
         Context.StopSongPreview();
 
