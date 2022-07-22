@@ -22,6 +22,8 @@
     "OPTIONS_LANG_DESC": "Language",
     "OPTIONS_GRAPHICS_NAME": "Calidad de Gráficos",
     "OPTIONS_GRAPHICS_DESC": "",
+    "OPTIONS_RENDERSCALE_NAME": "Escala del Renderizador",
+    "OPTIONS_RENDERSCALE_DESC": "Similar a Calidad de Gráficos pero no afecta a la interfaz.",
     "OPTIONS_NATIVEAUDIO_NAME": "Usar Audio Nativo",
     "OPTIONS_NATIVEAUDIO_DESC": "Omite el sistema de audio de Unity y reduce la latencia del audio, pero al reanudar la música se produciran cortos.",
     "OPTIONS_SAFEAREA_NAME": "Habilitar Area Segura",

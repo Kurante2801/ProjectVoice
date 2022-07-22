@@ -75,6 +75,16 @@ public class OptionsScreen : Screen
             quality.SetNames(graphics.Select(quality => quality.GetLocalized()).ToArray());
         });
 
+        var renderscale = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
+        renderscale.SetValues(PlayerSettings.RenderScale * 100f, 0f, 100f, 5f, 0, true, false);
+        renderscale.SetRealMinMax(25f, 100f);
+        renderscale.SetLocalizationKeys("OPTIONS_RENDERSCALE_NAME", "OPTIONS_RENDERSCALE_DESC");
+        renderscale.OnValueChanged.AddListener(value =>
+        {
+            PlayerSettings.RenderScale = value / 100f;
+            Context.SetupResolution();
+        });
+
         var safearea = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
         safearea.SetValue(PlayerSettings.SafeArea);
         safearea.SetLocalizationKeys("OPTIONS_SAFEAREA_NAME", "OPTIONS_SAFEAREA_DESC");
@@ -98,10 +108,10 @@ public class OptionsScreen : Screen
         targetfps.SetLocalizationKeys("OPTIONS_TARGETFPS_NAME", "OPTIONS_TARGETFPS_DESC");
         targetfps.OnValueChanged.AddListener((_, _, value) => PlayerSettings.TargetFPS = (int)value);
 
-        var music = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
-        music.SetValues(PlayerSettings.MusicVolume * 100f, 0f, 100f, 5f, 0, true, true);
-        music.SetLocalizationKeys("OPTIONS_MUSICVOLUME_NAME", "OPTIONS_MUSICVOLUME_DESC");
-        music.OnValueChanged.AddListener(value =>
+        var musicvolume = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
+        musicvolume.SetValues(PlayerSettings.MusicVolume * 100f, 0f, 100f, 5f, 0, true, true);
+        musicvolume.SetLocalizationKeys("OPTIONS_MUSICVOLUME_NAME", "OPTIONS_MUSICVOLUME_DESC");
+        musicvolume.OnValueChanged.AddListener(value =>
         {
             PlayerSettings.MusicVolume = value / 100f;
             if (Context.AudioController == null) return;

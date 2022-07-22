@@ -14,7 +14,7 @@ public class SettingSliderElement : SettingElement
 
     public UnityEvent<float> OnValueChanged = new();
 
-    public float Step = 0.25f;
+    public float Step = 0.25f, Min = 0, Max = 0;
     public int Decimals = 0;
 
     private float _value = 0;
@@ -42,12 +42,25 @@ public class SettingSliderElement : SettingElement
         InputField.SetTextWithoutNotify(value.ToString("F" + Decimals));
 
         Step = step;
+        Min = min;
+        Max = max;
+    }
+
+    /// <summary>
+    /// These min and max values are enforced when the slider is changed, but visually the slider's min and max are not affected
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    public void SetRealMinMax(float min, float max)
+    {
+        Min = min;
+        Max = max;
     }
 
     private void ValueChanged(float value)
     {
         float desired = (float)Math.Round(value, Decimals);
-        desired = Mathf.Round(desired / Step) * Step;
+        desired = Mathf.Clamp(Mathf.Round(desired / Step) * Step, Min, Max);
 
         if(value != desired)
             Slider.value = desired;

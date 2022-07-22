@@ -7,6 +7,8 @@ using System.IO;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
@@ -207,5 +209,8 @@ public class Context : SingletonMonoBehavior<Context>
     {
         float scale = GraphicsQualityExtensions.GetScale(PlayerSettings.GraphicsQuality);
         UnityEngine.Screen.SetResolution(Mathf.CeilToInt(ScreenRealWidth * scale), Mathf.CeilToInt(ScreenRealHeight * scale), UnityEngine.Screen.fullScreenMode);
+
+        var urpAsset = (UniversalRenderPipelineAsset)GraphicsSettings.renderPipelineAsset;
+        urpAsset.renderScale = PlayerSettings.RenderScale;
     }
 }

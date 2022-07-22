@@ -28,6 +28,8 @@
     "OPTIONS_LANG_DESC": "",
     "OPTIONS_GRAPHICS_NAME": "Graphics Quality",
     "OPTIONS_GRAPHICS_DESC": "",
+    "OPTIONS_RENDERSCALE_NAME": "Render Scale",
+    "OPTIONS_RENDERSCALE_DESC": "Similar to Graphics Quality, but does not affect UI",
     "OPTIONS_NATIVEAUDIO_NAME": "Use Native Audio",
     "OPTIONS_NATIVEAUDIO_DESC": "Bypasses Unity's audio system and lowers audio latency, but unpausing while playing causes stuttering.",
     "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",

@@ -15,8 +15,6 @@ public class LevelSelectionScreen : Screen
 
     public override void OnScreenInitialized()
     {
-        base.OnScreenInitialized();
-
         foreach (Transform child in Content)
             Destroy(child.gameObject);
         
@@ -29,6 +27,8 @@ public class LevelSelectionScreen : Screen
 
             Levels[level.ID] = card;
         }
+
+        base.OnScreenInitialized();
     }
 
     public void OptionsButton()

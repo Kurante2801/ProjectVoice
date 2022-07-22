@@ -21,6 +21,12 @@ public class PlayerSettings
         set => PlayerPrefs.SetString("graphicsquality", value);
     }
 
+    public static float RenderScale
+    {
+        get => PlayerPrefs.GetFloat("renderscale", 1f);
+        set => PlayerPrefs.SetFloat("renderscale", Mathf.Clamp(value, 0.25f, 1f));
+    }
+
     public static bool SafeArea
     {
         get => PlayerPrefsExtensions.GetBool("safearea", true);
