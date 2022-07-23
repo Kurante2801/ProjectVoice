@@ -15,7 +15,7 @@ public class InitializationScreen : Screen
 
         if (Context.SelectedLevel != null)
         {
-            if(Context.State != null && Context.State.IsCompleted && Context.SelectedChart != null)
+            if(Context.State != null && Context.State.IsCompleted && Context.SelectedChart != null && !Context.Modifiers.Contains(Modifier.Auto))
                 Context.ScreenManager.ChangeScreen("ResultScreen", addToHistory: false);
             else
                 Context.ScreenManager.ChangeScreen("LevelSummaryScreen");
