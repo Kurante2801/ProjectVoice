@@ -36,6 +36,8 @@
     "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
     "OPTIONS_TARGETFPS_NAME": "FPS Limit",
     "OPTIONS_TARGETFPS_DESC": "",
+    "OPTIONS_FPSCOUNTER_NAME": "FPS Counter",
+    "OPTIONS_FPSCOUNTER_DESC": "",
     "OPTIONS_MUSICVOLUME_NAME": "Music Volume",
     "OPTIONS_MUSICVOLUME_DESC": "",
     "OPTIONS_BACKGROUNDDIM_NAME": "Background Dim",

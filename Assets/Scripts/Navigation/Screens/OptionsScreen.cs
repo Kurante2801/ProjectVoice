@@ -108,6 +108,11 @@ public class OptionsScreen : Screen
         targetfps.SetLocalizationKeys("OPTIONS_TARGETFPS_NAME", "OPTIONS_TARGETFPS_DESC");
         targetfps.OnValueChanged.AddListener((_, _, value) => PlayerSettings.TargetFPS = (int)value);
 
+        var fpscounter = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
+        fpscounter.SetValue(PlayerSettings.NativeAudio);
+        fpscounter.SetLocalizationKeys("OPTIONS_FPSCOUNTER_NAME", "OPTIONS_FPSCOUNTER_DESC");
+        fpscounter.OnValueChanged.AddListener(value => PlayerSettings.FPSCounter = value);
+
         var musicvolume = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
         musicvolume.SetValues(PlayerSettings.MusicVolume * 100f, 0f, 100f, 5f, 0, true, true);
         musicvolume.SetLocalizationKeys("OPTIONS_MUSICVOLUME_NAME", "OPTIONS_MUSICVOLUME_DESC");

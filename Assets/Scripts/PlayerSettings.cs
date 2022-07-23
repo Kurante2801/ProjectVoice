@@ -49,6 +49,12 @@ public class PlayerSettings
         }
     }
 
+    public static bool FPSCounter
+    {
+        get => PlayerPrefsExtensions.GetBool("fpscounter", false);
+        set => PlayerPrefsExtensions.SetBool("fpscounter", value);
+    }
+
     public static float MusicVolume
     {
         get => PlayerPrefs.GetFloat("musicvolume", 1f);

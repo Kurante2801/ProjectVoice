@@ -30,6 +30,8 @@
     "OPTIONS_SAFEAREA_DESC": "La interfaz evitará las cámaras integradas a la pantalla.",
     "OPTIONS_TARGETFPS_NAME": "Límite de FPS",
     "OPTIONS_TARGETFPS_DESC": "",
+    "OPTIONS_FPSCOUNTER_NAME": "Contador de FPS",
+    "OPTIONS_FPSCOUNTER_DESC": "",
     "OPTIONS_MUSICVOLUME_NAME": "Volumen de Música",
     "OPTIONS_MUSICVOLUME_DESC": "",
     "OPTIONS_BACKGROUNDDIM_NAME": "Atenuación del Fondo",
