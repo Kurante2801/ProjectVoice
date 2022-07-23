@@ -184,7 +184,7 @@ public static class LegacyParser
                 id = legacy.Id,
                 type = (int)type,
                 time = Mathf.RoundToInt(legacy.Time * 1000),
-                data = type == NoteType.Hold ? Mathf.RoundToInt(legacy.Hold * 1000) : (legacy.Dir == 0 ? -1 : 1),
+                data = type == NoteType.Hold ? Mathf.RoundToInt(legacy.Hold * 1000) : (legacy.Dir <= 0 ? -1 : 1),
             });
         }
 
