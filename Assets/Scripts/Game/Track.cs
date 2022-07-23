@@ -196,8 +196,8 @@ public class Track : MonoBehaviour
         leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - width);
         rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + width);
 
-        leftLine.transform.localScale = centerLine.transform.localScale = rightLine.transform.localScale = new Vector3(Mathf.Max(1f, 1f.ScreenScaledX()) * 0.5f, scaleY, 1f);
-        leftGlow.transform.localScale = rightGlow.transform.localScale = new Vector3(Mathf.Max(1f, 1f.ScreenScaledX()), scaleY, 1f);
+        leftLine.transform.localScale = centerLine.transform.localScale = rightLine.transform.localScale = new Vector3(0.5f.ScreenScaledX(), scaleY, 1f);
+        leftGlow.transform.localScale = rightGlow.transform.localScale = new Vector3(2f.ScreenScaledX(), scaleY, 1f);
 
         var color = GetColorValue(time);
         background.color = leftGlow.color = rightGlow.color = color;
