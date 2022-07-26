@@ -34,7 +34,7 @@ public class GameLevelInfo : MonoBehaviour
     {
         title.text = Context.SelectedLevel.Meta.title;
         var chart = Context.SelectedChart;
-        difficulty.text = $"{chart.name.SanitizeTMP()} <font-weight=500>{chart.difficulty}";
+        difficulty.text = $"{chart.name} {chart.difficulty}";
         difficulty.color = chart.type.GetColor().WithAlpha(0f);
 
         title.DOKill();

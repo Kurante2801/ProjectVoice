@@ -17,7 +17,7 @@ public class DifficultyButton : MonoBehaviour
     public void SetChart(ChartSection chart)
     {
         Chart = chart;
-        TMP.text = $"<font-weight=500>{chart.name.SanitizeTMP()} <b>{chart.difficulty}";
+        TMP.text = $"{chart.name} {chart.difficulty}";
         UpdateColors(false);
     }
 
