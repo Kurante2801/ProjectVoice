@@ -32,7 +32,7 @@ public class GameLevelInfo : MonoBehaviour
 
     private void FadeIn(Game game)
     {
-        title.text = "<font-weight=500>" + Context.SelectedLevel.Meta.title.SanitizeTMP();
+        title.text = Context.SelectedLevel.Meta.title;
         var chart = Context.SelectedChart;
         difficulty.text = $"{chart.name.SanitizeTMP()} <font-weight=500>{chart.difficulty}";
         difficulty.color = chart.type.GetColor().WithAlpha(0f);

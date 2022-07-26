@@ -28,7 +28,7 @@ public class LevelCard : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(level.Meta.title_localized))
         {
             TitleLocalized.gameObject.SetActive(true);
-            TitleLocalized.text = "<font-weight=500>" + level.Meta.title_localized.SanitizeTMP();
+            TitleLocalized.text = level.Meta.title_localized;
         }
         else
             TitleLocalized.gameObject.SetActive(false);
@@ -36,7 +36,7 @@ public class LevelCard : MonoBehaviour
         if (!string.IsNullOrEmpty(level.Meta.artist_localized))
         {
             ArtistLocalized.gameObject.SetActive(true);
-            ArtistLocalized.text = "<font-weight=500>" + level.Meta.artist_localized.SanitizeTMP();
+            ArtistLocalized.text = level.Meta.artist_localized;
         }
         else
             ArtistLocalized.gameObject.SetActive(false);
@@ -52,9 +52,9 @@ public class LevelCard : MonoBehaviour
 
             var diff = chart.difficulty;
             if(diff > 17)
-                gameObject.GetComponentInChildren<TMP_Text>().text = "<font-weight=500>17+";
+                gameObject.GetComponentInChildren<TMP_Text>().text = "17+";
             else
-                gameObject.GetComponentInChildren<TMP_Text>().text = "<font-weight=500>" + chart.difficulty.ToString();
+                gameObject.GetComponentInChildren<TMP_Text>().text = chart.difficulty.ToString();
         }
 
         LoadBackground();

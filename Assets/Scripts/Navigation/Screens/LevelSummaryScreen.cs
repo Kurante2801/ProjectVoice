@@ -42,7 +42,7 @@ public class LevelSummaryScreen : Screen
         if (!string.IsNullOrWhiteSpace(level.Meta.title_localized))
         {
             TitleLocalized.gameObject.SetActive(true);
-            TitleLocalized.text = "<font-weight=500>" + level.Meta.title_localized.SanitizeTMP();
+            TitleLocalized.text = level.Meta.title_localized;
         }
         else
             TitleLocalized.gameObject.SetActive(false);
@@ -50,7 +50,7 @@ public class LevelSummaryScreen : Screen
         if (!string.IsNullOrEmpty(level.Meta.artist_localized))
         {
             ArtistLocalized.gameObject.SetActive(true);
-            ArtistLocalized.text = "<font-weight=500>" + level.Meta.artist_localized.SanitizeTMP();
+            ArtistLocalized.text = level.Meta.artist_localized;
         }
         else
             ArtistLocalized.gameObject.SetActive(false);
@@ -144,8 +144,6 @@ public class LevelSummaryScreen : Screen
     private void AddInfoLine(string name, string text, string url = default)
     {
         if (string.IsNullOrWhiteSpace(text)) return;
-        text = text.SanitizeTMP();
-
-        Instantiate(infoLinePrefab.gameObject, infoContent).GetComponent<LevelInfoLine>().SetInfo(name, text, url);
+        Instantiate(infoLinePrefab.gameObject, infoContent).GetComponent<LevelInfoLine>().SetInfo(name, text.SanitizeTMP(), url);
     }
 }

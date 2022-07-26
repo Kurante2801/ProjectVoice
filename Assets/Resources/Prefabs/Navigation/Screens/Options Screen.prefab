@@ -1497,6 +1497,7 @@ MonoBehaviour:
   - {fileID: 8157841254869623909}
   - {fileID: 7118074944050795121}
   InitialTab: 0
+  AllowNoneSelected: 0
 --- !u!114 &6753407423094743143
 MonoBehaviour:
   m_ObjectHideFlags: 0
