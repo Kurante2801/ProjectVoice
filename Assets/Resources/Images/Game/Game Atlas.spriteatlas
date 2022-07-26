@@ -26,7 +26,7 @@ SpriteAtlas:
       m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
       m_TextureFormat: -1
-      m_TextureCompression: 1
+      m_TextureCompression: 0
       m_CompressionQuality: 50
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
@@ -51,7 +51,6 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: efca8132acafc6f46abfc1a65aca4c82, type: 3}
   - {fileID: 21300000, guid: 32011d921e8597c4986435dd727098ef, type: 3}
   - {fileID: 21300000, guid: 4b934ac278285ad4f9c6ad719142bc34, type: 3}
   - {fileID: 21300000, guid: 926e2263f96633146a0d586a140232a4, type: 3}
@@ -59,8 +58,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1e1c5477cce72e141b43e0e30aaf956a, type: 3}
   - {fileID: 21300000, guid: e17e8f3a8a9565b46b0780bf1f8934a4, type: 3}
   - {fileID: 21300000, guid: f08069abfdb1b1c4ca8b1e2ee8ebd69f, type: 3}
+  - {fileID: 21300000, guid: 5345507e413b6064793956b2a7a3d378, type: 3}
+  - {fileID: 21300000, guid: da18326f7cf9d5843ad4c4ec18dff917, type: 3}
   m_PackedSpriteNamesToIndex:
-  - track_background
   - judgement_diamond
   - track_line
   - white
@@ -68,6 +68,8 @@ SpriteAtlas:
   - judgement_circle
   - track_bottom
   - track_glow
+  - track_active
+  - track_background
   m_RenderDataMap: {}
   m_Tag: Game Atlas
   m_IsVariant: 0

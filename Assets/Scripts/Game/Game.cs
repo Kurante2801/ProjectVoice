@@ -356,7 +356,7 @@ public class Game : SingletonMonoBehavior<Game>
         
         Track.ScreenMargin = 12f.ScreenScaledX();
         Track.ScaleY = 1f.ScreenScaledY();
-        Track.WorldY = 11.9f.ScreenScaledY();
+        Track.WorldY = 12f.ScreenScaledY();
         Track.MarginPosition = (Context.ScreenWidth * 0.1f - Track.ScreenMargin * 2);
         Track.BackgroundWorldWidth = (Context.ScreenWidth / 136f) * Track.ScreenWidth;
         Track.LineWorldWidth = (Context.ScreenWidth / 6f) * Track.ScreenWidth;

@@ -44,7 +44,7 @@ public class HoldTick : MonoBehaviour
             return;
         }
 
-        transform.position = new Vector3(Track.ScreenMargin + Track.MarginPosition * x, Note.GetPosition(time, model) + 11.9f.ScreenScaledY(), 0f);
+        transform.position = new Vector3(Track.ScreenMargin + Track.MarginPosition * x, Note.GetPosition(time, model) + 12f.ScreenScaledY(), 0f);
     }
 
     private void ScreenSizeChanged(int w, int h)

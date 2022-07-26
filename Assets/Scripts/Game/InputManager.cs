@@ -52,8 +52,6 @@ public class InputManager : SingletonMonoBehavior<InputManager>
         if (swiped.Contains(finger.Index))
             swiped.Remove(finger.Index);
 
-        if (Game.Instance.IsPaused) return;
-
         foreach(var track in Game.Instance.CreatedTracks)
         {
             if (track.Fingers.Contains(finger.Index))
@@ -115,7 +113,7 @@ public class InputManager : SingletonMonoBehavior<InputManager>
     public static bool IsTrackWithin(Track track, float x)
     {
         var pos = track.CurrentMoveValue;
-        var width = track.CurrentScaleValue * 13.6f;
+        var width = track.CurrentScaleValue * 13.6f + 2f.ScreenScaledX();
         return x.IsWithin(pos - width * 0.5f, pos + width * 0.5f);
     }
 }

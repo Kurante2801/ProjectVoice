@@ -38,7 +38,7 @@ public class GameJudgementLine : MonoBehaviour
 
     private void ScreenSizeChanged(int w, int h)
     {
-        transform.position = new Vector3(w * 0.05f, 11.9f.ScreenScaledY(), 1f);
+        transform.position = new Vector3(w * 0.05f, 12f.ScreenScaledY(), 1f);
         transform.localScale = new Vector3(3200f.ScreenScaledX(), 5f.ScreenScaledY(), 1f);
     }
 

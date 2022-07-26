@@ -10,7 +10,7 @@ public class Track : MonoBehaviour
 {
     public static float ScreenWidth = 0.115f;
     // These values are cached when screen size changes
-    public static float WorldY = 11.9f;
+    public static float WorldY = 12f;
     public static float ScreenMargin = 12f; // 120px of screen margin at 1280 screen width
     public static float ScaleY = 1f;
     public static float MarginPosition = (Context.ScreenWidth * 0.1f - ScreenMargin * 2); // This is part of a calculation to get a track's X position
@@ -55,7 +55,6 @@ public class Track : MonoBehaviour
 
     public void Initialize()
     {
-
         MoveTransitions.Clear();
         ScaleTransitions.Clear();
         ColorTransitions.Clear();
@@ -73,7 +72,6 @@ public class Track : MonoBehaviour
         background.sortingOrder = Model.spawn_time;
         centerLine.sortingOrder = 3;
 
-        //ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         CreatedNotes.Clear();
         Fingers.Clear();
         ActiveTime = -10000;
@@ -82,20 +80,6 @@ public class Track : MonoBehaviour
         if (isDebugTextEnabled)
             tmpID.text = Model.id.ToString();
     }
-
-    /*private void OnEnable()
-    {
-        Game.Instance.OnScreenSizeChanged.AddListener(ScreenSizeChanged);
-    }*/
-
-    /*private void OnDisable()
-    {
-        if (Game.Instance == null) return;
-
-        foreach (var note in CreatedNotes)
-            Game.Instance.DisposeNote(note);
-        CreatedNotes.Clear();
-    }*/
 
     private void Update()
     {
@@ -186,8 +170,10 @@ public class Track : MonoBehaviour
         CurrentMoveValue = pos;
         transform.position = new Vector3(pos, WorldY, 0f);
 
-        overlay.transform.localScale = new Vector3(scaleX, scaleY, 1f);
-        scaleX = Mathf.Max(scaleX - 0.1f.ScreenScaledX(), 0.025f);
+        if (scaleX == float.NaN)
+            scaleX = 0f;
+
+        overlay.transform.localScale = new Vector3(scaleX + 0.125f.ScreenScaledX(), scaleY, 1f);
         background.transform.localScale = bottom.transform.localScale = new Vector3(scaleX, scaleY, 1f);
 
         float width = 13.6f * scaleX * 0.5f;
@@ -196,7 +182,8 @@ public class Track : MonoBehaviour
         leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - width);
         rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + width);
 
-        leftLine.transform.localScale = centerLine.transform.localScale = rightLine.transform.localScale = new Vector3(0.5f.ScreenScaledX(), scaleY, 1f);
+        leftLine.transform.localScale = rightLine.transform.localScale = new Vector3(0.75f.ScreenScaledX(), scaleY, 1f);
+        centerLine.transform.localScale = new Vector3(0.5f.ScreenScaledX(), scaleY, 1f);
         leftGlow.transform.localScale = rightGlow.transform.localScale = new Vector3(2f.ScreenScaledX(), scaleY, 1f);
 
         var color = GetColorValue(time);
@@ -216,9 +203,7 @@ public class Track : MonoBehaviour
 
         // Debug info
         if (PlayerSettings.DebugTracks)
-        {
             tmpID.text = "ID: " + Model.id.ToString();
-        }
     }
 
     public void DisposeNote(Note note)
