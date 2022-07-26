@@ -61,7 +61,7 @@ public class OptionsScreen : Screen
             PlayerSettings.LanguageString = localization.Identifier;
         });
 
-        var graphics = Enum.GetValues(typeof(GraphicsQuality)).Cast<GraphicsQuality>().ToArray();
+        var graphics = Enum.GetValues(typeof(GraphicsQuality)).Cast<GraphicsQuality>().Reverse().ToArray();
         var quality = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
         quality.SetValues(graphics.Select(quality => quality.GetLocalized()).ToArray(), graphics.Select(quality => (object)quality.ToString().ToLower()).ToArray(), (object)PlayerSettings.GraphicsQuality);
         quality.SetLocalizationKeys("OPTIONS_GRAPHICS_NAME", "OPTIONS_GRAPHICS_DESC");

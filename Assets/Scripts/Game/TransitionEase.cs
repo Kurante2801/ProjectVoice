@@ -163,35 +163,32 @@ public static class TransitionEaseExtensions
 		return (end - start) * x + start;
 	}
 
-	public static float GetValue(this TransitionEase ease, float perc, float start, float end)
+    public static float GetValue(this TransitionEase ease, float perc, float start, float end) => ease switch
     {
-		return ease switch
-		{
-			TransitionEase.LINEAR => (end - start) * perc + start,
-            TransitionEase.QUAD_IN => (end - start) * (perc * perc) + start,
-            TransitionEase.QUAD_OUT => (end - start) * (-((1f - perc) * (1f - perc)) + 1f) + start,
-            TransitionEase.QUAD_INOUT => LerpQuadEaseInOut(start, end, perc),
-			TransitionEase.QUAD_OUTIN => LerpQuadEaseOutIn(start, end, perc),
-            TransitionEase.CIRC_IN => (end - start) * (1f - Mathf.Sqrt(1f - perc * perc)) + start,
-            TransitionEase.CIRC_OUT => (end - start) * (-(1f - Mathf.Sqrt(1f - (1f - perc) * (1f - perc))) + 1f) + start,
-            TransitionEase.CIRC_INOUT => LerpCircEaseInOut(start, end, perc),
-			TransitionEase.CIRC_OUTIN => LerpCircEaseOutIn(start, end, perc),
-            TransitionEase.EXP_IN => (end - start) * Mathf.Pow(2, 10f * (perc - 1)) + start,
-            TransitionEase.EXP_OUT => (end - start) * (-Mathf.Pow(2, 10f * -perc) + 1f) + start,
-            TransitionEase.EXP_INOUT => LerpExpEaseInOut(start, end, perc),
-            TransitionEase.EXP_OUTIN => LerpExpEaseOutIn(start, end, perc),
-            TransitionEase.BACK_IN => (end - start) * (perc * perc * (2.70158f * perc - 1.70158f)) + start,
-            TransitionEase.BACK_OUT => (end - start) * (-((1f - perc) * (1f - perc) * (2.70158f * (1 - perc) - 1.70158f)) + 1f) + start,
-            TransitionEase.BACK_INOUT => LerpBackEaseInOut(start, end, perc),
-			TransitionEase.BACK_OUTIN => LerpBackEaseOutIn(start, end, perc),
-            TransitionEase.EXIT_MOVE => LerpExitPosition(start, end, perc),
-			TransitionEase.EXIT_SCALE => LerpExitScale(start, end, perc),
-			TransitionEase.EXIT_COLOR => (end - start) * (perc * perc * (2.70158f * (perc * 6f) - 1.00158f)) + start,
-            TransitionEase.ELASTIC_IN => (end - start) * -(Mathf.Pow(2f, 10f * (perc - 1f)) * Mathf.Sin((perc - 1.1f) * 2f * Mathf.PI / 0.4f)) + start,
-            TransitionEase.ELASTIC_OUT => (end - start) * (Mathf.Pow(2f, -10f * perc) * Mathf.Sin((perc - 0.1f) * 2f * Mathf.PI / 0.4f) + 1f) + start,
-            TransitionEase.ELASTIC_INOUT => LerpElasticEaseInOut(start, end, perc),
-            TransitionEase.ELASTIC_OUTIN => LerpElasticEaseOutIn(start, end, perc),
-			_  => end,
-		};
-    }
+        TransitionEase.LINEAR => (end - start) * perc + start,
+        TransitionEase.QUAD_IN => (end - start) * (perc * perc) + start,
+        TransitionEase.QUAD_OUT => (end - start) * (-((1f - perc) * (1f - perc)) + 1f) + start,
+        TransitionEase.QUAD_INOUT => LerpQuadEaseInOut(start, end, perc),
+        TransitionEase.QUAD_OUTIN => LerpQuadEaseOutIn(start, end, perc),
+        TransitionEase.CIRC_IN => (end - start) * (1f - Mathf.Sqrt(1f - perc * perc)) + start,
+        TransitionEase.CIRC_OUT => (end - start) * (-(1f - Mathf.Sqrt(1f - (1f - perc) * (1f - perc))) + 1f) + start,
+        TransitionEase.CIRC_INOUT => LerpCircEaseInOut(start, end, perc),
+        TransitionEase.CIRC_OUTIN => LerpCircEaseOutIn(start, end, perc),
+        TransitionEase.EXP_IN => (end - start) * Mathf.Pow(2, 10f * (perc - 1)) + start,
+        TransitionEase.EXP_OUT => (end - start) * (-Mathf.Pow(2, 10f * -perc) + 1f) + start,
+        TransitionEase.EXP_INOUT => LerpExpEaseInOut(start, end, perc),
+        TransitionEase.EXP_OUTIN => LerpExpEaseOutIn(start, end, perc),
+        TransitionEase.BACK_IN => (end - start) * (perc * perc * (2.70158f * perc - 1.70158f)) + start,
+        TransitionEase.BACK_OUT => (end - start) * (-((1f - perc) * (1f - perc) * (2.70158f * (1 - perc) - 1.70158f)) + 1f) + start,
+        TransitionEase.BACK_INOUT => LerpBackEaseInOut(start, end, perc),
+        TransitionEase.BACK_OUTIN => LerpBackEaseOutIn(start, end, perc),
+        TransitionEase.EXIT_MOVE => LerpExitPosition(start, end, perc),
+        TransitionEase.EXIT_SCALE => LerpExitScale(start, end, perc),
+        TransitionEase.EXIT_COLOR => (end - start) * (perc * perc * (2.70158f * (perc * 6f) - 1.00158f)) + start,
+        TransitionEase.ELASTIC_IN => (end - start) * -(Mathf.Pow(2f, 10f * (perc - 1f)) * Mathf.Sin((perc - 1.1f) * 2f * Mathf.PI / 0.4f)) + start,
+        TransitionEase.ELASTIC_OUT => (end - start) * (Mathf.Pow(2f, -10f * perc) * Mathf.Sin((perc - 0.1f) * 2f * Mathf.PI / 0.4f) + 1f) + start,
+        TransitionEase.ELASTIC_INOUT => LerpElasticEaseInOut(start, end, perc),
+        TransitionEase.ELASTIC_OUTIN => LerpElasticEaseOutIn(start, end, perc),
+        _ => end,
+    };
 }
