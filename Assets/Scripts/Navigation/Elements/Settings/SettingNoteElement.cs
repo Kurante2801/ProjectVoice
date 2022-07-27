@@ -15,11 +15,11 @@ public class SettingNoteElement : SettingDropdownElement
     public UnityEvent<Color> OnBackgroundChanged = new(), OnForegroundChanged = new();
     public UnityEvent<NoteShape> OnShapeChanged = new();
     
-    public void SetValues(NoteShape selected, Color back, Color fore)
+    public void SetValues(NoteShape selected, Color back, Color fore, Color back_fallback, Color fore_fallback)
     {
         Background.texture = backgroundTextures[(int)selected];
         Background.color = back;
-        backgroundPicker.SetValues(back, false, backgroundKey);
+        backgroundPicker.SetValues(back, false, backgroundKey, back_fallback);
         backgroundPicker.OnValueChanged.AddListener(value =>
         {
             Background.color = value;
@@ -28,7 +28,7 @@ public class SettingNoteElement : SettingDropdownElement
 
         Foreground.texture = foregroundTextures[(int)selected];
         Foreground.color = fore;
-        foregroundPicker.SetValues(fore, false, foregroundKey);
+        foregroundPicker.SetValues(fore, false, foregroundKey, fore_fallback);
         foregroundPicker.OnValueChanged.AddListener(value =>
         {
             Foreground.color = value;

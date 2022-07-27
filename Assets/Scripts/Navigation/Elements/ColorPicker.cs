@@ -13,6 +13,7 @@ public class ColorPicker : MonoBehaviour
     public bool AllowAlpha = false;
     public string ModalText = "";
 
+    public Color? Fallback = null;
     private Color _color = Color.white;
     public Color Color
     {
@@ -49,18 +50,19 @@ public class ColorPicker : MonoBehaviour
         OnValueChanged?.Invoke(Color);
     }
 
-    public void SetValues(Color color, bool allowAlpha, string modalText)
+    public void SetValues(Color color, bool allowAlpha, string modalText, Color? fallback = null)
     {
         AllowAlpha = allowAlpha;
         Color = color;
         ModalText = modalText;
+        Fallback = fallback;
     }
 
     public void OpenModal()
     {
         var rootCanvas = GetComponentInParent<Canvas>().rootCanvas;
         var modal = ColorPickerModal.CreateModal(rootCanvas);
-        modal.SetValues(Color, ModalText, AllowAlpha);
+        modal.SetValues(Color, ModalText, AllowAlpha, Fallback);
         modal.OnEditEnd.AddListener(value =>
         {
             Color = value;

@@ -50,6 +50,8 @@
     "OPTIONS_NOTES_TAB": "Notes",
     "OPTIONS_NOTESPEED_NAME": "Note Speed",
     "OPTIONS_NOTESPEED_DESC": "",
+    "OPTIONS_JUDGEMENTSHAPE_NAME": "Judgement Shape",
+    "OPTIONS_JUDGEMENTSHAPE_DESC": "",
     "OPTIONS_NOTE_BACKGROUND_NAME": "Background Color",
     "OPTIONS_NOTE_FOREGROUND_NAME": "Foreground Color",
 

@@ -13,21 +13,21 @@ public class SettingNoteHoldElement : SettingNoteElement
     public UnityEvent<Color> OnBottomForegroundChanged => OnForegroundChanged;
     public UnityEvent<Color> OnTopForegroundChanged = new();
 
-    public void SetValues(NoteShape shape, Color back, Color bottomFore, Color topFore)
+    public void SetValues(NoteShape shape, Color back, Color bottomFore, Color topFore, Color back_fallback, Color bottomFore_fallback, Color topFore_fallback)
     {
         TopBackground.texture = backgroundTextures[(int)shape];
         TopForeground.texture = foregroundTextures[(int)shape];
         Sustain.texture = sustainTextures[(int)shape];
 
         TopForeground.color = topFore;
-        topForegroundPicker.SetValues(topFore, false, topForegroundKey);
+        topForegroundPicker.SetValues(topFore, false, topForegroundKey, topFore_fallback);
         topForegroundPicker.OnValueChanged.AddListener(value =>
         {
             TopForeground.color = value;
             OnTopForegroundChanged?.Invoke(value);
         });
 
-        SetValues(shape, back, bottomFore);
+        SetValues(shape, back, bottomFore, back_fallback, bottomFore_fallback);
         backgroundPicker.OnValueChanged.AddListener(color =>
         {
             TopBackground.color = color;

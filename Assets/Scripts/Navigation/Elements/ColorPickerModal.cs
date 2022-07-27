@@ -10,7 +10,7 @@ public class ColorPickerModal : MonoBehaviour
 {
     [Tooltip("Objects to hide when alpha is not allowed")]
     public List<GameObject> AlphaObjects = new();
-    public Image CancelColorImage, AcceptColorImage;
+    public Image CancelColorImage, AcceptColorImage, ResetColorImage;
 
     public RawImage SVGraphic, HueGraphic, AlphaGraphic;
     public TMP_InputField RedInput, GreenInput, BlueInput, AlphaInput, HexInput;
@@ -18,6 +18,7 @@ public class ColorPickerModal : MonoBehaviour
     public Slider2D SaturationValueSlider;
     public Image TextBar;
     public TMP_Text PropertyText;
+    public Button ResetButton;
 
     public CanvasGroup CanvasGroup;
 
@@ -34,6 +35,7 @@ public class ColorPickerModal : MonoBehaviour
     public Color32 RGBA => ColorExtensions.HSVToRGB(Hue, Saturation, Value).WithAlpha(Alpha);
 
     private Color32 previous;
+    private Color32? fallback;
 
     public UnityEvent<Color32> OnEditEnd = new();
 
@@ -156,7 +158,7 @@ public class ColorPickerModal : MonoBehaviour
         AcceptColorImage.color = color;
     }
 
-    public void SetValues(Color32 value, string text, bool allowAlpha)
+    public void SetValues(Color32 value, string text, bool allowAlpha, Color32? fallback = null)
     {
         if (string.IsNullOrWhiteSpace(text))
             TextBar.gameObject.SetActive(false);
@@ -169,12 +171,26 @@ public class ColorPickerModal : MonoBehaviour
         ValueChanged();
 
         previous = value;
+        this.fallback = fallback;
         CancelColorImage.color = value.WithAlpha(allowAlpha ? value.a : (byte)255);
 
         foreach (var gameObject in AlphaObjects)
             gameObject.SetActive(allowAlpha);
         CanvasGroup.DOKill();
         CanvasGroup.DOFade(1f, 0.25f);
+
+        if(fallback != null)
+        {
+            ResetButton.gameObject.SetActive(true);
+            ResetColorImage.color = (Color32)fallback;
+            ResetButton.onClick.AddListener(() =>
+            {
+                Color.RGBToHSV((Color)this.fallback, out _hue, out _saturation, out _value);
+                ValueChanged(updateHue: true, updateSV: true);
+            });
+        }
+        else
+            ResetButton.gameObject.SetActive(false);
     }
 
     public void CancelButton()
@@ -185,16 +201,10 @@ public class ColorPickerModal : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void ResetButton()
-    {
-        SetValues(previous, PropertyText.text, AllowAlpha);
-    }
-
     public void AcceptButton()
     {
         var color = RGBA;
         CancelButton();
         OnEditEnd?.Invoke(color);
     }
-
 }

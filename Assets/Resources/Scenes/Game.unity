@@ -961,6 +961,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3368149986780719121, guid: 27b1a08c9fd07f04ea7e9d3ca347acf7, type: 3}
+      propertyPath: m_keepAlive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3368149986780719121, guid: 27b1a08c9fd07f04ea7e9d3ca347acf7, type: 3}
+      propertyPath: m_enableOnStartup
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3368149986804425083, guid: 27b1a08c9fd07f04ea7e9d3ca347acf7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3471090310403122535, guid: 27b1a08c9fd07f04ea7e9d3ca347acf7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

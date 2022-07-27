@@ -40,6 +40,8 @@ public class Track : MonoBehaviour
 
     private void Start()
     {
+        judgement.sprite = Game.Instance.GameAtlas.GetSprite("judgement_" + PlayerSettings.JudgementShape.Value.ToString().ToLower());
+
         isDebugTextEnabled = PlayerSettings.DebugTracks.Value;
 
         tmpID.gameObject.SetActive(isDebugTextEnabled);
