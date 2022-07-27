@@ -14,6 +14,12 @@
     "NOTESHAPE_CIRCLE": "Círculo",
     "NOTESHAPE_HEXAGON": "Hexágono",
 
+    "MODIFIER_AUTO_DESC": "El nivel se juega solo",
+    "MODIFIER_AUTOCLICK_DESC": "Las Click Notes se juegan solas",
+    "MODIFIER_AUTOHOLD_DESC": "Las Hold Notes se juegan solas",
+    "MODIFIER_AUTOSWIPE_DESC": "Las Swipe Notes se juegan solas",
+    "MODIFIER_AUTOSLIDE_DESC": "Las Slide Notes se juegan solas",
+
     "OPTIONS_TRUE_BOOLEAN": "Sí",
     "OPTIONS_FALSE_BOOLEAN": "No",
 
