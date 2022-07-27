@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 
 public static class AudioLoader
 {
@@ -21,7 +22,7 @@ public static class AudioLoader
         };
     }
 
-    public static async UniTask<AudioClip> LoadClip(string path)
+    public static async UniTask<AudioClip> LoadClip(string path, CancellationToken token = default)
     {
         MPEGLength = -1f;
         // Load Windows MP3, breaks some features but good enough for testing
@@ -29,6 +30,7 @@ public static class AudioLoader
         {
             using var request = UnityWebRequest.Get("file://" + path);
             await request.SendWebRequest();
+            token.ThrowIfCancellationRequested();
 
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 throw new Exception(request.error);
@@ -46,6 +48,7 @@ public static class AudioLoader
         {
             using var request = UnityWebRequestMultimedia.GetAudioClip("file://" + path, Detect(path));
             await request.SendWebRequest();
+            token.ThrowIfCancellationRequested();
 
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 throw new Exception(request.error);

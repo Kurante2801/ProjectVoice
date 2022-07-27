@@ -133,7 +133,7 @@ public class Game : SingletonMonoBehavior<Game>
         for (int i = 0; i < max; i++)
             tracksPool.Release(Instantiate(trackPrefab.gameObject, poolContainer).GetComponent<Track>());
 
-        await Context.AudioSource.DOFade(0f, 0.75f).AsyncWaitForCompletion();
+        await Context.AudioController?.DOFade(0f, 0.75f).AsyncWaitForCompletion();
         Context.StopSongPreview();
 
         Note.SpeedIndex = Math.Clamp(PlayerSettings.NoteSpeedIndex.Value, 0, 9);

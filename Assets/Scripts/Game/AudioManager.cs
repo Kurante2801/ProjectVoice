@@ -5,31 +5,43 @@ using DG.Tweening;
 using DG.Tweening.Plugins.Options;
 using DG.Tweening.Core;
 using Cysharp.Threading.Tasks;
+using System.Threading;
+using System;
 
 // Based off https://github.com/Cytoid/Cytoid/blob/main/Assets/Scripts/AudioManager.cs
 // but using a free native audio because I'm poor
 public class AudioManager : SingletonMonoBehavior<AudioManager>
 {
-    public static async UniTask<AudioController> LoadAudio(string path, AudioSource source, bool overrideNative = false)
+    public static async UniTask<AudioController> LoadAudio(string path, AudioSource source, CancellationToken token = default, bool overrideNative = false)
     {
         // Android native
         if(PlayerSettings.NativeAudio.Value && !overrideNative && Application.platform == RuntimePlatform.Android)
         {
             int fileID = -2;
             ANAMusic.load(path, true, true, id => fileID = id);
-            await UniTask.WaitUntil(() => fileID != -2);
+            try
+            {
+                await UniTask.WaitUntil(() => fileID != -2, cancellationToken: token);
+            }
+            catch(OperationCanceledException)
+            {
+                await UniTask.WaitUntil(() => fileID != -2);
+                if(fileID >= 0) ANAMusic.release(fileID);
+                throw new OperationCanceledException(token);
+            }
+
             // Failed to load
             if(fileID == -1)
             {
                 Debug.LogWarning($"Could not load {path} using ANAMusic. Loading with Unity instead.");
-                return await LoadAudio(path, source, true);
+                return await LoadAudio(path, source, token, true);
             }
 
             return new NativeAudioController(fileID);
         }
         else
         {
-            var clip = await AudioLoader.LoadClip(path);
+            var clip = await AudioLoader.LoadClip(path, token);
             return new UnityAudioController(source, clip, AudioLoader.MPEGLength > 0 ? Mathf.CeilToInt((float)AudioLoader.MPEGLength * 1000f) : -1);
         }
     }
@@ -93,7 +105,7 @@ public class UnityAudioController : AudioController
         if (source == null || source.clip == null) return;
         source.Stop();
         source.clip.UnloadAudioData();
-        Object.Destroy(source.clip);
+        UnityEngine.Object.Destroy(source.clip);
         source.clip = null;
     }
 

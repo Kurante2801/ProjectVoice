@@ -93,11 +93,6 @@ public class Context : SingletonMonoBehavior<Context>
 
         if (Application.platform == RuntimePlatform.Android)
         {
-            /*using (var version = new AndroidJavaClass("android.os.Build$VERSION"))
-                AndroidVersionCode = version.GetStatic<int>("SDK_INT");
-
-            print(AndroidVersionCode);*/
-
             var dir = GetAndroidStoragePath();
             if (dir == null)
             {
@@ -153,13 +148,22 @@ public class Context : SingletonMonoBehavior<Context>
         if (path == audioPath) return;
 
         audioToken?.Cancel();
+        audioToken?.Dispose();
         audioToken = new();
-        
+
         // Play preview
-        AudioController = await AudioManager.LoadAudio(path, AudioSource);
-        if(audioToken == null || audioToken.IsCancellationRequested)
+        try
         {
-            AudioController.Unload();
+            AudioController = await AudioManager.LoadAudio(path, AudioSource, audioToken.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (AudioController == null)
+        {
+            audioPath = "";
             return;
         }
 
@@ -175,9 +179,11 @@ public class Context : SingletonMonoBehavior<Context>
     public static void FadeOutSongPreview()
     {
         audioToken?.Cancel();
-        AudioController.DOKill();
-        AudioController.DOFade(0f, 0.25f).OnComplete(() => AudioController?.Unload());
         audioPath = "";
+
+        var controller = AudioController;
+        controller.DOKill();
+        controller.DOFade(0f, 0.25f).OnComplete(() => controller?.Unload());
     }
 
     public static void StopSongPreview()
