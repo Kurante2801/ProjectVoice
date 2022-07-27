@@ -40,9 +40,9 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
 
             var tex = grade switch
             {
-                NoteGrade.Good => holdGood[(int)PlayerSettings.HoldShape],
-                NoteGrade.Great => holdGreat[(int)PlayerSettings.HoldShape],
-                NoteGrade.Perfect => holdPerfect[(int)PlayerSettings.HoldShape],
+                NoteGrade.Good => holdGood[(int)PlayerSettings.HoldShape.Value],
+                NoteGrade.Great => holdGreat[(int)PlayerSettings.HoldShape.Value],
+                NoteGrade.Perfect => holdPerfect[(int)PlayerSettings.HoldShape.Value],
                 _ => null
             };
 

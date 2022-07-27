@@ -13,7 +13,7 @@ public class AudioManager : SingletonMonoBehavior<AudioManager>
     public static async UniTask<AudioController> LoadAudio(string path, AudioSource source, bool overrideNative = false)
     {
         // Android native
-        if(PlayerSettings.NativeAudio && !overrideNative && Application.platform == RuntimePlatform.Android)
+        if(PlayerSettings.NativeAudio.Value && !overrideNative && Application.platform == RuntimePlatform.Android)
         {
             int fileID = -2;
             ANAMusic.load(path, true, true, id => fileID = id);

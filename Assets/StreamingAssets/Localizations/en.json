@@ -76,6 +76,12 @@
     "OPTIONS_NOTEHOLD_BOTTOM_FOREGROUND_NAME": "Bottom Foreground Color",
     "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Top Foreground Color",
 
+    "OPTIONS_OTHERS_TAB": "Others",
+    "OPTIONS_PROFILER_NAME": "Enable Profiler",
+    "OPTIONS_PROFILER_DESC": "Toggles Graphy",
+    "OPTIONS_DEBUGTRACKS_NAME": "Debug Tracks",
+    "OPTIONS_DEBUGTRACKS_DESC": "Show information (id, position, width, color) of each track.",
+
     "PAUSE_CONTINUE": "Continue",
     "PAUSE_RETRY": "Retry",
     "PAUSE_EXIT": "Exit",

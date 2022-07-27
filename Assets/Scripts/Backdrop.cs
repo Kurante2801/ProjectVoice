@@ -41,7 +41,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
             Background.texture = tex;
             Background.DOFade(1f, 0.25f);
 
-            BackgroundBlurred.texture = tex.Blurred(PlayerSettings.BackgroundBlur);
+            BackgroundBlurred.texture = tex.Blurred(PlayerSettings.BackgroundBlur.Value);
             BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
             BackgroundOverlay.DOFade(overlay, 0.25f);
 

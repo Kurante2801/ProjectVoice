@@ -1,197 +1,212 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Tayx.Graphy;
 using UnityEngine;
 
 public class PlayerSettings
 {
     // General settings
-    public static string LanguageString
-    {
-        get => PlayerPrefs.GetString("localizationstring", "en");
-        set
-        {
-            PlayerPrefs.SetString("localizationstring", value); 
-            Context.OnLocalizationChanged?.Invoke();
-        }
-    }
-
-    public static string GraphicsQuality
-    {
-        get => PlayerPrefs.GetString("graphicsquality", "medium");
-        set => PlayerPrefs.SetString("graphicsquality", value);
-    }
-
-    public static float RenderScale
-    {
-        get => PlayerPrefs.GetFloat("renderscale", 1f);
-        set => PlayerPrefs.SetFloat("renderscale", Mathf.Clamp(value, 0.25f, 1f));
-    }
-
-    public static bool SafeArea
-    {
-        get => PlayerPrefsExtensions.GetBool("safearea", true);
-        set => PlayerPrefsExtensions.SetBool("safearea", value);
-    }
-
-    public static bool NativeAudio
-    {
-        get => PlayerPrefsExtensions.GetBool("nativeaudio", true);
-        set => PlayerPrefsExtensions.SetBool("nativeaudio", value);
-    }
-
-    public static int TargetFPS
-    {
-        get => PlayerPrefs.GetInt("targetfps", 120);
-        set
-        {
-            PlayerPrefs.SetInt("targetfps", value);
-            Application.targetFrameRate = value;
-        }
-    }
-
-    public static bool FPSCounter
-    {
-        get => PlayerPrefsExtensions.GetBool("fpscounter", false);
-        set => PlayerPrefsExtensions.SetBool("fpscounter", value);
-    }
-
-    public static float MusicVolume
-    {
-        get => PlayerPrefs.GetFloat("musicvolume", 1f);
-        set => PlayerPrefs.SetFloat("musicvolume", Mathf.Clamp01(value));
-    }
-
-    public static float BackgroundDim
-    {
-        get => PlayerPrefs.GetFloat("backgrounddim", 0.5f);
-        set => PlayerPrefs.SetFloat("backgrounddim", Mathf.Clamp01(value));
-    }
-
-    public static int BackgroundBlur
-    {
-        get => PlayerPrefs.GetInt("backgroundblur", 24);
-        set => PlayerPrefs.SetInt("backgroundblur", value);
-    }
-
-    public static float AudioOffset
-    {
-        get => PlayerPrefs.GetFloat("audiooffset_float", 0f);
-        set => PlayerPrefs.SetFloat("audiooffset_float", value);
-    }
+    public static SettingString LanguageString = new("localizationstring", "en", value => Context.OnLocalizationChanged?.Invoke());
+    public static SettingString GraphicsQuality = new("graphicsquality", "medium");
+    public static SettingFloat RenderScale = new("renderscale", 1f, null, value => Mathf.Clamp(value, 0.25f, 1f));
+    public static SettingBool SafeArea = new("safearea", true);
+    public static SettingBool NativeAudio = new("nativeaudio", true);
+    public static SettingInt TargetFPS = new("targetfps", 120, value => Application.targetFrameRate = value, value => Mathf.Max(30, value));
+    public static SettingFloat MusicVolume = new("musicvolume", 1f, null, value => Mathf.Clamp01(value));
+    public static SettingFloat BackgroundDim = new("backgrounddim", 0.25f, null, value => Mathf.Clamp01(value));
+    public static SettingInt BackgroundBlur = new("backgroundblur", 24);
+    public static SettingFloat AudioOffset = new("audiooffset", 0f);
 
     // Note settings
-    public static int NoteSpeedIndex
+    public static SettingInt NoteSpeedIndex = new("notespeedindex", 2);
+    public static SettingShape JudgementShape = new("judgementshape", NoteShape.Diamond);
+
+    public static SettingShape ClickShape = new("clickshape", NoteShape.Diamond);
+    public static SettingColor ClickBackgroundColor = new("clickbackcolor", Color.black);
+    public static SettingColor ClickForegroundColor = new("clickforecolor", new Color32(220, 75, 75, 255));
+
+    public static SettingShape SwipeLeftShape = new("swipeleftshape", NoteShape.Diamond);
+    public static SettingColor SwipeLeftBackgroundColor = new("swipeleftbackcolor", Color.black);
+    public static SettingColor SwipeLeftForegroundColor = new("swipeleftforecolor", Color.cyan);
+
+    public static SettingShape SwipeRightShape = new("swiperightshape", NoteShape.Diamond);
+    public static SettingColor SwipeRightBackgroundColor = new("swiperightbackcolor", Color.black);
+    public static SettingColor SwipeRightForegroundColor = new("swiperightforecolor", Color.cyan);
+
+    public static SettingShape HoldShape = new("holdshape", NoteShape.Diamond);
+    public static SettingColor HoldBackgroundColor = new("holdbackcolor", Color.black);
+    public static SettingColor HoldTopForegroundColor = new("holdtopforecolor", new Color32(220, 75, 75, 255));
+    public static SettingColor HoldBottomForegroundColor = new("holdbottomforecolor", new Color32(220, 75, 75, 255));
+
+    public static SettingShape SlideShape = new("slideshape", NoteShape.Diamond);
+    public static SettingColor SlideBackgroundColor = new("slidebackcolor", Color.black);
+    public static SettingColor SlideForegroundColor = new("slideforecolor", Color.white);
+
+    // Other
+    public static SettingBool DebugTracks = new("debugtracks", false);
+    public static SettingBool Profiler = new("graphy", false, value => Context.SetupProfiler());
+
+    // Classes
+    public class SettingString
     {
-        get => PlayerPrefs.GetInt("notespeedindex", 2);
-        set => PlayerPrefs.SetInt("notespeedindex", value);
+        public readonly string Key;
+        public readonly string Fallback;
+        public Action<string> OnSet;
+        public Func<string, string> ValidateFunc;
+        public string Value
+        {
+            get => PlayerPrefs.GetString(Key, Fallback);
+            set
+            {
+                var validated = ValidateFunc(value);
+                PlayerPrefs.SetString(Key, validated);
+                OnSet?.Invoke(validated);
+            }
+        }
+
+        public SettingString(string key, string fallback, Action<string> onSet = null, Func<string, string> validateFunc = null)
+        {
+            Key = key;
+            Fallback = fallback;
+            OnSet = onSet;
+            ValidateFunc = validateFunc ?? (value => value);
+        }
     }
 
-    public static NoteShape JudgementShape
+    public class SettingFloat
     {
-        get => PlayerPrefsExtensions.GetShape("judgementshape", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("judgementshape", value);
+        public readonly string Key;
+        public readonly float Fallback;
+        public Action<float> OnSet;
+        public Func<float, float> ValidateFunc;
+        public float Value
+        {
+            get => PlayerPrefs.GetFloat(Key, Fallback);
+            set
+            {
+                var validated = ValidateFunc(value);
+                PlayerPrefs.GetFloat(Key, validated);
+                OnSet?.Invoke(validated);
+            }
+        }
+
+        public SettingFloat(string key, float fallback, Action<float> onSet = null, Func<float, float> validateFunc = null)
+        {
+            Key = key;
+            Fallback = fallback;
+            OnSet = onSet;
+            ValidateFunc = validateFunc ?? (value => value);
+        }
     }
 
-    public static NoteShape ClickShape
+    // Classes
+    public class SettingBool
     {
-        get => PlayerPrefsExtensions.GetShape("clickshape", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("clickshape", value);
+        public readonly string Key;
+        public readonly bool Fallback;
+        public Action<bool> OnSet;
+        public Func<bool, bool> ValidateFunc;
+        public bool Value
+        {
+            get => PlayerPrefsExtensions.GetBool(Key, Fallback);
+            set
+            {
+                var validated = ValidateFunc(value);
+                PlayerPrefsExtensions.SetBool(Key, validated);
+                OnSet?.Invoke(validated);
+            }
+        }
+
+        public SettingBool(string key, bool fallback, Action<bool> onSet = null, Func<bool, bool> validateFunc = null)
+        {
+            Key = key;
+            Fallback = fallback;
+            OnSet = onSet;
+            ValidateFunc = validateFunc ?? (value => value);
+        }
     }
 
-    public static Color ClickBackgroundColor
+    public class SettingInt
     {
-        get => PlayerPrefsExtensions.GetColor("clickbackcolor", Color.black, false);
-        set => PlayerPrefsExtensions.SetColor("clickbackcolor", value, false);
+        public readonly string Key;
+        public readonly int Fallback;
+        public Action<int> OnSet;
+        public Func<int, int> ValidateFunc;
+
+        public int Value
+        {
+            get => PlayerPrefs.GetInt(Key, Fallback);
+            set
+            {
+                var validated = ValidateFunc(value);
+                PlayerPrefs.GetInt(Key, validated);
+                OnSet?.Invoke(validated);
+            }
+        }
+
+        public SettingInt(string key, int fallback, Action<int> onSet = null, Func<int, int> validateFunc = null)
+        {
+            Key = key;
+            Fallback = fallback;
+            OnSet = onSet;
+            ValidateFunc = validateFunc ?? (value => value);
+        }
     }
 
-    public static Color ClickForegroundColor
+    public class SettingShape
     {
-        get => PlayerPrefsExtensions.GetColor("clickforecolor", new Color32(220, 75, 75, 255), false);
-        set => PlayerPrefsExtensions.SetColor("clickforecolor", value, false);
+        public readonly string Key;
+        public readonly NoteShape Fallback;
+        public Action<NoteShape> OnSet;
+        public Func<NoteShape, NoteShape> ValidateFunc;
+
+        public NoteShape Value
+        {
+            get => PlayerPrefsExtensions.GetShape(Key, Fallback);
+            set
+            {
+                var validated = ValidateFunc(value);
+                PlayerPrefsExtensions.SetShape(Key, validated);
+                OnSet?.Invoke(validated);
+            }
+        }
+
+        public SettingShape(string key, NoteShape fallback, Action<NoteShape> onSet = null, Func<NoteShape, NoteShape> validateFunc = null)
+        {
+            Key = key;
+            Fallback = fallback;
+            OnSet = onSet;
+            ValidateFunc = validateFunc ?? (value => value);
+        }
     }
 
-    public static NoteShape SwipeLeftShape
+    public class SettingColor
     {
-        get => PlayerPrefsExtensions.GetShape("swipeleftshape", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("swipeleftshape", value);
-    }
+        public readonly string Key;
+        public readonly Color Fallback;
+        public readonly bool ParseAlpha;
+        public Action<Color> OnSet;
+        public Func<Color, Color> ValidateFunc;
 
-    public static Color SwipeLeftBackgroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("swipeleftbackcolor", Color.black, false);
-        set => PlayerPrefsExtensions.SetColor("swipeleftbackcolor", value, false);
-    }
+        public Color Value
+        {
+            get => PlayerPrefsExtensions.GetColor(Key, Fallback, ParseAlpha);
+            set
+            {
+                var validated = ValidateFunc(value);
+                PlayerPrefsExtensions.SetColor(Key, validated, ParseAlpha);
+                OnSet?.Invoke(validated);
+            }
+        }
 
-    public static Color SwipeLeftForegroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("swipeleftforecolor", Color.cyan, false);
-        set => PlayerPrefsExtensions.SetColor("swipeleftforecolor", value, false);
-    }
-
-    public static NoteShape SwipeRightShape
-    {
-        get => PlayerPrefsExtensions.GetShape("swiperightshape", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("swiperightshape", value);
-    }
-
-    public static Color SwipeRightBackgroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("swiperightbackcolor", Color.black, false);
-        set => PlayerPrefsExtensions.SetColor("swiperightbackcolor", value, false);
-    }
-
-    public static Color SwipeRightForegroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("swiperightforecolor", Color.cyan, false);
-        set => PlayerPrefsExtensions.SetColor("swiperightforecolor", value, false);
-    }
-
-
-    public static NoteShape HoldShape
-    {
-        get => PlayerPrefsExtensions.GetShape("noteshapehold", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("noteshapehold", value);
-    }
-
-    public static Color HoldBackgroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("holdbackcolor", Color.black, false);
-        set => PlayerPrefsExtensions.SetColor("holdbackcolor", value, false);
-    }
-
-    public static Color HoldTopForegroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("holdtopforecolor", new Color32(220, 75, 75, 255), false);
-        set => PlayerPrefsExtensions.SetColor("holdtopforecolor", value, false);
-    }
-
-    public static Color HoldBottomForegroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("holdbottomforecolor", new Color32(220, 75, 75, 255), false);
-        set => PlayerPrefsExtensions.SetColor("holdbottomforecolor", value, false);
-    }
-
-    public static NoteShape SlideShape
-    {
-        get => PlayerPrefsExtensions.GetShape("noteshapeslide", NoteShape.Diamond);
-        set => PlayerPrefsExtensions.SetShape("noteshapeslide", value);
-    }
-
-    public static Color SlideBackgroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("slidebackcolor", Color.black, false);
-        set => PlayerPrefsExtensions.SetColor("slidebackcolor", value, false);
-    }
-
-    public static Color SlideForegroundColor
-    {
-        get => PlayerPrefsExtensions.GetColor("slideforecolor", Color.white, false);
-        set => PlayerPrefsExtensions.SetColor("slideforecolor", value, false);
-    }
-
-    public static bool DebugTracks
-    {
-        get => PlayerPrefsExtensions.GetBool("debugtracks", false);
-        set => PlayerPrefsExtensions.SetBool("debugtracks", value);
+        public SettingColor(string key, Color fallback, bool parseAlpha = false, Action<Color> onSet = null, Func<Color, Color> validateFunc = null)
+        {
+            Key = key;
+            Fallback = fallback;
+            OnSet = onSet;
+            ParseAlpha = parseAlpha;
+            ValidateFunc = validateFunc ?? (value => value);
+        }
     }
 }

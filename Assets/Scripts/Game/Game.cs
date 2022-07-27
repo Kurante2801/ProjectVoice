@@ -60,6 +60,7 @@ public class Game : SingletonMonoBehavior<Game>
     protected async void Start()
     {
         await UniTask.WaitUntil(() => Context.IsInitialized);
+        Context.SetupProfiler();
         await Initialize();
     }
 
@@ -135,7 +136,7 @@ public class Game : SingletonMonoBehavior<Game>
         await Context.AudioSource.DOFade(1f, 0.25f).AsyncWaitForCompletion();
         Context.StopSongPreview();
 
-        Note.SpeedIndex = Math.Clamp(PlayerSettings.NoteSpeedIndex, 0, 9);
+        Note.SpeedIndex = Math.Clamp(PlayerSettings.NoteSpeedIndex.Value, 0, 9);
 
         State = new(this);
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
@@ -189,7 +190,7 @@ public class Game : SingletonMonoBehavior<Game>
 
         TransitionTime = 0.5f;
         OnGameStarted?.Invoke(this);
-        Backdrop.Instance.SetOverlay(PlayerSettings.BackgroundDim, TransitionTime);
+        Backdrop.Instance.SetOverlay(PlayerSettings.BackgroundDim.Value, TransitionTime);
 
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
         Conductor.Instance.Initialize();

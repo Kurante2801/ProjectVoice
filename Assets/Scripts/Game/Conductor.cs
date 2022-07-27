@@ -19,7 +19,7 @@ public class Conductor : SingletonMonoBehavior<Conductor>
     protected override void Awake()
     {
         base.Awake();
-        isNative = PlayerSettings.NativeAudio && Application.platform == RuntimePlatform.Android;
+        isNative = PlayerSettings.NativeAudio.Value && Application.platform == RuntimePlatform.Android;
     }
 
     protected override void OnDestroy()
@@ -37,13 +37,13 @@ public class Conductor : SingletonMonoBehavior<Conductor>
         isNative = Controller is NativeAudioController;
 
         Controller.Looping = false;
-        offsetSeconds = chart.music_offset / 1000D + PlayerSettings.AudioOffset;
-        offsetMilliseconds = chart.music_offset + Mathf.RoundToInt(PlayerSettings.AudioOffset * 1000f);
+        offsetSeconds = chart.music_offset / 1000D + PlayerSettings.AudioOffset.Value;
+        offsetMilliseconds = chart.music_offset + Mathf.RoundToInt(PlayerSettings.AudioOffset.Value * 1000f);
     }
     
     public void Initialize()
     {
-        Controller.Volume = PlayerSettings.MusicVolume;
+        Controller.Volume = PlayerSettings.MusicVolume.Value;
 
         dspTime = AudioSettings.dspTime - MinTime / 1000D;
         if (MinTime >= 0) Controller.Play(MinTime);

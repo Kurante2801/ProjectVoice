@@ -6,7 +6,7 @@ public class HoldNote : Note
 {
     public int HoldTime => Model.data;
     public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoHold);
-    public override NoteShape GetShape() => PlayerSettings.HoldShape;
+    public override NoteShape GetShape() => PlayerSettings.HoldShape.Value;
     
     public static int ReleaseMissThreshold = 100;
     public bool IsBeingHeld = false;
@@ -23,9 +23,9 @@ public class HoldNote : Note
 
     protected override void Start()
     {
-        backgroundTop.color = sustain.color = Background.color = PlayerSettings.HoldBackgroundColor;
-        Foreground.color = PlayerSettings.HoldBottomForegroundColor;
-        foregroundTop.color = PlayerSettings.HoldTopForegroundColor;
+        backgroundTop.color = sustain.color = Background.color = PlayerSettings.HoldBackgroundColor.Value;
+        Foreground.color = PlayerSettings.HoldBottomForegroundColor.Value;
+        foregroundTop.color = PlayerSettings.HoldTopForegroundColor.Value;
 
         backgroundTop.sprite = Background.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("hold_back");
         sustain.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("hold_sustain");

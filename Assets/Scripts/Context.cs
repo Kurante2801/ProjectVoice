@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Tayx.Graphy;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -77,7 +78,7 @@ public class Context : SingletonMonoBehavior<Context>
 
         base.Awake();
         DontDestroyOnLoad(gameObject);
-        Application.targetFrameRate = PlayerSettings.TargetFPS;
+        Application.targetFrameRate = PlayerSettings.TargetFPS.Value;
         Application.runInBackground = false;
         BetterStreamingAssets.Initialize();
 
@@ -123,7 +124,7 @@ public class Context : SingletonMonoBehavior<Context>
         }
 
         AudioSource = GetComponent<AudioSource>();
-        AudioSource.volume = PlayerSettings.MusicVolume;
+        AudioSource.volume = PlayerSettings.MusicVolume.Value;
         AudioSource.bypassEffects = true;
 
         IsInitialized = true;
@@ -166,7 +167,7 @@ public class Context : SingletonMonoBehavior<Context>
         AudioController.Volume = 0f;
         AudioController.Looping = true;
         AudioController.DOKill();
-        AudioController.DOFade(PlayerSettings.MusicVolume, 1.25f);
+        AudioController.DOFade(PlayerSettings.MusicVolume.Value, 1.25f);
 
         audioPath = path;
     }
@@ -207,10 +208,26 @@ public class Context : SingletonMonoBehavior<Context>
 
     public static void SetupResolution()
     {
-        float scale = GraphicsQualityExtensions.GetScale(PlayerSettings.GraphicsQuality);
+        float scale = GraphicsQualityExtensions.GetScale(PlayerSettings.GraphicsQuality.Value);
         UnityEngine.Screen.SetResolution(Mathf.CeilToInt(ScreenRealWidth * scale), Mathf.CeilToInt(ScreenRealHeight * scale), UnityEngine.Screen.fullScreenMode);
 
         var urpAsset = (UniversalRenderPipelineAsset)GraphicsSettings.renderPipelineAsset;
-        urpAsset.renderScale = PlayerSettings.RenderScale;
+        urpAsset.renderScale = PlayerSettings.RenderScale.Value;
+    }
+
+    public static void SetupProfiler()
+    {
+        var profiler = GraphyManager.Instance;
+        if (profiler == null) return;
+
+        if (PlayerSettings.Profiler.Value)
+        {
+            profiler.Enable();
+            profiler.FpsModuleState = GraphyManager.ModuleState.FULL;
+            profiler.RamModuleState = GraphyManager.ModuleState.FULL;
+            profiler.AudioModuleState = PlayerSettings.NativeAudio.Value ? GraphyManager.ModuleState.OFF : GraphyManager.ModuleState.FULL;
+        }
+        else
+            profiler.Disable();
     }
 }

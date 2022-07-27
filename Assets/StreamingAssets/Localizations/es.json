@@ -70,6 +70,12 @@
     "OPTIONS_NOTEHOLD_BOTTOM_FOREGROUND_NAME": "Color de Fondo Abajo",
     "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Color de Fondo Arriba",
 
+    "OPTIONS_OTHERS_TAB": "Otros",
+    "OPTIONS_PROFILER_NAME": "Habilitar Profiler",
+    "OPTIONS_PROFILER_DESC": "Habilita/deshabilita Graphy",
+    "OPTIONS_DEBUGTRACKS_NAME": "Depurar Tracks",
+    "OPTIONS_DEBUGTRACKS_DESC": "Mostrar información (id, posición, tamaño, color) de cada track.",
+
     "PAUSE_CONTINUE": "Continuar",
     "PAUSE_RETRY": "Reíntentar",
     "PAUSE_EXIT": "Salir",

@@ -6,7 +6,7 @@ public class SwipeNote : Note
 {
     public int SwipeDelta => Model.data;
     public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoSwipe);
-    public override NoteShape GetShape() => SwipeDelta < 0 ? PlayerSettings.SwipeLeftShape : PlayerSettings.SwipeRightShape;
+    public override NoteShape GetShape() => SwipeDelta < 0 ? PlayerSettings.SwipeLeftShape.Value : PlayerSettings.SwipeRightShape.Value;
 
     protected override void Start() { }
 
@@ -16,8 +16,8 @@ public class SwipeNote : Note
         Background.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("swipe_back");
         Foreground.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("swipe_fore");
 
-        Background.color = left ? PlayerSettings.SwipeLeftBackgroundColor : PlayerSettings.SwipeRightBackgroundColor;
-        Foreground.color = left ? PlayerSettings.SwipeLeftForegroundColor : PlayerSettings.SwipeRightForegroundColor;
+        Background.color = left ? PlayerSettings.SwipeLeftBackgroundColor.Value : PlayerSettings.SwipeRightBackgroundColor.Value;
+        Foreground.color = left ? PlayerSettings.SwipeLeftForegroundColor.Value : PlayerSettings.SwipeRightForegroundColor.Value;
 
         transform.localRotation = Quaternion.Euler(0f, 0f, 90f + 90f * SwipeDelta);
 

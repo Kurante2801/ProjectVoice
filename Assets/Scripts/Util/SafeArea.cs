@@ -143,7 +143,7 @@ namespace Crystal
 
         Rect GetSafeArea ()
         {
-            if (!PlayerSettings.SafeArea)
+            if (!PlayerSettings.SafeArea.Value)
                 return new Rect(0f, 0f, UnityEngine.Screen.width, UnityEngine.Screen.height);
 
             Rect safeArea = UnityEngine.Screen.safeArea;

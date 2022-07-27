@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class SlideNote : Note
 {
-    public override NoteShape GetShape() => PlayerSettings.SlideShape;
+    public override NoteShape GetShape() => PlayerSettings.SlideShape.Value;
 
     protected override void Start()
     {
         Background.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("slide_back");
         Foreground.sprite = Game.Instance.ShapesAtlas[(int)GetShape()].GetSprite("slide_fore");
 
-        Background.color = PlayerSettings.SlideBackgroundColor;
-        Foreground.color = PlayerSettings.SlideForegroundColor;
+        Background.color = PlayerSettings.SlideBackgroundColor.Value;
+        Foreground.color = PlayerSettings.SlideForegroundColor.Value;
     }
 
     protected override void Update()

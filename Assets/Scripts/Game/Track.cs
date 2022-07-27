@@ -40,7 +40,7 @@ public class Track : MonoBehaviour
 
     private void Start()
     {
-        isDebugTextEnabled = PlayerSettings.DebugTracks;
+        isDebugTextEnabled = PlayerSettings.DebugTracks.Value;
 
         tmpID.gameObject.SetActive(isDebugTextEnabled);
         tmpID.fontSize = 18f.ScreenScaledY();
@@ -202,7 +202,7 @@ public class Track : MonoBehaviour
         }
 
         // Debug info
-        if (PlayerSettings.DebugTracks)
+        if (PlayerSettings.DebugTracks.Value)
             tmpID.text = "ID: " + Model.id.ToString();
     }
 

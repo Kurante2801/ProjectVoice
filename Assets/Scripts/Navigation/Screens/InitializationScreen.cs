@@ -12,6 +12,7 @@ public class InitializationScreen : Screen
     public async override void OnScreenTransitionInEnded()
     {
         base.OnScreenTransitionInEnded();
+        Context.SetupProfiler();
 
         if (Context.SelectedLevel != null)
         {

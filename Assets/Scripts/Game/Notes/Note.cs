@@ -34,7 +34,7 @@ public class Note : MonoBehaviour
     
     public NoteType Type = NoteType.Click;
     public static bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoClick);
-    public virtual NoteShape GetShape() => PlayerSettings.ClickShape;
+    public virtual NoteShape GetShape() => PlayerSettings.ClickShape.Value;
 
     protected virtual void Start() { }
 

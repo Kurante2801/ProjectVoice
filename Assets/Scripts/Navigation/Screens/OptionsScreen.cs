@@ -14,7 +14,7 @@ public class OptionsScreen : Screen
 {
     public override string GetID() => "OptionsScreen";
 
-    public RectTransform GeneralContent, NoteContent;
+    public RectTransform GeneralContent, NotesContent, OthersContent;
 
     public List<SettingElement> Prefabs = new();
 
@@ -27,6 +27,7 @@ public class OptionsScreen : Screen
     {
         PopulateGeneral();
         PopulateNotes();
+        PopulateOthers();
         base.OnScreenInitialized();
     }
 
@@ -52,22 +53,22 @@ public class OptionsScreen : Screen
             Destroy(child.gameObject);
 
         var lang = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
-        lang.SetValues(Context.LocalizationManager.Localizations.Values.Select(localization => localization.Strings["LANGUAGE_NAME"].Capitalize()).ToArray(), Context.LocalizationManager.Localizations.Keys.ToArray(), (object)PlayerSettings.LanguageString);
+        lang.SetValues(Context.LocalizationManager.Localizations.Values.Select(localization => localization.Strings["LANGUAGE_NAME"].Capitalize()).ToArray(), Context.LocalizationManager.Localizations.Keys.ToArray(), (object)PlayerSettings.LanguageString.Value);
         lang.SetLocalizationKeys("OPTIONS_LANG_NAME", "OPTIONS_LANG_DESC");
         lang.OnValueChanged.AddListener((_, _, key) =>
         {
             if (!Context.LocalizationManager.Localizations.TryGetValue((string)key, out var localization))
                 return;
-            PlayerSettings.LanguageString = localization.Identifier;
+            PlayerSettings.LanguageString.Value = localization.Identifier;
         });
 
         var graphics = Enum.GetValues(typeof(GraphicsQuality)).Cast<GraphicsQuality>().Reverse().ToArray();
         var quality = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
-        quality.SetValues(graphics.Select(quality => quality.GetLocalized()).ToArray(), graphics.Select(quality => (object)quality.ToString().ToLower()).ToArray(), (object)PlayerSettings.GraphicsQuality);
+        quality.SetValues(graphics.Select(quality => quality.GetLocalized()).ToArray(), graphics.Select(quality => (object)quality.ToString().ToLower()).ToArray(), (object)PlayerSettings.GraphicsQuality.Value);
         quality.SetLocalizationKeys("OPTIONS_GRAPHICS_NAME", "OPTIONS_GRAPHICS_DESC");
         quality.OnValueChanged.AddListener((_, _, value) =>
         {
-            PlayerSettings.GraphicsQuality = (string)value;
+            PlayerSettings.GraphicsQuality.Value = (string)value;
             Context.SetupResolution();
         });
         quality.OnLocalizationChanged.AddListener(() =>
@@ -76,126 +77,135 @@ public class OptionsScreen : Screen
         });
 
         var renderscale = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
-        renderscale.SetValues(PlayerSettings.RenderScale * 100f, 0f, 100f, 5f, 0, true, false);
+        renderscale.SetValues(PlayerSettings.RenderScale.Value * 100f, 0f, 100f, 5f, 0, true, false);
         renderscale.SetRealMinMax(25f, 100f);
         renderscale.SetLocalizationKeys("OPTIONS_RENDERSCALE_NAME", "OPTIONS_RENDERSCALE_DESC");
         renderscale.OnValueChanged.AddListener(value =>
         {
-            PlayerSettings.RenderScale = value / 100f;
+            PlayerSettings.RenderScale.Value = value / 100f;
             Context.SetupResolution();
         });
 
         var safearea = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
-        safearea.SetValue(PlayerSettings.SafeArea);
+        safearea.SetValue(PlayerSettings.SafeArea.Value);
         safearea.SetLocalizationKeys("OPTIONS_SAFEAREA_NAME", "OPTIONS_SAFEAREA_DESC");
-        safearea.OnValueChanged.AddListener(value => PlayerSettings.SafeArea = value);
+        safearea.OnValueChanged.AddListener(value => PlayerSettings.SafeArea.Value = value);
 
         var nativeaudio = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
-        nativeaudio.SetValue(PlayerSettings.NativeAudio);
+        nativeaudio.SetValue(PlayerSettings.NativeAudio.Value);
         nativeaudio.SetLocalizationKeys("OPTIONS_NATIVEAUDIO_NAME", "OPTIONS_NATIVEAUDIO_DESC");
         nativeaudio.OnValueChanged.AddListener(value =>
         {
-            PlayerSettings.NativeAudio = value;
+            PlayerSettings.NativeAudio.Value = value;
             if(Context.AudioController != null && Context.SelectedLevel != null)
             {
                 Context.StopSongPreview();
                 Context.PlaySongPreview(Context.SelectedLevel);
             }
+            Context.SetupProfiler();
         });
 
         var targetfps = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
-        targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS" }, new object[] { 30, 60, 120 }, PlayerSettings.TargetFPS);
+        targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS" }, new object[] { 30, 60, 120 }, PlayerSettings.TargetFPS.Value);
         targetfps.SetLocalizationKeys("OPTIONS_TARGETFPS_NAME", "OPTIONS_TARGETFPS_DESC");
-        targetfps.OnValueChanged.AddListener((_, _, value) => PlayerSettings.TargetFPS = (int)value);
-
-        var fpscounter = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
-        fpscounter.SetValue(PlayerSettings.NativeAudio);
-        fpscounter.SetLocalizationKeys("OPTIONS_FPSCOUNTER_NAME", "OPTIONS_FPSCOUNTER_DESC");
-        fpscounter.OnValueChanged.AddListener(value => PlayerSettings.FPSCounter = value);
+        targetfps.OnValueChanged.AddListener((_, _, value) => PlayerSettings.TargetFPS.Value = (int)value);
 
         var musicvolume = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
-        musicvolume.SetValues(PlayerSettings.MusicVolume * 100f, 0f, 100f, 5f, 0, true, true);
+        musicvolume.SetValues(PlayerSettings.MusicVolume.Value * 100f, 0f, 100f, 5f, 0, true, true);
         musicvolume.SetLocalizationKeys("OPTIONS_MUSICVOLUME_NAME", "OPTIONS_MUSICVOLUME_DESC");
         musicvolume.OnValueChanged.AddListener(value =>
         {
-            PlayerSettings.MusicVolume = value / 100f;
+            PlayerSettings.MusicVolume.Value = value / 100f;
             if (Context.AudioController == null) return;
             Context.AudioController.DOKill();
             Context.AudioController.Volume = value / 100f;
         });
 
         var dim = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
-        dim.SetValues(PlayerSettings.BackgroundDim * 100f, 0f, 100f, 5f, 0, true, true);
+        dim.SetValues(PlayerSettings.BackgroundDim.Value * 100f, 0f, 100f, 5f, 0, true, true);
         dim.SetLocalizationKeys("OPTIONS_BACKGROUNDDIM_NAME", "OPTIONS_BACKGROUNDDIM_DESC");
-        dim.OnValueChanged.AddListener(value => PlayerSettings.BackgroundDim = value / 100f);
+        dim.OnValueChanged.AddListener(value => PlayerSettings.BackgroundDim.Value = value / 100f);
 
         var blur = CreateSetting<SettingSliderElement>(SettingType.Slider, GeneralContent);
-        blur.SetValues(PlayerSettings.BackgroundBlur, 0f, 24f, 6f, 0, true, false);
+        blur.SetValues(PlayerSettings.BackgroundBlur.Value, 0f, 24f, 6f, 0, true, false);
         blur.SetLocalizationKeys("OPTIONS_BACKGROUNDBLUR_NAME", "OPTIONS_BACKGROUNDBLUR_DESC");
         blur.OnValueChanged.AddListener(value =>
         {
-            PlayerSettings.BackgroundBlur = (int)value;
+            PlayerSettings.BackgroundBlur.Value = (int)value;
             Backdrop.Instance.SetBlur((int)value);
         });
 
         var offset = CreateSetting<SettingNumberElement>(SettingType.Number, GeneralContent);
-        offset.SetValues(PlayerSettings.AudioOffset, 4);
+        offset.SetValues(PlayerSettings.AudioOffset.Value, 4);
         offset.SetLocalizationKeys("OPTIONS_AUDIOOFFSET_NAME", "OPTIONS_AUDIOOFFSET_DESC");
-        offset.OnValueChanged.AddListener(value => PlayerSettings.AudioOffset = value);
+        offset.OnValueChanged.AddListener(value => PlayerSettings.AudioOffset.Value = value);
     }
 
     private void PopulateNotes()
     {
-        foreach (Transform child in NoteContent)
+        foreach (Transform child in NotesContent)
             Destroy(child.gameObject);
 
-        var speed = CreateSetting<SettingSliderElement>(SettingType.Slider, NoteContent);
-        speed.SetValues(PlayerSettings.NoteSpeedIndex + 1, 1, 10, 1, 1, true, false);
+        var speed = CreateSetting<SettingSliderElement>(SettingType.Slider, NotesContent);
+        speed.SetValues(PlayerSettings.NoteSpeedIndex.Value + 1, 1, 10, 1, 1, true, false);
         speed.SetLocalizationKeys("OPTIONS_NOTESPEED_NAME", "OPTIONS_NOTESPEED_DESC");
-        speed.OnValueChanged.AddListener(value => PlayerSettings.NoteSpeedIndex = (int)value - 1);
-        CreateSeparator(NoteContent);
+        speed.OnValueChanged.AddListener(value => PlayerSettings.NoteSpeedIndex.Value = (int)value - 1);
+        CreateSeparator(NotesContent);
 
-        var click = Instantiate(NoteSettingsPrefabs[0].gameObject, NoteContent).GetComponent<SettingNoteElement>();
+        var click = Instantiate(NoteSettingsPrefabs[0].gameObject, NotesContent).GetComponent<SettingNoteElement>();
         click.SetLocalizationKeys("OPTIONS_NOTECLICK_NAME", "", "OPTIONS_NOTECLICK_BACK_MODAL", "OPTIONS_NOTECLICK_FORE_MODAL");
-        click.SetValues(PlayerSettings.ClickShape, PlayerSettings.ClickBackgroundColor, PlayerSettings.ClickForegroundColor);
-        click.OnShapeChanged.AddListener(value => PlayerSettings.ClickShape = value);
-        click.OnBackgroundChanged.AddListener(value => PlayerSettings.ClickBackgroundColor = value);
-        click.OnForegroundChanged.AddListener(value => PlayerSettings.ClickForegroundColor = value);
-        CreateSeparator(NoteContent);
+        click.SetValues(PlayerSettings.ClickShape.Value, PlayerSettings.ClickBackgroundColor.Value, PlayerSettings.ClickForegroundColor.Value);
+        click.OnShapeChanged.AddListener(value => PlayerSettings.ClickShape.Value = value);
+        click.OnBackgroundChanged.AddListener(value => PlayerSettings.ClickBackgroundColor.Value = value);
+        click.OnForegroundChanged.AddListener(value => PlayerSettings.ClickForegroundColor.Value = value);
+        CreateSeparator(NotesContent);
 
-        var left = Instantiate(NoteSettingsPrefabs[1].gameObject, NoteContent).GetComponent<SettingNoteElement>();
+        var left = Instantiate(NoteSettingsPrefabs[1].gameObject, NotesContent).GetComponent<SettingNoteElement>();
         left.SetLocalizationKeys("OPTIONS_NOTESWIPE_LEFT_NAME", "", "OPTIONS_NOTESWIPE_LEFT_BACK_MODAL", "OPTIONS_NOTESWIPE_LEFT_FORE_MODAL");
-        left.SetValues(PlayerSettings.SwipeLeftShape, PlayerSettings.SwipeLeftBackgroundColor, PlayerSettings.SwipeLeftForegroundColor);
-        left.OnShapeChanged.AddListener(value => PlayerSettings.SwipeLeftShape = value);
-        left.OnBackgroundChanged.AddListener(value => PlayerSettings.SwipeLeftBackgroundColor = value);
-        left.OnForegroundChanged.AddListener(value => PlayerSettings.SwipeLeftForegroundColor = value);
-        CreateSeparator(NoteContent);
+        left.SetValues(PlayerSettings.SwipeLeftShape.Value, PlayerSettings.SwipeLeftBackgroundColor.Value, PlayerSettings.SwipeLeftForegroundColor.Value);
+        left.OnShapeChanged.AddListener(value => PlayerSettings.SwipeLeftShape.Value = value);
+        left.OnBackgroundChanged.AddListener(value => PlayerSettings.SwipeLeftBackgroundColor.Value = value);
+        left.OnForegroundChanged.AddListener(value => PlayerSettings.SwipeLeftForegroundColor.Value = value);
+        CreateSeparator(NotesContent);
 
-        var right = Instantiate(NoteSettingsPrefabs[2].gameObject, NoteContent).GetComponent<SettingNoteElement>();
+        var right = Instantiate(NoteSettingsPrefabs[2].gameObject, NotesContent).GetComponent<SettingNoteElement>();
         right.SetLocalizationKeys("OPTIONS_NOTESWIPE_RIGHT_NAME", "", "OPTIONS_NOTESWIPE_RIGHT_BACK_MODAL", "OPTIONS_NOTESWIPE_RIGHT_FORE_MODAL");
-        right.SetValues(PlayerSettings.SwipeRightShape, PlayerSettings.SwipeRightBackgroundColor, PlayerSettings.SwipeRightForegroundColor);
-        right.OnShapeChanged.AddListener(value => PlayerSettings.SwipeRightShape = value);
-        right.OnBackgroundChanged.AddListener(value => PlayerSettings.SwipeRightBackgroundColor = value);
-        right.OnForegroundChanged.AddListener(value => PlayerSettings.SwipeRightForegroundColor = value);
-        CreateSeparator(NoteContent);
+        right.SetValues(PlayerSettings.SwipeRightShape.Value, PlayerSettings.SwipeRightBackgroundColor.Value, PlayerSettings.SwipeRightForegroundColor.Value);
+        right.OnShapeChanged.AddListener(value => PlayerSettings.SwipeRightShape.Value = value);
+        right.OnBackgroundChanged.AddListener(value => PlayerSettings.SwipeRightBackgroundColor.Value = value);
+        right.OnForegroundChanged.AddListener(value => PlayerSettings.SwipeRightForegroundColor.Value = value);
+        CreateSeparator(NotesContent);
 
-        var slide = Instantiate(NoteSettingsPrefabs[3].gameObject, NoteContent).GetComponent<SettingNoteElement>();
+        var slide = Instantiate(NoteSettingsPrefabs[3].gameObject, NotesContent).GetComponent<SettingNoteElement>();
         slide.SetLocalizationKeys("OPTIONS_NOTESLIDE_NAME", "", "OPTIONS_NOTESLIDE_BACK_MODAL", "OPTIONS_NOTESLIDE_FORE_MODAL");
-        slide.SetValues(PlayerSettings.SlideShape, PlayerSettings.SlideBackgroundColor, PlayerSettings.SlideForegroundColor);
-        slide.OnShapeChanged.AddListener(value => PlayerSettings.SlideShape = value);
-        slide.OnBackgroundChanged.AddListener(value => PlayerSettings.SlideBackgroundColor = value);
-        slide.OnForegroundChanged.AddListener(value => PlayerSettings.SlideForegroundColor = value);
-        CreateSeparator(NoteContent);
+        slide.SetValues(PlayerSettings.SlideShape.Value, PlayerSettings.SlideBackgroundColor.Value, PlayerSettings.SlideForegroundColor.Value);
+        slide.OnShapeChanged.AddListener(value => PlayerSettings.SlideShape.Value = value);
+        slide.OnBackgroundChanged.AddListener(value => PlayerSettings.SlideBackgroundColor.Value = value);
+        slide.OnForegroundChanged.AddListener(value => PlayerSettings.SlideForegroundColor.Value = value);
+        CreateSeparator(NotesContent);
 
-        var hold = Instantiate(NoteSettingsPrefabs[4].gameObject, NoteContent).GetComponent<SettingNoteHoldElement>();
+        var hold = Instantiate(NoteSettingsPrefabs[4].gameObject, NotesContent).GetComponent<SettingNoteHoldElement>();
         hold.SetLocalizationKeys("OPTIONS_NOTEHOLD_NAME", "", "OPTIONS_NOTEHOLD_BACK_MODAL", "OPTIONS_NOTEHOLD_BOTTOM_FORE_MODAL", "OPTIONS_NOTEHOLD_TOP_FORE_MODAL");
-        hold.SetValues(PlayerSettings.HoldShape, PlayerSettings.HoldBackgroundColor, PlayerSettings.HoldBottomForegroundColor, PlayerSettings.HoldTopForegroundColor);
-        hold.OnShapeChanged.AddListener(value => PlayerSettings.HoldShape = value);
-        hold.OnBackgroundChanged.AddListener(value => PlayerSettings.HoldBackgroundColor = value);
-        hold.OnBottomForegroundChanged.AddListener(value => PlayerSettings.HoldBottomForegroundColor = value);
-        hold.OnTopForegroundChanged.AddListener(value => PlayerSettings.HoldTopForegroundColor = value);
+        hold.SetValues(PlayerSettings.HoldShape.Value, PlayerSettings.HoldBackgroundColor.Value, PlayerSettings.HoldBottomForegroundColor.Value, PlayerSettings.HoldTopForegroundColor.Value);
+        hold.OnShapeChanged.AddListener(value => PlayerSettings.HoldShape.Value = value);
+        hold.OnBackgroundChanged.AddListener(value => PlayerSettings.HoldBackgroundColor.Value = value);
+        hold.OnBottomForegroundChanged.AddListener(value => PlayerSettings.HoldBottomForegroundColor.Value = value);
+        hold.OnTopForegroundChanged.AddListener(value => PlayerSettings.HoldTopForegroundColor.Value = value);
     }
 
+    private void PopulateOthers()
+    {
+        var profiler = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
+        profiler.SetValue(PlayerSettings.Profiler.Value);
+        profiler.SetLocalizationKeys("OPTIONS_PROFILER_NAME", "OPTIONS_PROFILER_DESC");
+        profiler.OnValueChanged.AddListener(value => PlayerSettings.Profiler.Value = value);
+
+        var debugtracks = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
+        debugtracks.SetValue(PlayerSettings.DebugTracks.Value);
+        debugtracks.SetLocalizationKeys("OPTIONS_DEBUGTRACKS_NAME", "OPTIONS_DEBUGTRACKS_DESC");
+        debugtracks.OnValueChanged.AddListener(value => PlayerSettings.DebugTracks.Value = value);
+    }
+    
     public void ReturnButton()
     {
         if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
