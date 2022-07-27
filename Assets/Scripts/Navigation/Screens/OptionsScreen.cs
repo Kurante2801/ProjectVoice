@@ -86,25 +86,6 @@ public class OptionsScreen : Screen
             Context.SetupResolution();
         });
 
-        var safearea = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
-        safearea.SetValue(PlayerSettings.SafeArea.Value);
-        safearea.SetLocalizationKeys("OPTIONS_SAFEAREA_NAME", "OPTIONS_SAFEAREA_DESC");
-        safearea.OnValueChanged.AddListener(value => PlayerSettings.SafeArea.Value = value);
-
-        var nativeaudio = CreateSetting<SettingBooleanElement>(SettingType.Boolean, GeneralContent);
-        nativeaudio.SetValue(PlayerSettings.NativeAudio.Value);
-        nativeaudio.SetLocalizationKeys("OPTIONS_NATIVEAUDIO_NAME", "OPTIONS_NATIVEAUDIO_DESC");
-        nativeaudio.OnValueChanged.AddListener(value =>
-        {
-            PlayerSettings.NativeAudio.Value = value;
-            if(Context.AudioController != null && Context.SelectedLevel != null)
-            {
-                Context.StopSongPreview();
-                Context.PlaySongPreview(Context.SelectedLevel);
-            }
-            Context.SetupProfiler();
-        });
-
         var targetfps = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
         targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS" }, new object[] { 30, 60, 120 }, PlayerSettings.TargetFPS.Value);
         targetfps.SetLocalizationKeys("OPTIONS_TARGETFPS_NAME", "OPTIONS_TARGETFPS_DESC");
@@ -195,6 +176,25 @@ public class OptionsScreen : Screen
 
     private void PopulateOthers()
     {
+        var safearea = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
+        safearea.SetValue(PlayerSettings.SafeArea.Value);
+        safearea.SetLocalizationKeys("OPTIONS_SAFEAREA_NAME", "OPTIONS_SAFEAREA_DESC");
+        safearea.OnValueChanged.AddListener(value => PlayerSettings.SafeArea.Value = value);
+
+        var nativeaudio = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
+        nativeaudio.SetValue(PlayerSettings.NativeAudio.Value);
+        nativeaudio.SetLocalizationKeys("OPTIONS_NATIVEAUDIO_NAME", "OPTIONS_NATIVEAUDIO_DESC");
+        nativeaudio.OnValueChanged.AddListener(value =>
+        {
+            PlayerSettings.NativeAudio.Value = value;
+            if (Context.AudioController != null && Context.SelectedLevel != null)
+            {
+                Context.StopSongPreview();
+                Context.PlaySongPreview(Context.SelectedLevel);
+            }
+            Context.SetupProfiler();
+        });
+
         var profiler = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
         profiler.SetValue(PlayerSettings.Profiler.Value);
         profiler.SetLocalizationKeys("OPTIONS_PROFILER_NAME", "OPTIONS_PROFILER_DESC");
