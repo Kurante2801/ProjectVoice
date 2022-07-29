@@ -30,17 +30,19 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
 
         if (!valid)
         {
-            Background.DOFade(0f, 0.25f);
-            BackgroundBlurred.DOFade(0f, 0.25f);
+            Background.DOFade(0f, 0.25f).OnComplete(() => Destroy(Background.texture));
+            BackgroundBlurred.DOFade(0f, 0.25f).OnComplete(() => Destroy(BackgroundBlurred.texture));
         }
         else
         {
             Background.color = Color.white.WithAlpha(0f);
 
             var tex = await TextureExtensions.LoadTexture(path);
+            Destroy(Background.texture);
             Background.texture = tex;
             Background.DOFade(1f, 0.25f);
 
+            Destroy(BackgroundBlurred.texture);
             BackgroundBlurred.texture = tex.Blurred(PlayerSettings.BackgroundBlur.Value);
             BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
             BackgroundOverlay.DOFade(overlay, 0.25f);
@@ -57,6 +59,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
     public void SetBlur(int blur)
     {
         if (Background.texture == null) return;
+        Destroy(BackgroundBlurred.texture);
         BackgroundBlurred.texture = Background.texture.Blurred(blur);
     }
 
