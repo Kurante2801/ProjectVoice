@@ -169,11 +169,8 @@ public class Track : MonoBehaviour
 
         float pos = ScreenMargin + MarginPosition * GetPositionValue(time);
         CurrentMoveValue = pos;
+
         transform.position = new Vector3(pos, WorldY, 0f);
-
-        if (scale.x == float.NaN)
-            scale.x = 0f;
-
         overlay.transform.localScale = new Vector3(scale.x + 0.125f.ScreenScaledX(), scale.y, 1f);
         background.transform.localScale = bottom.transform.localScale = scale;
 
@@ -220,75 +217,73 @@ public class Track : MonoBehaviour
         return false;
     }
 
-    //private void ScreenSizeChanged(int w, int h) { }
-
-    public float GetPositionValue(int time)
-    {
-        foreach (var transition in MoveTransitions)
-        {
-            if (time.IsBetween(transition.StartTime, transition.EndTime))
-                return transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue);
-        }
-
-        var fallback = MoveTransitions[^1];
-        return fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), fallback.StartValue, fallback.EndValue);
-    }
-
     public MoveTransition GetPositionTransition(int time)
     {
-        foreach (var transition in MoveTransitions)
+        for (int i = 0; i < MoveTransitions.Count; i++)
         {
+            var transition = MoveTransitions[i];
             if (time.IsBetween(transition.StartTime, transition.EndTime))
                 return transition;
         }
 
         return MoveTransitions[^1];
     }
-
-    private float GetScaleValue(int time)
+    
+    public float GetPositionValue(int time)
     {
-        foreach (var transition in ScaleTransitions)
-        {
-            if (time.IsBetween(transition.StartTime, transition.EndTime))
-                return transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue);
-        }
+        var transition = GetPositionTransition(time);
+        var value = Mathf.Abs(transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue));
 
-        var fallback = ScaleTransitions[^1];
-        return fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), fallback.StartValue, fallback.EndValue);
+        if (float.IsNaN(value))
+            return 0f;
+
+        return value;
     }
 
     public ScaleTransition GetScaleTransition(int time)
     {
-        foreach (var transition in ScaleTransitions)
+        for (int i = 0; i < ScaleTransitions.Count; i++)
         {
+            var transition = ScaleTransitions[i];
             if (time.IsBetween(transition.StartTime, transition.EndTime))
                 return transition;
         }
 
         return ScaleTransitions[^1];
     }
-
-    private Color GetColorValue(int time)
+    
+    private float GetScaleValue(int time)
     {
-        foreach (var transition in ColorTransitions)
-        {
-            if (time.IsBetween(transition.StartTime, transition.EndTime))
-                return Color.Lerp(transition.StartValue, transition.EndValue, transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), 0f, 1f));
-        }
+        var transition = GetScaleTransition(time);
+        var value = Mathf.Abs(transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue));
 
-        var fallback = ColorTransitions[^1];
-        return Color.Lerp(fallback.StartValue, fallback.EndValue, fallback.TransitionEase.GetValue(time.MapRange(fallback.StartTime, fallback.EndTime, 0f, 1f), 0f, 1f));
+        if (float.IsNaN(value))
+            return 0.001f;
+
+        return Mathf.Max(0.001f, value);
     }
 
     public ColorTransition GetColorTransition(int time)
     {
-        foreach (var transition in ColorTransitions)
+        for (int i = 0; i < ColorTransitions.Count; i++)
         {
+            var transition = ColorTransitions[i];
             if (time.IsBetween(transition.StartTime, transition.EndTime))
                 return transition;
         }
 
         return ColorTransitions[^1];
+    }
+
+    private Color GetColorValue(int time)
+    {
+        var transition = GetColorTransition(time);
+        var value = Mathf.Abs(transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), 0f, 1f));
+
+        if (float.IsNaN(value))
+            value = 1f;
+
+        return Color.Lerp(transition.StartValue, transition.EndValue, Mathf.Clamp01(value));
     }
 
     public class MoveTransition
