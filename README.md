@@ -4,7 +4,7 @@ Rhythm game clone, WIP
 
 ## TODO/Missing Features:
 - [ ] Exiting a song takes you to result screen
-- [ ] Rapidly changing Background Blur creates a memory leak (probably not disposing of old blurred image)
+- [x] Rapidly changing Background Blur creates a memory leak (probably not disposing of old blurred image)
 - [ ] Define how the scoring system will work
 - [ ] Save and display High Scores
 - [ ] Make Result Screen look decent
