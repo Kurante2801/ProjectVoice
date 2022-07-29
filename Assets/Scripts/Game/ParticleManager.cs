@@ -23,8 +23,10 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
     private Dictionary<NoteGrade, Material> holdMaterials = new();
     [SerializeField] private List<Texture2D> holdGood, holdGreat, holdPerfect;
 
+    public int AnimationTime = 600;
     public AnimationCurve SizeCurve;
     public AnimationCurve AlphaCurve;
+    public float HoldEndTime = 1.5f;
 
     private void Start()
     {
@@ -56,7 +58,7 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
         for (int i = discardedHolds.Count - 1; i > -1; i--)
         {
             var discarded = discardedHolds[i];
-            if (Time.time - discarded.Time > 1f)
+            if (Time.time - discarded.Time > HoldEndTime)
             {
                 var sol = discarded.ParticleSystem.sizeOverLifetime;
                 sol.size = discarded.Curve;

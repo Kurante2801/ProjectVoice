@@ -1468,35 +1468,36 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 6f903f081e9db184db8b7a254887e511, type: 3}
   - {fileID: 2800000, guid: c001acf2ac58c08429acbe99453c7b19, type: 3}
   - {fileID: 2800000, guid: b40de5c339e07da448b0ee21f6a47412, type: 3}
+  AnimationTime: 1000
   SizeCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 10.179119
-      outSlope: 10.179119
+      inSlope: 6.107374
+      outSlope: 6.107374
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.043763675
+      outWeight: 0.08374445
     - serializedVersion: 3
-      time: 0.25
-      value: 0.75
-      inSlope: 0.85001266
-      outSlope: 0.33333334
-      tangentMode: 65
+      time: 0.4
+      value: 0.8
+      inSlope: 0.42635044
+      outSlope: 0.42635044
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.26477027
-      outWeight: 0.13639681
+      inWeight: 0.34354484
+      outWeight: 0.13931437
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0.09301082
-      outSlope: 0.09301082
+      inSlope: 0.15516979
+      outSlope: 0.15516979
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.16630197
+      inWeight: 0.11962072
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -1543,6 +1544,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  HoldEndTime: 1.5
 --- !u!1 &912402504
 GameObject:
   m_ObjectHideFlags: 0
