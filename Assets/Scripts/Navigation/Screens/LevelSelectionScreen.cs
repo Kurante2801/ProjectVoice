@@ -20,7 +20,14 @@ public class LevelSelectionScreen : Screen
         {
             ScrollView.SetActive(false);
             NoLevelsText.gameObject.SetActive(true);
-            NoLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", Context.UserDataPath);
+
+            if (!string.IsNullOrWhiteSpace(Context.FileErrorText))
+            {
+                NoLevelsText.fontSize = 18f;
+                NoLevelsText.text = Context.FileErrorText;
+            }
+            else
+                NoLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", Context.UserDataPath);
 
             base.OnScreenInitialized();
             return;

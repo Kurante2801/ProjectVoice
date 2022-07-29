@@ -67,6 +67,7 @@ public class Context : SingletonMonoBehavior<Context>
     public static UnityEvent OnModifiersChanged = new();
 
     public static GameState State;
+    public static string FileErrorText = "";
 
     // Caches Camera.main
     private static Camera _camera;
@@ -117,6 +118,8 @@ public class Context : SingletonMonoBehavior<Context>
             }
             catch (Exception e)
             {
+                FileErrorText = e.ToString();
+                Debug.LogError("Error making Project Voice folder and/or .nomedia");
                 Debug.LogError(e);
             }
         }
@@ -124,6 +127,7 @@ public class Context : SingletonMonoBehavior<Context>
         {
             Application.runInBackground = true;
             UserDataPath = Application.persistentDataPath;
+            Debug.Log("User data path: " + UserDataPath);
         }
 
         AudioSource = GetComponent<AudioSource>();
