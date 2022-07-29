@@ -20,7 +20,7 @@ public class LevelSelectionScreen : Screen
         {
             ScrollView.SetActive(false);
             NoLevelsText.gameObject.SetActive(true);
-            NoLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", Application.persistentDataPath);
+            NoLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", Context.UserDataPath);
 
             base.OnScreenInitialized();
             return;
