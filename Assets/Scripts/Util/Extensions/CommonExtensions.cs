@@ -72,4 +72,20 @@ public static class CommonExtensions
 
     public static Vector3 WithX(this Vector3 vector, float x) => new(x, vector.y, vector.z);
     public static Vector3 WithY(this Vector3 vector, float y) => new(vector.x, y, vector.z);
+
+    /// <summary>
+    /// Converts width and height from Screen size to World space
+    /// </summary>
+    /// <param name="renderer"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns>World size</returns>
+    public static Vector2 ScreenSizeToWorld(this SpriteRenderer renderer, float width, float height)
+    {
+        float camH = Context.Camera.orthographicSize * 2;
+        var cameraSize = new Vector2(Context.Camera.aspect * camH, camH);
+
+        var size = renderer.sprite.bounds.size;
+        return new Vector2(MathExtensions.MapRange(width / size.x, 0f, Context.ScreenWidth, 0f, cameraSize.x), MathExtensions.MapRange(height / size.y, 0f, Context.ScreenHeight, 0f, cameraSize.y));
+    }
 }

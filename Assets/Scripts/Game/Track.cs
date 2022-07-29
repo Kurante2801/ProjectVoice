@@ -8,7 +8,7 @@ using System.Globalization;
 
 public class Track : MonoBehaviour
 {
-    public static float ScreenWidth = 0.115f;
+    public const float ScreenWidth = 0.11125f;
     // These values are cached when screen size changes
     public static float WorldY = 12f;
     public static float ScreenMargin = 12f; // 120px of screen margin at 1280 screen width
@@ -115,9 +115,8 @@ public class Track : MonoBehaviour
             tmpColor[2].text = $"VALUE: {colorTrans.StartValue.ToHex()} - {colorTrans.EndValue.ToHex()}\n({Color.Lerp(colorTrans.StartValue, colorTrans.EndValue, colorTrans.TransitionEase.GetValue(time.MapRange(colorTrans.StartTime, colorTrans.EndTime, 0f, 1f), 0f, 1f)).ToHex()})";
         }
 
-        float scaleX = BackgroundWorldWidth * GetScaleValue(time);
-        CurrentScaleValue = scaleX;
-        float scaleY = 1f.ScreenScaledY();
+        var scale = background.ScreenSizeToWorld(Context.ScreenWidth * ScreenWidth * GetScaleValue(time), Context.ScreenHeight);
+        CurrentScaleValue = scale.x;
         var judgement_scale = 1f;
 
         // Despawn animation
@@ -127,8 +126,8 @@ public class Track : MonoBehaviour
         {
             float animationTime = Mathf.Clamp01(sinceDespawnTime / Model.despawn_duration);
             centerLine.color = Color.black.WithAlpha(Game.Instance.TrackDespawnCurveWidth.Evaluate(animationTime));
-            scaleX *= centerLine.color.a;
-            scaleY *= Game.Instance.TrackDespawnCurveHeight.Evaluate(animationTime);
+            scale.x *= centerLine.color.a;
+            scale.y *= Game.Instance.TrackDespawnCurveHeight.Evaluate(animationTime);
             judgement_scale *= 1f - animationTime;
 
             IsAnimating = true;
@@ -143,8 +142,8 @@ public class Track : MonoBehaviour
             {
                 float animationTime = Mathf.Clamp01(sinceSpawnTime / Model.spawn_duration);
                 centerLine.color = Color.black.WithAlpha(Game.Instance.TrackSpawnCurveWidth.Evaluate(animationTime));
-                scaleX *= centerLine.color.a;
-                scaleY *= Game.Instance.TrackSpawnCurveHeight.Evaluate(animationTime);
+                scale.x *= centerLine.color.a;
+                scale.y *= Game.Instance.TrackSpawnCurveHeight.Evaluate(animationTime);
                 judgement_scale *= animationTime;
 
                 IsAnimating = true;
@@ -172,21 +171,21 @@ public class Track : MonoBehaviour
         CurrentMoveValue = pos;
         transform.position = new Vector3(pos, WorldY, 0f);
 
-        if (scaleX == float.NaN)
-            scaleX = 0f;
+        if (scale.x == float.NaN)
+            scale.x = 0f;
 
-        overlay.transform.localScale = new Vector3(scaleX + 0.125f.ScreenScaledX(), scaleY, 1f);
-        background.transform.localScale = bottom.transform.localScale = new Vector3(scaleX, scaleY, 1f);
+        overlay.transform.localScale = new Vector3(scale.x + 0.125f.ScreenScaledX(), scale.y, 1f);
+        background.transform.localScale = bottom.transform.localScale = scale;
 
-        float width = 13.6f * scaleX * 0.5f;
+        float width = 13.6f * scale.x * 0.5f;
         leftLine.transform.position = leftLine.transform.position.WithX(transform.position.x - width + 0.1f.ScreenScaledX());
         rightLine.transform.position = rightLine.transform.position.WithX(transform.position.x + width - 0.1f.ScreenScaledX());
         leftGlow.transform.position = leftGlow.transform.position.WithX(transform.position.x - width);
         rightGlow.transform.position = rightGlow.transform.position.WithX(transform.position.x + width);
 
-        leftLine.transform.localScale = rightLine.transform.localScale = new Vector3(0.75f.ScreenScaledX(), scaleY, 1f);
-        centerLine.transform.localScale = new Vector3(0.5f.ScreenScaledX(), scaleY, 1f);
-        leftGlow.transform.localScale = rightGlow.transform.localScale = new Vector3(2f.ScreenScaledX(), scaleY, 1f);
+        leftLine.transform.localScale = rightLine.transform.localScale = new Vector3(0.75f.ScreenScaledX(), scale.y, 1f);
+        centerLine.transform.localScale = new Vector3(0.5f.ScreenScaledX(), scale.y, 1f);
+        leftGlow.transform.localScale = rightGlow.transform.localScale = new Vector3(2f.ScreenScaledX(), scale.y, 1f);
 
         var color = GetColorValue(time);
         background.color = leftGlow.color = rightGlow.color = color;

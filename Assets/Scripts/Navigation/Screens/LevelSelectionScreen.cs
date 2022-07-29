@@ -10,11 +10,22 @@ public class LevelSelectionScreen : Screen
 
     public Dictionary<string, LevelCard> Levels = new();
 
-    public GameObject LevelCardPrefab;
+    public GameObject LevelCardPrefab, ScrollView;
     public RectTransform Content;
+    public TMPro.TMP_Text NoLevelsText;
 
     public override void OnScreenInitialized()
     {
+        if(Context.LevelManager.LoadedLevels.Count == 0)
+        {
+            ScrollView.SetActive(false);
+            NoLevelsText.gameObject.SetActive(true);
+            NoLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", Application.persistentDataPath);
+
+            base.OnScreenInitialized();
+            return;
+        }
+
         foreach (Transform child in Content)
             Destroy(child.gameObject);
         

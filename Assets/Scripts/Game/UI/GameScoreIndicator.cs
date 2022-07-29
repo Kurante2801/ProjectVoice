@@ -36,7 +36,7 @@ public class GameScoreIndicator : MonoBehaviour
     {
         if (Game.Instance.IsPaused) return;
 
-        value = MathUtil.Lerp(value, score, 0.6D);
+        value = MathExtensions.Lerp(value, score, 0.6D);
         if (value == _value) return;
 
         string text = Mathf.FloorToInt((float)value).ToString("D6");

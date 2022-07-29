@@ -1,5 +1,6 @@
 {
     "LANGUAGE_NAME": "español",
+    "LEVEL_SEL_NOLEVELS": "No se encontraron niveles, colóquelos en <br>{PATH}<br>y reinicia el juego",
 
     "OPTIONS": "Opciones",
     "INFO": "Info",

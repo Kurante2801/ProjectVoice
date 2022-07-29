@@ -68,6 +68,14 @@ public class Context : SingletonMonoBehavior<Context>
 
     public static GameState State;
 
+    // Caches Camera.main
+    private static Camera _camera;
+    public static Camera Camera
+    {
+        get => _camera != null ? _camera : _camera = Camera.main;
+        set => _camera = value;
+    }
+
     protected override void Awake()
     {
         if (GameObject.FindGameObjectsWithTag("Context").Length > 1) // This is 1 instead of 0 because 'this' has the tag too
@@ -85,11 +93,6 @@ public class Context : SingletonMonoBehavior<Context>
         ScreenRealWidth = UnityEngine.Screen.width;
         ScreenRealHeight = UnityEngine.Screen.height;
         SetupResolution();
-
-#if UNITY_EDITOR
-        Application.runInBackground = true;
-        UserDataPath = Application.persistentDataPath;
-#endif
 
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -116,6 +119,11 @@ public class Context : SingletonMonoBehavior<Context>
             {
                 Debug.LogError(e);
             }
+        }
+        else
+        {
+            Application.runInBackground = true;
+            UserDataPath = Application.persistentDataPath;
         }
 
         AudioSource = GetComponent<AudioSource>();
