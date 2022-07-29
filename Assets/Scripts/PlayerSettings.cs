@@ -86,7 +86,7 @@ public class PlayerSettings
             set
             {
                 var validated = ValidateFunc(value);
-                PlayerPrefs.GetFloat(Key, validated);
+                PlayerPrefs.SetFloat(Key, validated);
                 OnSet?.Invoke(validated);
             }
         }
@@ -140,7 +140,7 @@ public class PlayerSettings
             set
             {
                 var validated = ValidateFunc(value);
-                PlayerPrefs.GetInt(Key, validated);
+                PlayerPrefs.SetInt(Key, validated);
                 OnSet?.Invoke(validated);
             }
         }
