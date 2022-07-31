@@ -80,6 +80,9 @@
     "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Color de Fondo Arriba",
 
     "OPTIONS_OTHERS_TAB": "Otros",
+    "OPTIONS_STORAGE_NAME": "Abrir pantalla de configuración de almacenamiento",
+    "OPTIONS_STORAGE_DESC": "Después de actualizar la ubicación de tus niveles, el juego se reiniciará.",
+    "OPTIONS_STORAGE_BUTTON": "Seleccionar",
     "OPTIONS_PROFILER_NAME": "Habilitar Profiler",
     "OPTIONS_PROFILER_DESC": "Habilita/deshabilita Graphy",
     "OPTIONS_DEBUGTRACKS_NAME": "Depurar Tracks",

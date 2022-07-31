@@ -80,6 +80,9 @@
     "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Top Foreground Color",
 
     "OPTIONS_OTHERS_TAB": "Others",
+    "OPTIONS_STORAGE_NAME": "Open storage setting screen",
+    "OPTIONS_STORAGE_DESC": "After updating the location of your levels, the game will restart",
+    "OPTIONS_STORAGE_BUTTON": "Select",
     "OPTIONS_PROFILER_NAME": "Enable Profiler",
     "OPTIONS_PROFILER_DESC": "Toggles Graphy",
     "OPTIONS_DEBUGTRACKS_NAME": "Debug Tracks",

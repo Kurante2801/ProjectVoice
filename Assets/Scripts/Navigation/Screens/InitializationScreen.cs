@@ -38,6 +38,7 @@ public class InitializationScreen : Screen
             }
         }
 
+        FolderAccessScreen.IsFirstTime = false;
         Context.UserDataPath = PlayerSettings.UserDataPath.Value;
 
         if (Context.SelectedLevel != null)

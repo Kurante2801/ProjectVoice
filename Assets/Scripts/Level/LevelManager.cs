@@ -16,6 +16,7 @@ public class LevelManager
     // CommonExtensions.GetSubEntry loops through all files in a given folder, I don't like it either but Scoped Storage has forced my hand
     public void LoadLevels()
     {
+        LoadedLevels.Clear();
         var paths = new List<string>();
         var directories = FileBrowserHelpers.GetEntriesInDirectory(Context.UserDataPath, false).Where(entry => entry.IsDirectory);
 

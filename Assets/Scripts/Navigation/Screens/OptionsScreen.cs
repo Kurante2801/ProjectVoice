@@ -7,7 +7,7 @@ using System;
 
 public enum SettingType
 {
-    None, Dropdown, Boolean, Slider, Number, Color, Note
+    None, Dropdown, Boolean, Slider, Number, Color, Note, Button
 }
 
 public class OptionsScreen : Screen
@@ -183,6 +183,13 @@ public class OptionsScreen : Screen
 
     private void PopulateOthers()
     {
+        foreach (Transform child in OthersContent)
+            Destroy(child.gameObject);
+
+        var storage = CreateSetting<SettingButtonElement>(SettingType.Button, OthersContent);
+        storage.SetLocalizationKeys("OPTIONS_STORAGE_NAME", "OPTIONS_STORAGE_DESC", "OPTIONS_STORAGE_BUTTON");
+        storage.OnButtonClicked.AddListener(() => Context.ScreenManager.ChangeScreen("FolderAccessScreen"));
+
         var safearea = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
         safearea.SetValue(PlayerSettings.SafeArea.Value);
         safearea.SetLocalizationKeys("OPTIONS_SAFEAREA_NAME", "OPTIONS_SAFEAREA_DESC");

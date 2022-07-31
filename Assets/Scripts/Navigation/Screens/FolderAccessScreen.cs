@@ -6,6 +6,8 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class FolderAccessScreen : Screen
 {
@@ -15,10 +17,14 @@ public class FolderAccessScreen : Screen
     [SerializeField] private TMP_InputField directory;
     [SerializeField] private Button returnButton;
 
-    public static bool CanLeave = true; // Require folder to continue
+    public static bool CanLeave = true;
+    public static bool IsFirstTime = true;
+    private static bool shouldRestart = false;
 
     public override void OnScreenBecameActive()
     {
+        IsFirstTime = false;
+
         returnButton.interactable = CanLeave;
         accessState.text = "FOLDERACCESS_REQUEST".Get();
         directory.text = "";
@@ -59,14 +65,28 @@ public class FolderAccessScreen : Screen
                 System.IO.Directory.CreateDirectory(path); // We can use IO on api level 29 and below
             }
 
+            shouldRestart = PlayerSettings.UserDataPath.Value != path;
+
             PlayerSettings.UserDataPath.Value = path;
             OnScreenBecameActive();
         }, () => { }, FileBrowser.PickMode.Folders, false, title: "Select folder containing all levels");
     }
 
-    public void ReturnButton()
+    public async void ReturnButton()
     {
         if (FileBrowser.IsOpen || !CanLeave) return;
+
+        if (!IsFirstTime && shouldRestart)
+        {
+            Context.ScreenManager.ChangeScreen(null);
+            Context.FadeOutSongPreview();
+            Backdrop.Instance.SetBackdrop(null);
+            Context.SelectedLevel = null;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Navigation");
+            return;
+        }
 
         if (!Context.ScreenManager.TryReturnScreen())
             Context.ScreenManager.ChangeScreen("InitializationScreen", addToHistory: false);
