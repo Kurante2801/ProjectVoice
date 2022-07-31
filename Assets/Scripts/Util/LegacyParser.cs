@@ -125,6 +125,24 @@ public static class LegacyParser
         var legacy_tracks = JsonConvert.DeserializeObject<List<TrackLegacyModel>>(FileBrowserHelpers.ReadTextFromFile(tracks_path));
         var legacy_notes = JsonConvert.DeserializeObject<List<NoteLegacyModel>>(FileBrowserHelpers.ReadTextFromFile(notes_path));
 
+        // Sort same way as editor
+        legacy_tracks.Sort((a, b) => a.Start.CompareTo(b.Start));
+        legacy_notes.Sort((a, b) => a.Time.CompareTo(b.Time));
+
+        for (int i = 0; i < legacy_notes.Count; i++)
+        {
+            for (int j = 0; j < legacy_tracks.Count; j++)
+            {
+                if (legacy_notes[i].Track == legacy_tracks[j].id)
+                {
+                    legacy_notes[i].Track = j;
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < legacy_tracks.Count; i++)
+            legacy_tracks[i].id = i;
+
         foreach (var legacy in legacy_tracks)
         {
             var track = new ChartModel.TrackModel();
@@ -174,7 +192,7 @@ public static class LegacyParser
             model.tracks.Add(track);
         }
 
-        foreach(var legacy in legacy_notes)
+        foreach (var legacy in legacy_notes)
         {
             var track = model.tracks.FirstOrDefault(track => track.id == legacy.Track);
             if (track == null) continue;
@@ -196,7 +214,7 @@ public static class LegacyParser
     {
         var transitions = new List<ChartModel.TransitionModel>();
 
-        // No transitions, so we create one transition with just the initial values
+        // No transitions, so we create one transition with just the initial value
         if (legacy.Count < 1)
         {
             transitions.Add(new()
@@ -213,7 +231,7 @@ public static class LegacyParser
 
         // Fix gaps from spawn to initial transition
         var transition = legacy[0];
-        if(Mathf.RoundToInt(transition.Start * 1000) != track.spawn_time)
+        if (Mathf.RoundToInt(transition.Start * 1000) != track.spawn_time)
         {
             transitions.Add(new()
             {
@@ -225,8 +243,8 @@ public static class LegacyParser
             });
         }
 
-        // Fix gaps between transitions
-        for(int i = 0; i < legacy.Count; i++)
+        // Convert transitions
+        for (int i = 0; i < legacy.Count; i++)
         {
             transition = legacy[i];
 
@@ -234,70 +252,44 @@ public static class LegacyParser
             if (i > 0)
                 initialValue = transitions[^1].end_value;
 
-            // Convert from legacy
             transitions.Add(new()
             {
                 start_time = Mathf.RoundToInt(transition.Start * 1000),
                 end_time = Mathf.RoundToInt(transition.End * 1000),
                 start_value = initialValue,
                 end_value = transition.To,
-                easing = LegacyEasings.TryGetValue(transition.Ease, out var result) ? (int)result : (int)TransitionEase.NONE
-            });
-
-            // Fix gap between this transition to the next one
-            if (i < legacy.Count - 1 && transition.End != legacy[i + 1].Start)
-            {
-                transitions.Add(new()
-                {
-                    start_time = Mathf.RoundToInt(transition.End * 1000),
-                    end_time = Mathf.RoundToInt(legacy[i + 1].Start * 1000),
-                    start_value = transition.To,
-                    end_value = transition.To,
-                    easing = (int)TransitionEase.NONE
-                });
-            }
-        }
-
-        // Fix gap between last transition and track despawn
-        transition = legacy[^1];
-        if (Mathf.RoundToInt(transition.End * 1000) != track.despawn_time)
-        {
-            transitions.Add(new()
-            {
-                start_time = Mathf.RoundToInt(transition.End * 1000),
-                end_time = track.despawn_time,
-                start_value = transition.To,
-                end_value = transition.To,
-                easing = (int)TransitionEase.NONE
+                easing = (int)ParseEase(transition.Ease)
             });
         }
 
+        transitions.Sort((a, b) => a.start_time.CompareTo(b.start_time));
         return transitions;
     }
 
-    public static Dictionary<string, TransitionEase> LegacyEasings = new()
+    public static TransitionEase ParseEase(string ease) => ease switch
     {
-        ["easenone"] = TransitionEase.NONE,
-        ["easelinear"] = TransitionEase.LINEAR,
-        ["easeinexpo"] = TransitionEase.EXP_IN,
-        ["easeoutexpo"] = TransitionEase.EXP_OUT,
-        ["easeinoutexpo"] = TransitionEase.EXP_INOUT,
-        ["easeoutinexpo"] = TransitionEase.EXP_OUTIN,
-        ["easeinquad"] = TransitionEase.QUAD_IN,
-        ["easeoutquad"] = TransitionEase.QUAD_OUT,
-        ["easeinoutquad"] = TransitionEase.QUAD_INOUT,
-        ["easeoutinquad"] = TransitionEase.QUAD_OUTIN,
-        ["easeincirc"] = TransitionEase.CIRC_IN,
-        ["easeoutcirc"] = TransitionEase.CIRC_OUT,
-        ["easeinoutcirc"] = TransitionEase.CIRC_INOUT,
-        ["easeoutincirc"] = TransitionEase.CIRC_OUTIN,
-        ["easeinback"] = TransitionEase.BACK_IN,
-        ["easeoutback"] = TransitionEase.BACK_OUT,
-        ["easeinoutback"] = TransitionEase.BACK_INOUT,
-        ["easeoutinback"] = TransitionEase.BACK_OUTIN,
-        ["easeintelastic"] = TransitionEase.ELASTIC_IN,
-        ["easeoutelastic"] = TransitionEase.ELASTIC_OUT,
-        ["easeinoutelastic"] = TransitionEase.ELASTIC_INOUT,
+        "easelinear" => TransitionEase.LINEAR,
+        "easeinquad" => TransitionEase.QUAD_IN,
+        "easeoutquad" => TransitionEase.QUAD_OUT,
+        "easeinoutquad" => TransitionEase.QUAD_INOUT,
+        "easeoutinquad" => TransitionEase.QUAD_OUTIN,
+        "easeincirc" => TransitionEase.CIRC_IN,
+        "easeoutcirc" => TransitionEase.CIRC_OUT,
+        "easeinoutcirc" => TransitionEase.CIRC_INOUT,
+        "easeoutincirc" => TransitionEase.CIRC_OUTIN,
+        "easeinexpo" => TransitionEase.EXP_IN,
+        "easeoutexpo" => TransitionEase.EXP_OUT,
+        "easeinoutexpo" => TransitionEase.EXP_INOUT,
+        "easeoutinexpo" => TransitionEase.EXP_OUTIN,
+        "easeinback" => TransitionEase.BACK_IN,
+        "easeoutback" => TransitionEase.BACK_OUT,
+        "easeinoutback" => TransitionEase.EXIT, // As parsed by editor
+        "easeoutinback" => TransitionEase.BACK_OUTIN,
+        "easeintelastic" => TransitionEase.ELASTIC_IN, // Not a typo
+        "easeoutelastic" => TransitionEase.ELASTIC_OUT,
+        "easeinoutelastic" => TransitionEase.ELASTIC_INOUT,
+        "easeoutinelastic" => TransitionEase.ELASTIC_OUTIN,
+        _ => TransitionEase.NONE,
     };
     
     [Serializable]

@@ -104,6 +104,6 @@
     "FOLDERACCESS_REQUEST": "Select the location your levels are stored at",
     "FOLDERACCESS_LOADING": "Attempting to open folder...",
     "FOLDERACCESS_NODIR": "No directory selected",
-    "FOLDERACCESS_SUCCESS": "Directory access <color=#0F0>success</color>, found {DIRCOUNT} folder(s).",
+    "FOLDERACCESS_SUCCESS": "Directory access was <color=#0F0>successful</color>, found {DIRCOUNT} folder(s).",
     "FOLDERACCESS_FAILURE": "Directory access <color=#F00>failed</color>."
 }

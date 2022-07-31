@@ -219,11 +219,15 @@ public class Track : MonoBehaviour
 
     public MoveTransition GetPositionTransition(int time)
     {
+        var result = MoveTransitions[0];
         for (int i = 0; i < MoveTransitions.Count; i++)
         {
             var transition = MoveTransitions[i];
-            if (time.IsBetween(transition.StartTime, transition.EndTime))
-                return transition;
+
+            if (time >= transition.StartTime)
+                result = transition;
+            else
+                return result;
         }
 
         return MoveTransitions[^1];
@@ -232,7 +236,7 @@ public class Track : MonoBehaviour
     public float GetPositionValue(int time)
     {
         var transition = GetPositionTransition(time);
-        var value = Mathf.Abs(transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue));
+        var value = transition.TransitionEase.GetValueClamped(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue);
 
         if (float.IsNaN(value))
             return 0f;
@@ -242,20 +246,24 @@ public class Track : MonoBehaviour
 
     public ScaleTransition GetScaleTransition(int time)
     {
+        var result = ScaleTransitions[0];
         for (int i = 0; i < ScaleTransitions.Count; i++)
         {
             var transition = ScaleTransitions[i];
-            if (time.IsBetween(transition.StartTime, transition.EndTime))
-                return transition;
+
+            if (time >= transition.StartTime)
+                result = transition;
+            else
+                return result;
         }
 
         return ScaleTransitions[^1];
     }
-    
+
     private float GetScaleValue(int time)
     {
         var transition = GetScaleTransition(time);
-        var value = Mathf.Abs(transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue));
+        var value = Mathf.Abs(transition.TransitionEase.GetValueClamped(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), transition.StartValue, transition.EndValue));
 
         if (float.IsNaN(value))
             return 0.001f;
@@ -265,11 +273,15 @@ public class Track : MonoBehaviour
 
     public ColorTransition GetColorTransition(int time)
     {
+        var result = ColorTransitions[0];
         for (int i = 0; i < ColorTransitions.Count; i++)
         {
             var transition = ColorTransitions[i];
-            if (time.IsBetween(transition.StartTime, transition.EndTime))
-                return transition;
+
+            if (time >= transition.StartTime)
+                result = transition;
+            else
+                return result;
         }
 
         return ColorTransitions[^1];
@@ -278,12 +290,12 @@ public class Track : MonoBehaviour
     private Color GetColorValue(int time)
     {
         var transition = GetColorTransition(time);
-        var value = Mathf.Abs(transition.TransitionEase.GetValue(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), 0f, 1f));
+        var value = transition.TransitionEase.GetValueClamped(time.MapRange(transition.StartTime, transition.EndTime, 0f, 1f), 0f, 1f);
 
         if (float.IsNaN(value))
             value = 1f;
 
-        return Color.Lerp(transition.StartValue, transition.EndValue, Mathf.Clamp01(value));
+        return Color.Lerp(transition.StartValue, transition.EndValue, value);
     }
 
     public class MoveTransition

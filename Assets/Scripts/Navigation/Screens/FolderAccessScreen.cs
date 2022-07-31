@@ -21,6 +21,12 @@ public class FolderAccessScreen : Screen
     public static bool IsFirstTime = true;
     private static bool shouldRestart = false;
 
+    public override void OnScreenInitialized()
+    {
+        base.OnScreenInitialized();
+        shouldRestart = false;
+    }
+
     public override void OnScreenBecameActive()
     {
         IsFirstTime = false;

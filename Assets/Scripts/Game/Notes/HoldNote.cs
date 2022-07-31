@@ -8,7 +8,7 @@ public class HoldNote : Note
     public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoHold);
     public override NoteShape GetShape() => PlayerSettings.HoldShape.Value;
     
-    public static int ReleaseMissThreshold = 100;
+    public static int ReleaseMissThreshold = 350;
     public bool IsBeingHeld = false;
     private NoteGrade initialGrade = NoteGrade.None;
     private int initialDifference = 0;
