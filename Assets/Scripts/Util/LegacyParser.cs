@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using SimpleFileBrowser;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ public static class LegacyParser
                         };
 
                         if (i < 3)
-                            chart.path = $"track_{chart.type}.json";
+                            chart.path = $"track_{chart.type.ToString().ToLower()}.json";
                         else
                             chart.path = $"track_extra{i - 1}.json";
 
@@ -121,8 +122,8 @@ public static class LegacyParser
     public static ChartModel ParseChart(string tracks_path, string notes_path)
     {
         var model = new ChartModel();
-        var legacy_tracks = JsonConvert.DeserializeObject<List<TrackLegacyModel>>(File.ReadAllText(tracks_path));
-        var legacy_notes = JsonConvert.DeserializeObject<List<NoteLegacyModel>>(File.ReadAllText(notes_path));
+        var legacy_tracks = JsonConvert.DeserializeObject<List<TrackLegacyModel>>(FileBrowserHelpers.ReadTextFromFile(tracks_path));
+        var legacy_notes = JsonConvert.DeserializeObject<List<NoteLegacyModel>>(FileBrowserHelpers.ReadTextFromFile(notes_path));
 
         foreach (var legacy in legacy_tracks)
         {

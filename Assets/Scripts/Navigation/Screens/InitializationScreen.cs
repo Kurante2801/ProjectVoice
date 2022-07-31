@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -14,6 +15,31 @@ public class InitializationScreen : Screen
         base.OnScreenTransitionInEnded();
         Context.SetupProfiler();
 
+        if(!Context.LocalizationManager.Initialized)
+            await Context.LocalizationManager.Initialize();
+
+        // Android scoped storage stuff
+        string path = PlayerSettings.UserDataPath.Value;
+        if (string.IsNullOrEmpty(path))
+        {
+            FolderAccessScreen.CanLeave = false;
+            Context.ScreenManager.ChangeScreen("FolderAccessScreen", addToHistory: false);
+            return;
+        }
+        else
+        {
+            // Check access
+            var paths = SimpleFileBrowser.FileBrowserHelpers.GetEntriesInDirectory(path, false);
+            if (paths == null)
+            {
+                FolderAccessScreen.CanLeave = false;
+                Context.ScreenManager.ChangeScreen("FolderAccessScreen", addToHistory: false);
+                return;
+            }
+        }
+
+        Context.UserDataPath = PlayerSettings.UserDataPath.Value;
+
         if (Context.SelectedLevel != null)
         {
             if(Context.State != null && Context.State.IsCompleted && Context.SelectedChart != null && !Context.Modifiers.Contains(Modifier.Auto))
@@ -23,9 +49,7 @@ public class InitializationScreen : Screen
             return;
         }
 
-        await Context.LevelManager.LoadLevels();
-        await Context.LocalizationManager.Initialize();
-
+        Context.LevelManager.LoadLevels();
         Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
     }
 }

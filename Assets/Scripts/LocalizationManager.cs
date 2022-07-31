@@ -12,6 +12,7 @@ public class LocalizationManager
     public string ActiveLocalization => PlayerSettings.LanguageString.Value;
     public Localization Fallback = new(); // Creating a new to avoid exceptions when the game starts (OnEnable is called on childrens)
     public Dictionary<string, Localization> Localizations = new();
+    public bool Initialized = false;
 
     public async UniTask Initialize()
     {
@@ -31,6 +32,7 @@ public class LocalizationManager
         }
 
         Fallback = Localizations["en"];
+        Initialized = true;
     }
 
     public string GetLocalized(string key, string fallback)

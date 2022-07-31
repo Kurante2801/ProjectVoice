@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using SimpleFileBrowser;
 using DG.Tweening;
 using System;
 using System.Collections;
@@ -88,46 +89,20 @@ public class Context : SingletonMonoBehavior<Context>
         base.Awake();
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = PlayerSettings.TargetFPS.Value;
-        Application.runInBackground = false;
+        Application.runInBackground = Application.platform != RuntimePlatform.Android;
         BetterStreamingAssets.Initialize();
 
         ScreenRealWidth = UnityEngine.Screen.width;
         ScreenRealHeight = UnityEngine.Screen.height;
         SetupResolution();
 
-        if (Application.platform == RuntimePlatform.Android)
+        FileBrowser.SingleClickMode = true;
+
+        if(Application.platform == RuntimePlatform.Android)
         {
-            var dir = GetAndroidStoragePath();
-            if (dir == null)
-            {
-                Application.Quit();
-                return;
-            }
-
-            UserDataPath = dir + "/Project Voice";
-
-            // Test for write permission
-            try
-            {
-                Directory.CreateDirectory(UserDataPath);
-                File.Create(UserDataPath + "/.nomedia").Dispose();
-
-                var file = $"{UserDataPath}/{Path.GetRandomFileName()}";
-                File.Create(file);
-                File.Delete(file);
-            }
-            catch (Exception e)
-            {
-                FileErrorText = e.ToString();
-                Debug.LogError("Error making Project Voice folder and/or .nomedia");
-                Debug.LogError(e);
-            }
-        }
-        else
-        {
-            Application.runInBackground = true;
-            UserDataPath = Application.persistentDataPath;
-            Debug.Log("User data path: " + UserDataPath);
+            using var version = new AndroidJavaClass("android.os.Build$VERSION");
+            AndroidVersionCode = version.GetStatic<int>("SDK_INT");
+            print("Android version: " + AndroidVersionCode);
         }
 
         AudioSource = GetComponent<AudioSource>();
@@ -143,19 +118,18 @@ public class Context : SingletonMonoBehavior<Context>
         bool useMusic = string.IsNullOrWhiteSpace(level.Meta.preview_path);
         string path;
 
-        // Check if preview_path exists
-        if (!useMusic)
+        if (useMusic || !CommonExtensions.GetSubEntry(level.Path, level.Meta.preview_path, out var preview))
         {
-            path = level.Path + level.Meta.preview_path;
-            if (!File.Exists(path))
-            {
-                Debug.LogWarning("Preview file not fount at " + path);
-                path = level.Path + level.Meta.music_path;
-                useMusic = true;
-            }
+            if (!useMusic)
+                Debug.LogError($"Preview file {level.Meta.preview_path} not found at {level.Path}");
+
+            useMusic = true;
+            CommonExtensions.GetSubEntry(level.Path, level.Meta.music_path, out var music);
+            path = music.Path;
+            level.Meta.preview_time = Mathf.Max(level.Meta.preview_time, 0);
         }
         else
-            path = level.Path + level.Meta.music_path;
+            path = preview.Path;
 
         if (path == audioPath) return;
 
@@ -194,6 +168,8 @@ public class Context : SingletonMonoBehavior<Context>
         audioPath = "";
 
         var controller = AudioController;
+        if (controller == null) return;
+
         controller.DOKill();
         controller.DOFade(0f, 0.25f).OnComplete(() => controller?.Unload());
     }
@@ -203,11 +179,6 @@ public class Context : SingletonMonoBehavior<Context>
         audioToken?.Cancel();
         AudioController?.Unload();
         audioPath = "";
-    }
-
-    public string GetAndroidStoragePath()
-    {
-        return Application.persistentDataPath;
     }
 
     public static void SetAutoRotation(bool enabled)

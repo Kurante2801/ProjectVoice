@@ -96,5 +96,11 @@
     "GRAPHICS_VERYLOW": "Muy Bajo",
     "GRAPHICS_LOW": "Bajo",
     "GRAPHICS_MEDIUM": "Medio",
-    "GRAPHICS_HIGH": "Alto"
+    "GRAPHICS_HIGH": "Alto",
+
+    "FOLDERACCESS_REQUEST": "Seleccione la ubicación en la que se almacena sus niveles",
+    "FOLDERACCESS_LOADING": "Intentando abrir carpeta...",
+    "FOLDERACCESS_NODIR": "Ningún directorio seleccionado",
+    "FOLDERACCESS_SUCCESS": "El acceso al directorio fue <color=#0F0>exitoso</color>, se encontraron {DIRCOUNT} carpeta/s",
+    "FOLDERACCESS_FAILURE": "El acceso al directorio <color=#F00>fracazó."
 }

@@ -82,6 +82,14 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
         if (oldScreen != null)
         {
+            if (oldScreen.GetID() == "FolderAccessScreen" && !FolderAccessScreen.CanLeave)
+            {
+                Debug.LogError("Tried to leave Folder Access Screen without selecting a folder!");
+                ActiveScreenId = "FolderAccessScreen";
+                ChangingToScreenId = null;
+                return;
+            }
+            
             oldScreen.CanvasGroup.DOFade(0f, duration);
             oldScreen.OnScreenTransitionOutBegan();
 

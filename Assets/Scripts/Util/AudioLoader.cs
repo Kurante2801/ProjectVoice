@@ -7,9 +7,12 @@ using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
+using System.Linq;
 
 public static class AudioLoader
 {
+    private static HashSet<CachedAudio> CachedFiles = new();
+
     public static double MPEGLength = -1f;
     public static AudioType Detect(string path)
     {
@@ -46,6 +49,9 @@ public static class AudioLoader
         }
         else
         {
+            if (Context.AndroidVersionCode > 29)
+                path = GetCached(path);
+
             using var request = UnityWebRequestMultimedia.GetAudioClip("file://" + path, Detect(path));
             await request.SendWebRequest();
             token.ThrowIfCancellationRequested();
@@ -56,4 +62,41 @@ public static class AudioLoader
             return DownloadHandlerAudioClip.GetContent(request);
         }
     }
+
+    public static string GetCached(string path)
+    {
+        var cached = CachedFiles.FirstOrDefault(audio => audio.ScopedPath == path);
+        if (cached != null)
+            return cached.RealPath;
+
+        var audio = new CachedAudio();
+        audio.ScopedPath = path;
+        audio.RealPath = Path.Join(Application.temporaryCachePath, RandomFilename() + Path.GetExtension(path));
+        SimpleFileBrowser.FileBrowserHelpers.CopyFile(audio.ScopedPath, audio.RealPath);
+        CachedFiles.Add(audio);
+
+        return audio.RealPath;
+    }
+
+    private static string RandomFilename()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var filename = new char[6];
+
+        for(int i = 0; i < 6; i++)
+            filename[i] = chars[UnityEngine.Random.Range(0, chars.Length)];
+        var result = new string(filename);
+
+        if (CachedFiles.FirstOrDefault(cached => Path.GetFileNameWithoutExtension(cached.RealPath) == result) != null)
+            result = RandomFilename();
+
+        return result;
+    }
+
+    private class CachedAudio
+    {
+        public string ScopedPath;
+        public string RealPath;
+    }
+
 }

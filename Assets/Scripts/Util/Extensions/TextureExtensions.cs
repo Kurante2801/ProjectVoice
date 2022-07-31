@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using SimpleFileBrowser;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,15 @@ public static class TextureExtensions
 {
     public static async UniTask<Texture2D> LoadTexture(string path)
     {
+        if(Context.AndroidVersionCode > 29)
+        {
+            var bytes = FileBrowserHelpers.ReadBytesFromFile(path);
+            var tex = new Texture2D(1, 1);
+            tex.LoadImage(bytes);
+
+            return tex;
+        }
+
         using var request = UnityWebRequestTexture.GetTexture("file://" + path);
         await request.SendWebRequest();
 

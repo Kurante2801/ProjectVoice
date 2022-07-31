@@ -1,4 +1,5 @@
 using DG.Tweening;
+using SimpleFileBrowser;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         backdropPath = path;
 
         var valid = !string.IsNullOrWhiteSpace(path);
-        if (valid && !File.Exists(path))
+        if (valid && !FileBrowserHelpers.FileExists(path))
         {
             Debug.LogWarning($"Could not find backdrop {path}");
             backdropPath = "";

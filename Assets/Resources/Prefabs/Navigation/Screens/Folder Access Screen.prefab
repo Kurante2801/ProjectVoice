@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 256}
-  m_SizeDelta: {x: 500, y: 448}
+  m_SizeDelta: {x: 800, y: 448}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4501230176394661869
 CanvasRenderer:
@@ -66,7 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Folder access was {STATE}, found {DIRS} folders in directory
+  m_text: Folder access was <color=#0F0>{STATE}</color>, found {DIRS} folders in
+    directory
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d35b0696d28a784f8e21a73121a596e, type: 2}
   m_sharedMaterial: {fileID: 1053333423450310472, guid: 1d35b0696d28a784f8e21a73121a596e, type: 2}
@@ -147,7 +148,7 @@ GameObject:
   - component: {fileID: 8293797121476223548}
   - component: {fileID: 8293797121476223545}
   - component: {fileID: 8293797121476223551}
-  - component: {fileID: 5392936417907766241}
+  - component: {fileID: 4756449059559172822}
   m_Layer: 5
   m_Name: Folder Access Screen
   m_TagString: Untagged
@@ -229,7 +230,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &5392936417907766241
+--- !u!114 &4756449059559172822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -245,8 +246,9 @@ MonoBehaviour:
   CanvasGroup: {fileID: 0}
   RectTransform: {fileID: 0}
   GraphicRaycaster: {fileID: 0}
-  state: {fileID: 2662613087458491424}
+  accessState: {fileID: 2662613087458491424}
   directory: {fileID: 2352808212327956489}
+  returnButton: {fileID: 8718635538336640014}
 --- !u!1001 &1054044148469815438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -277,6 +279,34 @@ PrefabInstance:
     - target: {fileID: 2485325480096738983, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4756449059559172822}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FolderAccessScreen, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480315554099, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_Pivot.x
@@ -454,7 +484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4620678642157487725, guid: d883387f77dd6cc4f8c3c08ad307f890, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: 4620678642157487725, guid: d883387f77dd6cc4f8c3c08ad307f890, type: 3}
       propertyPath: m_SizeDelta.y
@@ -534,6 +564,51 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4620678642157487725, guid: d883387f77dd6cc4f8c3c08ad307f890, type: 3}
   m_PrefabInstance: {fileID: 1648203126634782435}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7057593691015895415 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8587806020750493588, guid: d883387f77dd6cc4f8c3c08ad307f890, type: 3}
+  m_PrefabInstance: {fileID: 1648203126634782435}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7755791509999725531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &7755791509999725531 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9042527987278755128, guid: d883387f77dd6cc4f8c3c08ad307f890, type: 3}
+  m_PrefabInstance: {fileID: 1648203126634782435}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4966546180831256247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7755791509999725531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d4fdf6abdb2e20498fbb57e34e046b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Key: FOLDERACCESS_NODIR
+  FallbackText: No directory selected
+  OnLocalizationChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7057593691015895415}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &6522187043689817407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -572,7 +647,7 @@ PrefabInstance:
     - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4756449059559172822}
     - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -583,7 +658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: LevelSummaryScreen, Assembly-CSharp
+      value: FolderAccessScreen, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -720,3 +795,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2485325480315554099, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
   m_PrefabInstance: {fileID: 6522187043689817407}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8718635538336640014 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2485325480315554097, guid: c146a4c309960ea45af17c4a8580522c, type: 3}
+  m_PrefabInstance: {fileID: 6522187043689817407}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

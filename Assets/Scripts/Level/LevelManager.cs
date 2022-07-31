@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using SimpleFileBrowser;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,122 +11,77 @@ using UnityEngine;
 public class LevelManager
 {
     public readonly Dictionary<string, Level> LoadedLevels = new();
-    //private readonly HashSet<string> loadedPaths = new();
-    public async UniTask<List<Level>> LoadLevels()
-    {
-        try
-        {
-            Directory.CreateDirectory(Context.UserDataPath);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to create data folder.");
-            Debug.LogError(e);
-            return new List<Level>();
-        }
-
-        var paths = new List<string>();
-        var directories = Directory.GetDirectories(Context.UserDataPath);
-
-        for(int i = 0; i < directories.Length; i++)
-        {
-            var path = directories[i] + Path.DirectorySeparatorChar;
-            if (File.Exists(path + "songconfig.txt"))
-                paths.Add(path + "songconfig.txt");
-            else if (File.Exists(path + "level.json"))
-                paths.Add(path + "level.json");
-            else
-                Debug.LogWarning($"Found no level file for path {path}");
-        }
-
-        Debug.Log($"Found {paths.Count} levels");
-        return await LoadLevels(paths);
-    }
-
     private readonly string[] extensions = new string[] { ".wav", ".ogg", ".mp3" };
-    public async UniTask<List<Level>> LoadLevels(List<string> paths)
+
+    // CommonExtensions.GetSubEntry loops through all files in a given folder, I don't like it either but Scoped Storage has forced my hand
+    public void LoadLevels()
     {
-        var tasks = new List<UniTask>();
-        var levels = new List<Level>();
+        var paths = new List<string>();
+        var directories = FileBrowserHelpers.GetEntriesInDirectory(Context.UserDataPath, false).Where(entry => entry.IsDirectory);
 
-        for(int i = 0; i < paths.Count; i++)
+        int folders = 0;
+        foreach (var entry in directories)
         {
-            string path = paths[i];
-
-            async UniTask LoadLevel()
+            folders++;
+            // Load either songconfig.txt or level.json
+            if (!CommonExtensions.GetSubEntry(entry.Path, "songconfig.txt", out var file))
             {
-                try
+                if (!CommonExtensions.GetSubEntry(entry.Path, "level.json", out file))
                 {
-                    FileInfo info;
-                    try
-                    {
-                        info = new FileInfo(path);
-                        if (info.Directory == null)
-                            throw new FileNotFoundException(info.ToString());
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning(e);
-                        return;
-                    }
-
-                    string filename = Path.GetFileName(path);
-                    path = info.Directory.FullName + Path.DirectorySeparatorChar;
-                    string fullpath = path + filename;
-                    LevelMeta meta;
-
-                    await UniTask.SwitchToThreadPool();
-                    if (filename == "songconfig.txt")
-                    {
-                        meta = LegacyParser.ParseMeta(File.ReadAllText(fullpath));
-
-                        // Check what exists
-                        foreach (string extension in extensions)
-                        {
-                            if (File.Exists($"{path}song_full{extension}"))
-                            {
-                                meta.music_path = $"song_full{extension}";
-                                break;
-                            }
-                        }
-
-                        if (meta.preview_time < 0)
-                        {
-                            foreach (string extension in extensions)
-                            {
-                                if (File.Exists($"{path}song_pv{extension}"))
-                                {
-                                    meta.preview_path = $"song_pv{extension}";
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                        meta = JsonConvert.DeserializeObject<LevelMeta>(File.ReadAllText(fullpath));
-                    await UniTask.SwitchToMainThread();
-
-                    var level = new Level();
-                    level.Meta = meta;
-                    level.Path = path;
-
-                    LoadedLevels[level.ID] = level;
-
-                    levels.Add(level);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Error while loading {path}");
-                    Debug.LogError(e);
+                    Debug.LogWarning($"Found no level file for {entry.Path}");
+                    continue;
                 }
             }
-            
-            tasks.Add(LoadLevel());
+            string data = FileBrowserHelpers.ReadTextFromFile(file.Path);
+
+            var level = new Level();
+            level.Path = entry.Path;
+
+            if (file.Name == "songconfig.txt")
+            {
+                level.Meta = LegacyParser.ParseMeta(data);
+
+                // Check what audio file exist for both song and preview
+                foreach (string extension in extensions)
+                {
+                    if (CommonExtensions.GetSubEntry(entry.Path, "song_full" + extension, out var music))
+                    {
+                        level.Meta.music_path = music.Name;
+                        break;
+                    }
+                }
+                if (string.IsNullOrWhiteSpace(level.Meta.music_path))
+                {
+                    Debug.LogError("Found no music file for level " + level.Path);
+                    continue;
+                }
+
+                if(level.Meta.preview_time < 0)
+                {
+                    foreach (string extension in extensions)
+                    {
+                        if (CommonExtensions.GetSubEntry(entry.Path, "song_pv" + extension, out var music))
+                        {
+                            level.Meta.preview_path = music.Name;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                level.Meta = JsonConvert.DeserializeObject<LevelMeta>(data);
+
+                if(!CommonExtensions.GetSubEntry(entry.Path, level.Meta.music_path, out _))
+                {
+                    Debug.LogError("Found no music file for level " + level.Path);
+                    continue;
+                }
+            }
+
+            LoadedLevels[level.ID] = level;
         }
 
-        await UniTask.WhenAll(tasks);
-
-        Debug.Log($"Loaded {levels.Count}/{paths.Count} levels");
-        return levels;
+        Debug.Log($"Found {folders} folders in {Context.UserDataPath} and loaded {LoadedLevels.Count} levels");
     }
 }

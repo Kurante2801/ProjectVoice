@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PlayerSettings
 {
+    public static SettingString UserDataPath = new("userdatapath", null);
     // General settings
     public static SettingString LanguageString = new("localizationstring", "en", value => Context.OnLocalizationChanged?.Invoke());
     public static SettingString GraphicsQuality = new("graphicsquality", "medium");

@@ -18,6 +18,9 @@ public class AudioManager : SingletonMonoBehavior<AudioManager>
         if(PlayerSettings.NativeAudio.Value && !overrideNative && Application.platform == RuntimePlatform.Android)
         {
             int fileID = -2;
+            if (Context.AndroidVersionCode > 29)
+                path = AudioLoader.GetCached(path);
+
             ANAMusic.load(path, true, true, id => fileID = id);
             try
             {

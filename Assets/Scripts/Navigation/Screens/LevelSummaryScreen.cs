@@ -91,7 +91,8 @@ public class LevelSummaryScreen : Screen
         Context.MainColor = selected.Chart.type.GetColor();
         Context.OnMainColorChanged?.Invoke();
 
-        Backdrop.Instance.SetBackdrop(level.Path + level.Meta.background_path, level.Meta.background_aspect_ratio);
+        if (CommonExtensions.GetSubEntry(level.Path, level.Meta.background_path, out var entry))
+            Backdrop.Instance.SetBackdrop(entry.Path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
         Context.PlaySongPreview(level);
     }
 

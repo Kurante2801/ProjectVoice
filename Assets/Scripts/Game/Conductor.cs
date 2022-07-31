@@ -31,9 +31,16 @@ public class Conductor : SingletonMonoBehavior<Conductor>
     public async UniTask Load(Level level, ChartModel chart)
     {
         Initialized = false;
-        string path = level.Path + (!string.IsNullOrWhiteSpace(chart.music_override) ? chart.music_override : level.Meta.music_path);
+
+        if(!CommonExtensions.GetSubEntry(level.Path, !string.IsNullOrWhiteSpace(chart.music_override) ? chart.music_override : level.Meta.music_path, out var music))
+        {
+            Debug.LogError("Failed to load music file");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Navigation");
+            return;
+        }
+
         MinTime = chart.start_time;
-        Controller = await AudioManager.LoadAudio(path, GetComponent<AudioSource>());
+        Controller = await AudioManager.LoadAudio(music.Path, GetComponent<AudioSource>());
         isNative = Controller is NativeAudioController;
 
         Controller.Looping = false;

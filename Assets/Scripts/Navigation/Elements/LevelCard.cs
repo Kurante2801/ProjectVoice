@@ -62,10 +62,9 @@ public class LevelCard : MonoBehaviour
 
     private async void LoadBackground()
     {
-        string path = Level.Path + Level.Meta.background_path;
-        if (!File.Exists(path)) return;
+        if (!CommonExtensions.GetSubEntry(Level.Path, Level.Meta.background_path, out var entry)) return;
 
-        var texture = await TextureExtensions.LoadTexture(path);
+        var texture = await TextureExtensions.LoadTexture(entry.Path);
         if (texture == null) return;
 
         Background.texture = texture;
