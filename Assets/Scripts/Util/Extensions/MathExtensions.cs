@@ -6,14 +6,18 @@ public static class MathExtensions
     public static double Lerp(double a, double b, double t) => a + (b - a) * Clamp01(t);
 
 
-    public static float MapRange(this float value, float from1, float from2, float to1, float to2)
+    public static float MapRange(this float value, float fromMin, float fromMax, float toMin, float toMax)
     {
-        return (value - from1) * (to2 - to1) / (from2 - from1) + to1;
+        return (value - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
     }
 
-    public static float MapRange(this int value, float from1, float from2, float to1, float to2)
+    public static float MapRange(this int value, float fromMin, float fromMax, float toMin, float toMax)
     {
-        return (value - from1) * (to2 - to1) / (from2 - from1) + to1;
+        return (value - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
+    }
+    public static double MapRange(this int value, double fromMin, double fromMax, double toMin, double toMax)
+    {
+        return (value - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
     }
 
     public static bool IsBetween(this int value, int min, int max)

@@ -74,7 +74,7 @@ public class Note : MonoBehaviour
     {
         int time = Conductor.Instance.Time;
         int difference = Model.time - time;
-        int missThreshold = -NoteGradeExtensions.Timings[(int)NoteGrade.Good];
+        int missThreshold = -NoteGrade.Good.GetTiming();
 
         // Miss animation
         if (IsCollected)
@@ -139,12 +139,12 @@ public class Note : MonoBehaviour
     public static NoteGrade JudgeGrade(int time, ChartModel.NoteModel model)
     {
         var difference = model.time - time;
-        if (difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good]) return NoteGrade.Miss;
+        if (difference < -NoteGrade.Good.GetTiming()) return NoteGrade.Miss;
         difference = Mathf.Abs(difference);
 
-        if (difference <= NoteGradeExtensions.Timings[(int)NoteGrade.Perfect]) return NoteGrade.Perfect;
-        if (difference <= NoteGradeExtensions.Timings[(int)NoteGrade.Great]) return NoteGrade.Great;
-        if (difference <= NoteGradeExtensions.Timings[(int)NoteGrade.Good]) return NoteGrade.Good;
+        if (difference <= NoteGrade.Perfect.GetTiming()) return NoteGrade.Perfect;
+        if (difference <= NoteGrade.Great.GetTiming()) return NoteGrade.Great;
+        if (difference <= NoteGrade.Good.GetTiming()) return NoteGrade.Good;
 
         return NoteGrade.None;
     }

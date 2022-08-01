@@ -19,7 +19,7 @@ public class SlideNote : Note
     {
         int time = Conductor.Instance.Time;
         int difference = Model.time - time;
-        int missThreshold = -NoteGradeExtensions.Timings[(int)NoteGrade.Good];
+        int missThreshold = -NoteGrade.Good.GetTiming();
 
         // Miss animation
         if (IsCollected)
@@ -40,7 +40,7 @@ public class SlideNote : Note
         float y = Mathf.Max(0f, GetPosition(time, Model));
         transform.localPosition = new Vector3(0f, y, 0f);
 
-        if ((difference < NoteGradeExtensions.Timings[(int)NoteGrade.Perfect] && Track.Fingers.Count > 0) || (IsAuto && difference <= 0) || difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
+        if ((difference < NoteGrade.Perfect.GetTiming() && Track.Fingers.Count > 0) || (IsAuto && difference <= 0) || difference < -NoteGrade.Good.GetTiming())
             JudgeNote(time);
     }
 

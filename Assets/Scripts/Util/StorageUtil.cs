@@ -49,7 +49,7 @@ public static class StorageUtil
     public static string GetFileName(string path) => Context.AndroidVersionCode <= 29 ? Path.GetFileName(path) : FileBrowserHelpers.GetFilename(path);
 
     /// <summary>
-    /// Gets the file path of a file inside directory
+    /// Gets the path of a file inside directory
     /// </summary>
     /// <param name="directory"></param>
     /// <param name="file"></param>

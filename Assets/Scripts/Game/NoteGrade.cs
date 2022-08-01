@@ -13,14 +13,6 @@ public enum NoteGrade
 
 public static class NoteGradeExtensions
 {
-    public static int[] Timings =
-    {
-        0000, // None
-        0200, // Good
-        0120, // Great
-        0040, // Excellent
-    };
-
     public static float GetScoreWeight(this NoteGrade grade)
     {
         return grade switch
@@ -29,6 +21,17 @@ public static class NoteGradeExtensions
             NoteGrade.Great => 0.75f,
             NoteGrade.Good => 0.5f,
             _ => 0f
+        };
+    }
+
+    public static int GetTiming(this NoteGrade grade)
+    {
+        return grade switch
+        {
+            NoteGrade.Perfect => 0040,
+            NoteGrade.Great => 0120,
+            NoteGrade.Good => 0200,
+            _ => 0
         };
     }
 }

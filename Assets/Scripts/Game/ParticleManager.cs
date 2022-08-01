@@ -63,8 +63,8 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
                 var sol = discarded.ParticleSystem.sizeOverLifetime;
                 sol.size = discarded.Curve;
 
-                holdPool.Release(discarded.ParticleSystem);
                 discardedHolds.RemoveAt(i);
+                holdPool.Release(discarded.ParticleSystem);
             }
         }
     }
@@ -114,6 +114,15 @@ public class ParticleManager : SingletonMonoBehavior<ParticleManager>
     {
         createdHolds.Remove(hold);
         holdPool.Release(hold);
+
+        for (int i = discardedHolds.Count - 1; i > -1; i--)
+        {
+            if (discardedHolds[i].ParticleSystem == hold)
+            {
+                discardedHolds.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     public void SpawnEffect(NoteShape shape, NoteGrade grade, Vector2 pos)

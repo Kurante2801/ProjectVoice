@@ -48,6 +48,18 @@ public sealed class GameState
         else
             Combo++;
 
+        // If player missed a note and is below their max combo, award 90% of total score
+        float comboMultiplier = Combo > MaxCombo ? 1f : 0.9f;
+
+        // In addition, multiply score by the accuracy they had
+        double accuracyMultiplier = grade switch
+        {
+            NoteGrade.Perfect => 1D,
+            NoteGrade.Great => difference.MapRange(NoteGrade.Great.GetTiming(), NoteGrade.Perfect.GetTiming(), 0.708, 0.9),
+            NoteGrade.Good => difference.MapRange(NoteGrade.Good.GetTiming(), NoteGrade.Great.GetTiming(), 0.204, 0.7),
+            _ => 0D
+        };
+
         MaxCombo = Mathf.Max(Combo, MaxCombo);
         ClearCount++;
 
@@ -59,12 +71,13 @@ public sealed class GameState
             _ => 0.0
         };
 
-        Score = Math.Min(Score + 1000000D / NoteCount * scoreMultiplier, 1000000D);
         // Accuracy percentage
         Accuracies.Add(scoreMultiplier);
         Accuracy = 0.0;
         Accuracies.ForEach(accuracy => Accuracy += accuracy);
         Accuracy /= Accuracies.Count;
+
+        Score = Math.Min(Score + 1000000D / NoteCount * scoreMultiplier * comboMultiplier, 1000000D);
 
         // Ensure million score
         if (Score > 995000 && ClearCount == NoteCount && IsFullScorePossible)

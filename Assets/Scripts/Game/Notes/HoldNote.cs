@@ -8,7 +8,7 @@ public class HoldNote : Note
     public static new bool IsAuto => Context.Modifiers.Contains(Modifier.Auto) || Context.Modifiers.Contains(Modifier.AutoHold);
     public override NoteShape GetShape() => PlayerSettings.HoldShape.Value;
     
-    public static int ReleaseMissThreshold = 350;
+    public static int ReleaseMissThreshold = 400;
     public bool IsBeingHeld = false;
     private NoteGrade initialGrade = NoteGrade.None;
     private int initialDifference = 0;
@@ -89,7 +89,7 @@ public class HoldNote : Note
                     if (difference <= 0)
                         StartHold(time);
                 }
-                else if (difference < -NoteGradeExtensions.Timings[(int)NoteGrade.Good])
+                else if (difference < -NoteGrade.Good.GetTiming())
                     JudgeNote(time);
             }
         }
@@ -153,15 +153,15 @@ public class HoldNote : Note
 
     public void StartHold(int time)
     {
-        initialDifference = Model.time - time;
         initialGrade = IsAuto ? NoteGrade.Perfect : JudgeGrade(time, Model);
+        initialDifference = Model.time - time;
+        if (initialGrade == NoteGrade.None) return;
 
         if(initialGrade == NoteGrade.Miss)
             JudgeNote(initialDifference);
         else
         {
             IsBeingHeld = true;
-            //ParticleManager.Instance.SpawnEffect(GetShape(), initialGrade, Track.transform.position);
             holdParticleSystem = ParticleManager.Instance.SpawnHold(initialGrade, Track.transform);
         }
     }
@@ -199,6 +199,12 @@ public class HoldNote : Note
     public void JudgeNote(int endDifference, int time)
     {
         var grade = initialGrade;
+        if (grade == NoteGrade.None)
+        {
+            Debug.LogError("JudgeNote was called for a hold note whose initialGrade is None");
+            Collect(grade);
+        }
+
         if (IsAuto)
             grade = NoteGrade.Perfect;
         else if (endDifference > ReleaseMissThreshold)
