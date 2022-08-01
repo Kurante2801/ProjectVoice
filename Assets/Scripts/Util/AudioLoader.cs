@@ -11,8 +11,6 @@ using System.Linq;
 
 public static class AudioLoader
 {
-    private static HashSet<CachedAudio> CachedFiles = new();
-
     public static double MPEGLength = -1f;
     public static AudioType Detect(string path)
     {
@@ -49,8 +47,12 @@ public static class AudioLoader
         }
         else
         {
+            bool cached = false;
             if (Context.AndroidVersionCode > 29)
-                path = GetCached(path);
+            {
+                cached = true;
+                path = StorageUtil.CopyToCache(path);
+            }
 
             using var request = UnityWebRequestMultimedia.GetAudioClip("file://" + path, Detect(path));
             await request.SendWebRequest();
@@ -59,44 +61,12 @@ public static class AudioLoader
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 throw new Exception(request.error);
 
-            return DownloadHandlerAudioClip.GetContent(request);
+            var clip = DownloadHandlerAudioClip.GetContent(request);
+
+            if (cached)
+                StorageUtil.DeleteFromCache(path);
+
+            return clip;
         }
     }
-
-    public static string GetCached(string path)
-    {
-        var cached = CachedFiles.FirstOrDefault(audio => audio.ScopedPath == path);
-        if (cached != null)
-            return cached.RealPath;
-
-        var audio = new CachedAudio();
-        audio.ScopedPath = path;
-        audio.RealPath = Path.Join(Application.temporaryCachePath, RandomFilename() + Path.GetExtension(path));
-        SimpleFileBrowser.FileBrowserHelpers.CopyFile(audio.ScopedPath, audio.RealPath);
-        CachedFiles.Add(audio);
-
-        return audio.RealPath;
-    }
-
-    private static string RandomFilename()
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        var filename = new char[6];
-
-        for(int i = 0; i < 6; i++)
-            filename[i] = chars[UnityEngine.Random.Range(0, chars.Length)];
-        var result = new string(filename);
-
-        if (CachedFiles.FirstOrDefault(cached => Path.GetFileNameWithoutExtension(cached.RealPath) == result) != null)
-            result = RandomFilename();
-
-        return result;
-    }
-
-    private class CachedAudio
-    {
-        public string ScopedPath;
-        public string RealPath;
-    }
-
 }

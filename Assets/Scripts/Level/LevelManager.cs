@@ -25,29 +25,29 @@ public class LevelManager
         {
             folders++;
             // Load either songconfig.txt or level.json
-            if (!CommonExtensions.GetSubEntry(entry.Path, "songconfig.txt", out var file))
+            if (!StorageUtil.GetSubfilePath(entry.Path, "songconfig.txt", out string file))
             {
-                if (!CommonExtensions.GetSubEntry(entry.Path, "level.json", out file))
+                if (!StorageUtil.GetSubfilePath(entry.Path, "level.json", out file))
                 {
                     Debug.LogWarning($"Found no level file for {entry.Path}");
                     continue;
                 }
             }
-            string data = FileBrowserHelpers.ReadTextFromFile(file.Path);
+            string data = FileBrowserHelpers.ReadTextFromFile(file);
 
             var level = new Level();
             level.Path = entry.Path;
 
-            if (file.Name == "songconfig.txt")
+            if (file.EndsWith("songconfig.txt"))
             {
                 level.Meta = LegacyParser.ParseMeta(data);
 
                 // Check what audio file exist for both song and preview
                 foreach (string extension in extensions)
                 {
-                    if (CommonExtensions.GetSubEntry(entry.Path, "song_full" + extension, out var music))
+                    if (StorageUtil.GetSubfilePath(entry.Path, "song_full" + extension, out string music))
                     {
-                        level.Meta.music_path = music.Name;
+                        level.Meta.music_path = music;
                         break;
                     }
                 }
@@ -61,9 +61,9 @@ public class LevelManager
                 {
                     foreach (string extension in extensions)
                     {
-                        if (CommonExtensions.GetSubEntry(entry.Path, "song_pv" + extension, out var music))
+                        if (StorageUtil.GetSubfilePath(entry.Path, "song_pv" + extension, out string music))
                         {
-                            level.Meta.preview_path = music.Name;
+                            level.Meta.preview_path = music;
                             break;
                         }
                     }
@@ -73,7 +73,7 @@ public class LevelManager
             {
                 level.Meta = JsonConvert.DeserializeObject<LevelMeta>(data);
 
-                if(!CommonExtensions.GetSubEntry(entry.Path, level.Meta.music_path, out _))
+                if(!StorageUtil.GetSubfilePath(entry.Path, level.Meta.music_path, out _))
                 {
                     Debug.LogError("Found no music file for level " + level.Path);
                     continue;

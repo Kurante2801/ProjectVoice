@@ -18,10 +18,19 @@ public class AudioManager : SingletonMonoBehavior<AudioManager>
         if(PlayerSettings.NativeAudio.Value && !overrideNative && Application.platform == RuntimePlatform.Android)
         {
             int fileID = -2;
+            bool cached = false;
             if (Context.AndroidVersionCode > 29)
-                path = AudioLoader.GetCached(path);
+            {
+                cached = true;
+                path = StorageUtil.CopyToCache(path);
+            }
 
-            ANAMusic.load(path, true, true, id => fileID = id);
+            ANAMusic.load(path, true, true, id =>
+            {
+                fileID = id;
+                if (cached)
+                    StorageUtil.DeleteFromCache(path);
+            });
             try
             {
                 await UniTask.WaitUntil(() => fileID != -2, cancellationToken: token);

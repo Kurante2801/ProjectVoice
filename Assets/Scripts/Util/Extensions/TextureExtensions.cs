@@ -11,13 +11,11 @@ public static class TextureExtensions
 {
     public static async UniTask<Texture2D> LoadTexture(string path)
     {
-        if(Context.AndroidVersionCode > 29)
+        bool cached = false;
+        if (Context.AndroidVersionCode > 29)
         {
-            var bytes = FileBrowserHelpers.ReadBytesFromFile(path);
-            var tex = new Texture2D(1, 1);
-            tex.LoadImage(bytes);
-
-            return tex;
+            path = StorageUtil.CopyToCache(path);
+            cached = true;
         }
 
         using var request = UnityWebRequestTexture.GetTexture("file://" + path);
@@ -28,6 +26,9 @@ public static class TextureExtensions
 
         var texture = DownloadHandlerTexture.GetContent(request);
         texture.wrapMode = TextureWrapMode.Clamp; // This fixes a 1 px border around the image
+
+        if(cached)
+            StorageUtil.DeleteFromCache(path);
 
         return texture;
     }

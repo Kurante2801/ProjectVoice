@@ -91,8 +91,16 @@ public class LevelSummaryScreen : Screen
         Context.MainColor = selected.Chart.type.GetColor();
         Context.OnMainColorChanged?.Invoke();
 
-        if (CommonExtensions.GetSubEntry(level.Path, level.Meta.background_path, out var entry))
-            Backdrop.Instance.SetBackdrop(entry.Path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
+        if (!string.IsNullOrWhiteSpace(level.Meta.background_path))
+        {
+            if (StorageUtil.GetSubfilePath(level.Path, level.Meta.background_path, out string path))
+                Backdrop.Instance.SetBackdrop(path, level.Meta.background_aspect_ratio ?? 4f / 3f);
+            else
+                Debug.LogError($"Could not find {level.Meta.background_path} inside {level.Path}");
+        }
+        else
+            Backdrop.Instance.SetBackdrop(null);
+
         Context.PlaySongPreview(level);
     }
 

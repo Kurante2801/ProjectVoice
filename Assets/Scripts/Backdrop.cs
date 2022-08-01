@@ -20,7 +20,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         backdropPath = path;
 
         var valid = !string.IsNullOrWhiteSpace(path);
-        if (valid && !FileBrowserHelpers.FileExists(path))
+        if (valid && !StorageUtil.FileExists(path))
         {
             Debug.LogWarning($"Could not find backdrop {path}");
             backdropPath = "";

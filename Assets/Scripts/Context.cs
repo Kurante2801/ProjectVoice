@@ -96,6 +96,7 @@ public class Context : SingletonMonoBehavior<Context>
         ScreenRealHeight = UnityEngine.Screen.height;
         SetupResolution();
 
+        StorageUtil.TemporaryCachePath = Application.temporaryCachePath;
         FileBrowser.SingleClickMode = true;
 
         if(Application.platform == RuntimePlatform.Android)
@@ -116,20 +117,16 @@ public class Context : SingletonMonoBehavior<Context>
     {
         AudioListener.pause = false;
         bool useMusic = string.IsNullOrWhiteSpace(level.Meta.preview_path);
-        string path;
 
-        if (useMusic || !CommonExtensions.GetSubEntry(level.Path, level.Meta.preview_path, out var preview))
+        if (useMusic || !StorageUtil.GetSubfilePath(level.Path, level.Meta.preview_path, out string path))
         {
             if (!useMusic)
                 Debug.LogError($"Preview file {level.Meta.preview_path} not found at {level.Path}");
 
             useMusic = true;
-            CommonExtensions.GetSubEntry(level.Path, level.Meta.music_path, out var music);
-            path = music.Path;
+            StorageUtil.GetSubfilePath(level.Path, level.Meta.music_path, out path);
             level.Meta.preview_time = Mathf.Max(level.Meta.preview_time, 0);
         }
-        else
-            path = preview.Path;
 
         if (path == audioPath) return;
 

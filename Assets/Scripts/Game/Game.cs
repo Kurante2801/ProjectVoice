@@ -89,8 +89,8 @@ public class Game : SingletonMonoBehavior<Game>
             Context.SelectedLevel = level;
             Context.SelectedChart = level.Meta.charts.LastOrDefault() ?? level.Meta.charts[0];
 
-            if (CommonExtensions.GetSubEntry(level.Path, level.Meta.background_path, out var entry))
-                Backdrop.Instance.SetBackdrop(entry.Path, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
+            if (StorageUtil.GetSubfilePath(level.Path, level.Meta.background_path, out string background))
+                Backdrop.Instance.SetBackdrop(background, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
 
             Context.Modifiers.Add(Modifier.Auto);
         }
@@ -104,15 +104,14 @@ public class Game : SingletonMonoBehavior<Game>
         // Load chart
         string path = Context.SelectedLevel.Path;
         var selected = Context.SelectedChart;
-
-        CommonExtensions.GetSubEntry(path, selected.path, out var chart);
+        StorageUtil.GetSubfilePath(path, selected.path, out string chart);
         if (selected.path.StartsWith("track_"))
         {
-            CommonExtensions.GetSubEntry(path, selected.path.Replace("track_", "note_"), out var note);
-            Chart = LegacyParser.ParseChart(chart.Path, note.Path);
+            StorageUtil.GetSubfilePath(path, selected.path.Replace("track_", "note_"), out string note);
+            Chart = LegacyParser.ParseChart(chart, note);
         }
         else
-            Chart = JsonConvert.DeserializeObject<ChartModel>(FileBrowserHelpers.ReadTextFromFile(chart.Path));
+            Chart = JsonConvert.DeserializeObject<ChartModel>(FileBrowserHelpers.ReadTextFromFile(chart));
 
         // Load audio
         await UniTask.WaitUntil(() => Conductor.Instance != null);

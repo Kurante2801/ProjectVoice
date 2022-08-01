@@ -90,40 +90,4 @@ public static class CommonExtensions
         var size = renderer.sprite.bounds.size;
         return new Vector2(MathExtensions.MapRange(width / size.x, 0f, Context.ScreenWidth, 0f, cameraSize.x), MathExtensions.MapRange(height / size.y, 0f, Context.ScreenHeight, 0f, cameraSize.y));
     }
-
-    // Workaround for not being able to just concatenate strings with Path.Join when using scoped storage
-    // if there's actually a way to avoid this contact me ASAP!
-    public static bool GetSubEntry(string path, string fileName, out FileSystemEntry entry)
-    {
-        // aha! f u scoped storage
-        if(Context.AndroidVersionCode <= 29)
-        {
-            string full = Path.Join(path, fileName);
-
-            if(!File.Exists(full) && !Directory.Exists(full))
-            {
-                entry = default;
-                return false;
-            }
-
-            var attr = File.GetAttributes(full);
-            bool isDir = attr.HasFlag(FileAttributes.Directory);
-
-            entry = new FileSystemEntry(full, isDir ? Path.GetDirectoryName(full) : Path.GetFileName(full), Path.GetExtension(path), isDir);
-            return true;
-        }
-
-        var array = FileBrowserHelpers.GetEntriesInDirectory(path, false);
-        for (int i = 0; i < array.Length; i++)
-        {
-            if (array[i].Name == fileName)
-            {
-                entry = array[i];
-                return true;
-            }
-        }
-
-        entry = default;
-        return false;
-    }
 }
