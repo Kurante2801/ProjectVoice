@@ -1468,36 +1468,27 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 6f903f081e9db184db8b7a254887e511, type: 3}
   - {fileID: 2800000, guid: c001acf2ac58c08429acbe99453c7b19, type: 3}
   - {fileID: 2800000, guid: b40de5c339e07da448b0ee21f6a47412, type: 3}
-  AnimationTime: 1000
+  AnimationTime: 600
   SizeCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.6
       inSlope: 10.179119
-      outSlope: 6.7153907
+      outSlope: 1.0603255
       tangentMode: 1
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.09846827
-    - serializedVersion: 3
-      time: 0.2
-      value: 0.75
-      inSlope: 1.712386
-      outSlope: 0.3125
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0.29978117
-      outWeight: 0.13931437
+      outWeight: 0.039387308
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0.15516979
-      outSlope: 0.15516979
+      inSlope: 0.06426209
+      outSlope: 0.06426209
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.11962072
+      inWeight: 0.14442015
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

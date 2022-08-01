@@ -98,8 +98,9 @@ public class Context : SingletonMonoBehavior<Context>
 
         StorageUtil.TemporaryCachePath = Application.temporaryCachePath;
         FileBrowser.SingleClickMode = true;
+        UserDataPath = Application.persistentDataPath;
 
-        if(Application.platform == RuntimePlatform.Android)
+        if (Application.platform == RuntimePlatform.Android)
         {
             using var version = new AndroidJavaClass("android.os.Build$VERSION");
             AndroidVersionCode = version.GetStatic<int>("SDK_INT");
