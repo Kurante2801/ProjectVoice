@@ -46,6 +46,7 @@ public static class StorageUtil
 
     public static bool FileExists(string path) => Context.AndroidVersionCode <= 29 ? File.Exists(path) : FileBrowserHelpers.FileExists(path);
     public static bool DirectoryExists(string path) => Context.AndroidVersionCode <= 29 ? Directory.Exists(path) : FileBrowserHelpers.DirectoryExists(path);
+    public static string GetFileName(string path) => Context.AndroidVersionCode <= 29 ? Path.GetFileName(path) : FileBrowserHelpers.GetFilename(path);
 
     /// <summary>
     /// Gets the file path of a file inside directory

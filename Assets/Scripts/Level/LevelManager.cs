@@ -47,7 +47,7 @@ public class LevelManager
                 {
                     if (StorageUtil.GetSubfilePath(entry.Path, "song_full" + extension, out string music))
                     {
-                        level.Meta.music_path = music;
+                        level.Meta.music_path = StorageUtil.GetFileName(music);
                         break;
                     }
                 }
@@ -63,7 +63,7 @@ public class LevelManager
                     {
                         if (StorageUtil.GetSubfilePath(entry.Path, "song_pv" + extension, out string music))
                         {
-                            level.Meta.preview_path = music;
+                            level.Meta.preview_path = StorageUtil.GetFileName(music);
                             break;
                         }
                     }
@@ -75,7 +75,7 @@ public class LevelManager
 
                 if(!StorageUtil.GetSubfilePath(entry.Path, level.Meta.music_path, out _))
                 {
-                    Debug.LogError("Found no music file for level " + level.Path);
+                    Debug.LogError($"Found no music file for level {level.Path}. Skipping.");
                     continue;
                 }
             }
