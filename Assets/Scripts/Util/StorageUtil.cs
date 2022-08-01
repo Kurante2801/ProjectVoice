@@ -22,7 +22,7 @@ public static class StorageUtil
         var result = new string(filename) + Path.GetExtension(path);
 
         if (CachedPaths.Contains(result))
-            result = RandomFilename(Path.GetExtension(path));
+            result = RandomFilename(path);
 
         if (addToCache)
             CachedPaths.Add(result);
