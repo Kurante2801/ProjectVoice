@@ -4,6 +4,7 @@ Shader "UI/SaturationValue"
     Properties
     {
         _Hue ("Hue", Range(0.0, 1.0)) = 0.0
+        _MainTex("Texture", 2D) = "white" {}
     }
     SubShader
     {
