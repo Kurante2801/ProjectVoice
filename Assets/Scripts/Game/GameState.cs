@@ -77,7 +77,7 @@ public sealed class GameState
         Accuracies.ForEach(accuracy => Accuracy += accuracy);
         Accuracy /= Accuracies.Count;
 
-        Score = Math.Min(Score + 1000000D / NoteCount * scoreMultiplier * comboMultiplier, 1000000D);
+        Score = Math.Min(Score + 1000000D / NoteCount * scoreMultiplier * comboMultiplier * accuracyMultiplier, 1000000D);
 
         // Ensure million score
         if (Score > 995000 && ClearCount == NoteCount && IsFullScorePossible)
