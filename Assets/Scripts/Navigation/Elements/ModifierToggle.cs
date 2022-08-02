@@ -19,7 +19,7 @@ public class ModifierToggle : MonoBehaviour
         Context.OnModifiersChanged.AddListener(ModifiersChanged);
         LocalizationChanged();
 
-        bool active = Context.Modifiers.Contains(Modifier);
+        active = Context.Modifiers.Contains(Modifier);
         button.image.color = button.image.color.WithAlpha(active ? 1f : 0.5f);
     }
 
