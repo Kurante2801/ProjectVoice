@@ -516,6 +516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ColorPickerModalPrefab: {fileID: 940723133398026673, guid: aa90fd4ded21eab4db89ae67c7451a27, type: 3}
+  FolderPickerModalPrefab: {fileID: 8712805982475994441, guid: 203c666721b87454592a574494beb04f, type: 3}
   BlurMaterial: {fileID: 2100000, guid: 7143ca44db3dc0142bbf26819b662f45, type: 2}
 --- !u!82 &3471090311706233750
 AudioSource:

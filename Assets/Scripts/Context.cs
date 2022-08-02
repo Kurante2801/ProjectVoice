@@ -57,9 +57,7 @@ public class Context : SingletonMonoBehavior<Context>
     public static Color MainColor = DifficultyType.Extra.GetColor();
     public static UnityEvent OnMainColorChanged = new();
 
-    public static float ColorPickerModalHeight = 638f;
-    public GameObject ColorPickerModalPrefab;
-
+    public GameObject ColorPickerModalPrefab, FolderPickerModalPrefab;
     public Material BlurMaterial;
 
     public static bool IsInitialized = false;

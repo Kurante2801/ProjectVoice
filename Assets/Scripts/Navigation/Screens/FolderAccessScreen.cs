@@ -59,24 +59,23 @@ public class FolderAccessScreen : Screen
         base.OnScreenBecameActive();
     }
 
-    public void SelectButton()
+    public void SelectButton() => StorageUtil.BrowseFolder(path =>
     {
-        FileBrowser.ShowLoadDialog(paths =>
+        if (string.IsNullOrEmpty(path)) return;
+
+        // Make sure path is not root of storage
+        if (Context.AndroidVersionCode <= 29 && Regex.IsMatch(path, @"^\/storage\/emulated\/\d+$"))
         {
-            string path = paths[0];
-            // Make sure path is not root of storage
-            if (Context.AndroidVersionCode <= 29 && Regex.IsMatch(path, @"^\/storage\/emulated\/\d+$"))
-            {
-                path = System.IO.Path.Combine(path, "Project Voice");
-                System.IO.Directory.CreateDirectory(path); // We can use IO on api level 29 and below
-            }
+            path = System.IO.Path.Combine(path, "Project Voice");
+            // We can use IO on api level 29 and below
+            if (!System.IO.Directory.Exists(path))
+                System.IO.Directory.CreateDirectory(path);
+        }
+        shouldRestart = PlayerSettings.UserDataPath.Value != path;
 
-            shouldRestart = PlayerSettings.UserDataPath.Value != path;
-
-            PlayerSettings.UserDataPath.Value = path;
-            OnScreenBecameActive();
-        }, () => { }, FileBrowser.PickMode.Folders, false, title: "Select folder containing all levels");
-    }
+        PlayerSettings.UserDataPath.Value = path;
+        OnScreenBecameActive();
+    });
 
     public async void ReturnButton()
     {

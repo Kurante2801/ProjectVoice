@@ -102,6 +102,8 @@
     "GRAPHICS_HIGH": "High",
 
     "FOLDERACCESS_REQUEST": "Select the location your levels are stored at",
+    "FOLDERACCESS_ACCEPT": "Select current folder",
+    "FOLDERACCESS_HEADER": "Select Folder",
     "FOLDERACCESS_LOADING": "Attempting to open folder...",
     "FOLDERACCESS_NODIR": "No directory selected",
     "FOLDERACCESS_SUCCESS": "Directory access was <color=#0F0>successful</color>, found {DIRCOUNT} folder(s).",

@@ -30,7 +30,6 @@ public static class StorageUtil
         return result;
     }
     
-    
     public static string CopyToCache(string path)
     {
         string cache = Path.Join(TemporaryCachePath, RandomFilename(path));
@@ -76,5 +75,21 @@ public static class StorageUtil
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// If on Android 10+, opens SAF, if on Android 9 or below opens FilePickerModal, otherwise opens SimpleFileBrowser
+    /// </summary>
+    /// <param name="callback"></param>
+    public static void BrowseFolder(System.Action<string> callback)
+    {
+#if !UNITY_EDITOR && UNITY_ANDROID
+        if (Context.AndroidVersionCode <= 29)
+            FolderPickerModal.CreateModal(GameObject.FindGameObjectWithTag("Root Canvas").GetComponent<Canvas>()).OnPathSelected.AddListener(path => callback(path));
+        else
+            FileBrowserHelpers.AJC.CallStatic("PickSAFFolder", FileBrowserHelpers.Context, new FBDirectoryReceiveCallbackAndroid((uri, name) => callback(uri)));
+#else
+        FileBrowser.ShowLoadDialog(paths => callback(paths[0]), () => { }, FileBrowser.PickMode.Folders, false, title: "Select folder containing all levels");
+#endif
     }
 }

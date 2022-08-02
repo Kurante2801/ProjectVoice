@@ -102,6 +102,8 @@
     "GRAPHICS_HIGH": "Alto",
 
     "FOLDERACCESS_REQUEST": "Seleccione la ubicación en la que se almacena sus niveles",
+    "FOLDERACCESS_ACCEPT": "Seleccionar esta carpeta",
+    "FOLDERACCESS_HEADER": "Seleccionar Carpeta",
     "FOLDERACCESS_LOADING": "Intentando abrir carpeta...",
     "FOLDERACCESS_NODIR": "Ningún directorio seleccionado",
     "FOLDERACCESS_SUCCESS": "El acceso al directorio fue <color=#0F0>exitoso</color>, se encontraron {DIRCOUNT} carpeta/s",
