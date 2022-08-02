@@ -372,8 +372,8 @@ public class Game : SingletonMonoBehavior<Game>
 
     private bool TrackExists(ChartModel.TrackModel track)
     {
-        foreach (var created in CreatedTracks)
-            if (created.Model.id == track.id) return true;
+        for (int i = 0; i < CreatedTracks.Count; i++)
+            if (CreatedTracks[i].Model.id == track.id) return true;
         return false;
     }
 

@@ -40,7 +40,7 @@ public class SlideNote : Note
         float y = Mathf.Max(0f, GetPosition(time, Model));
         transform.localPosition = new Vector3(0f, y, 0f);
 
-        if ((difference < NoteGrade.Perfect.GetTiming() && Track.Fingers.Count > 0) || (IsAuto && difference <= 0) || difference < -NoteGrade.Good.GetTiming())
+        if ((difference < NoteGrade.Great.GetTiming() && Track.Fingers.Count > 0) || (IsAuto && difference <= 0) || difference < missThreshold)
             JudgeNote(time);
     }
 
