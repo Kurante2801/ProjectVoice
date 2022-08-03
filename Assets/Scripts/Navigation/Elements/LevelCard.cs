@@ -63,12 +63,15 @@ public class LevelCard : MonoBehaviour
     private async void LoadBackground()
     {
         if (!StorageUtil.GetSubfilePath(Level.Path, Level.Meta.background_path, out string background)) return;
+        Background.DOKill();
+        Background.color = Color.white.WithAlpha(0f);
 
         var texture = await TextureExtensions.LoadTexture(background);
         if (texture == null) return;
 
         Background.texture = texture;
         BackgroundFitter.aspectRatio = Level.Meta.background_aspect_ratio ?? texture.width / (float)texture.height;
+        Background.DOFade(1f, 0.25f);
     }
 
     public void DoClick()

@@ -28,6 +28,7 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         }
 
         Background.DOKill();
+        BackgroundBlurred.DOKill();
 
         if (!valid)
         {
@@ -37,16 +38,21 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
         else
         {
             Background.color = Color.white.WithAlpha(0f);
+            BackgroundBlurred.color = Color.white.WithAlpha(0f);
 
             var tex = await TextureExtensions.LoadTexture(path);
             Destroy(Background.texture);
-            Background.texture = tex;
-            Background.DOFade(1f, 0.25f);
-
             Destroy(BackgroundBlurred.texture);
-            BackgroundBlurred.texture = tex.Blurred(PlayerSettings.BackgroundBlur.Value);
-            BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
-            BackgroundOverlay.DOFade(overlay, 0.25f);
+
+            if (tex != null)
+            {
+                Background.texture = tex;
+                Background.DOFade(1f, 0.25f);
+
+                BackgroundBlurred.texture = tex.Blurred(PlayerSettings.BackgroundBlur.Value);
+                BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
+                BackgroundOverlay.DOFade(overlay, 0.25f);
+            }
 
             AspectRatioFitter.aspectRatio = aspect ?? Background.texture.width / (float)Background.texture.height;
         }
@@ -54,7 +60,8 @@ public class Backdrop : SingletonMonoBehavior<Backdrop>
 
     public void DisplayBlurImage(bool blurred)
     {
-        BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
+        if (BackgroundBlurred.texture != null)
+            BackgroundBlurred.DOFade(blurred ? 1f : 0f, 0.25f);
     }
 
     public void SetBlur(int blur)
