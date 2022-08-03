@@ -1,13 +1,9 @@
 # Project Voice
 
-Rhythm game clone, WIP
+Rhythm game for Android made for charts created with [VoezEditor](https://github.com/AndrewFM/VoezEditor)
+Made with Unity 2021.3.4f1
 
-## TODO/Missing Features:
-- [x] Exiting a song takes you to result screen
-- [x] Rapidly changing Background Blur creates a memory leak (probably not disposing of old blurred image)
-- [x] Define how the scoring system will work
-- [ ] Save and display High Scores
-- [ ] Make Result Screen look decent
-- [x] Collection FX looks too fast
-- [ ] Properly credit people and document borrowed code
-- [ ] Make README
+## Installation
+- Move the charts you want to play to your device
+- Install the latest APK from [releases](https://github.com/Kurante2801/ProjectVoice/releases)
+- The game will ask you where your levels are located, simply select a folder and press the Return button and you're good to go
