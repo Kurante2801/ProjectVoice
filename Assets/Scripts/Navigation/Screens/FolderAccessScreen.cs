@@ -64,7 +64,7 @@ public class FolderAccessScreen : Screen
     {
         if (string.IsNullOrEmpty(path)) return;
 
-        if (!Directory.Exists(path))
+        if (!StorageUtil.DirectoryExists(path))
         {
             Debug.LogError("Directory does not exist");
             return;
