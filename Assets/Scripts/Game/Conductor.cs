@@ -39,8 +39,9 @@ public class Conductor : SingletonMonoBehavior<Conductor>
             return;
         }
 
-        MinTime = chart.start_time;
         Controller = await AudioManager.LoadAudio(music, GetComponent<AudioSource>());
+        MinTime = chart.start_time;
+        MaxTime = Controller.Length;
         isNative = Controller is NativeAudioController;
 
         Controller.Looping = false;
