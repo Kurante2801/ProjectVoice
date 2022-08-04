@@ -224,5 +224,5 @@ public class HoldNote : Note
 
     public override void OnTrackDown(int time) => StartHold(time);
 
-    public static float GetEndPosition(int duration) => Context.ScreenHeight * 0.1f * duration / Speed;
+    public static float GetEndPosition(int duration) => (Context.ScreenHeight * 0.1f * Track.ScreenHeight) * duration / Speed;
 }

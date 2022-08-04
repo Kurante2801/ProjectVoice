@@ -9,6 +9,7 @@ using System.Globalization;
 public class Track : MonoBehaviour
 {
     public const float ScreenWidth = 0.11125f;
+    public const float ScreenHeight = 0.835f;
     // These values are cached when screen size changes
     public static float WorldY = 12f;
     public static float ScreenMargin = 12f; // 120px of screen margin at 1280 screen width

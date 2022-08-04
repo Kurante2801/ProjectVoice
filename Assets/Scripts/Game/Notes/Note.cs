@@ -135,7 +135,7 @@ public class Note : MonoBehaviour
         }
     }
 
-    public static float GetPosition(int time, ChartModel.NoteModel model) => Context.ScreenHeight * 0.1f * (model.time - time) / Speed;
+    public static float GetPosition(int time, ChartModel.NoteModel model) => (Context.ScreenHeight * 0.1f * Track.ScreenHeight) * (model.time - time) / Speed;
     public static NoteGrade JudgeGrade(int time, ChartModel.NoteModel model)
     {
         var difference = model.time - time;
