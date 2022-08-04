@@ -107,5 +107,6 @@
     "FOLDERACCESS_LOADING": "Intentando abrir carpeta...",
     "FOLDERACCESS_NODIR": "Ningún directorio seleccionado",
     "FOLDERACCESS_SUCCESS": "El acceso al directorio fue <color=#0F0>exitoso</color>, se encontraron {DIRCOUNT} carpeta/s",
-    "FOLDERACCESS_FAILURE": "El acceso al directorio <color=#F00>fracazó."
+    "FOLDERACCESS_FAILURE": "El acceso al directorio <color=#F00>fracazó.",
+    "FOLDERACCESS_NEWFOLDER": "Nueva Carpeta"
 }

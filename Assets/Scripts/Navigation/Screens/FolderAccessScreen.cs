@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using System;
+using System.IO;
 
 public class FolderAccessScreen : Screen
 {
@@ -63,17 +64,27 @@ public class FolderAccessScreen : Screen
     {
         if (string.IsNullOrEmpty(path)) return;
 
+        if (!Directory.Exists(path))
+        {
+            Debug.LogError("Directory does not exist");
+            return;
+        }
+
         // Make sure path is not root of storage
         if (Context.AndroidVersionCode <= 29 && Regex.IsMatch(path, @"^\/storage\/emulated\/\d+$"))
         {
-            path = System.IO.Path.Combine(path, "Project Voice");
+            path = Path.Combine(path, "Project Voice");
             // We can use IO on api level 29 and below
-            if (!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
         }
         shouldRestart = PlayerSettings.UserDataPath.Value != path;
-
         PlayerSettings.UserDataPath.Value = path;
+
+        // Create .nomedia folder
+        if (!StorageUtil.GetSubfilePath(path, ".nomedia", out _))
+            StorageUtil.CreateFile(path, ".nomedia");
+
         OnScreenBecameActive();
     });
 

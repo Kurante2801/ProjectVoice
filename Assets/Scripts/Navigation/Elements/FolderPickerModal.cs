@@ -13,10 +13,11 @@ using UnityEngine.UI;
 public class FolderPickerModal : MonoBehaviour
 {
     [SerializeField] private FolderPickerDirectory directoryButtonPrefab;
+    [SerializeField] private NewFolderModal newFolderModalPrefab;
     [SerializeField] private TMP_InputField pathField;
     [SerializeField] private RectTransform content;
     [SerializeField] private CanvasGroup canvasGroup;
-    
+
     private GameObject blocker;
     private int currentPathIndex = -1;
     private readonly List<string> pathsFollowed = new List<string>();
@@ -128,6 +129,28 @@ public class FolderPickerModal : MonoBehaviour
                 GoToPath(Path.GetFullPath(parentPath.FullName));
         }
         catch { }
+    }
+
+    public void OnNewFolderPressed()
+    {
+        var modal = Instantiate(newFolderModalPrefab.gameObject, transform).GetComponent<NewFolderModal>();
+        foreach (var layoutGroup in modal.GetComponentsInChildren<LayoutGroup>())
+            layoutGroup.transform.RebuildLayout();
+        
+        modal.OnFolderNamed.AddListener(value =>
+        {
+            if (string.IsNullOrWhiteSpace(value)) return;
+            string path = Path.Join(CurrentPath, value);
+
+            if (Directory.Exists(path))
+            {
+                Debug.LogError("Directory exists");
+                return;
+            }
+
+            Directory.CreateDirectory(path);
+            GoToPath(CurrentPath);
+        });
     }
 
     public void OnCancelButtonPressed()

@@ -92,4 +92,12 @@ public static class StorageUtil
         FileBrowser.ShowLoadDialog(paths => callback(paths[0]), () => { }, FileBrowser.PickMode.Folders, false, title: "Select folder containing all levels");
 #endif
     }
+
+    public static void CreateFile(string directoryPath, string fileName)
+    {
+        if (Context.AndroidVersionCode <= 29)
+            File.Create(Path.Join(directoryPath, fileName));
+        else
+            FileBrowserHelpers.CreateFileInDirectory(directoryPath, fileName);
+    }
 }
