@@ -1156,6 +1156,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Step: 0.25
+  Min: 0
+  Max: 0
   Decimals: 0
 --- !u!224 &9124775597786577529 stripped
 RectTransform:

@@ -95,6 +95,9 @@
     "RESULT_RETRY": "Reíntentar",
     "RESULT_NEXT": "Siguiente",
     "RESULT_CHARTER": "Mapeado por {CHARTER}",
+    "RESULT_RANK": "Rango",
+    "RESULT_ACCURACY": "Precisión",
+    "RESULT_MAXCOMBO": "Combo Máximo",
 
     "GRAPHICS_VERYLOW": "Muy Bajo",
     "GRAPHICS_LOW": "Bajo",
@@ -108,5 +111,10 @@
     "FOLDERACCESS_NODIR": "Ningún directorio seleccionado",
     "FOLDERACCESS_SUCCESS": "El acceso al directorio fue <color=#0F0>exitoso</color>, se encontraron {DIRCOUNT} carpeta/s",
     "FOLDERACCESS_FAILURE": "El acceso al directorio <color=#F00>fracazó.",
-    "FOLDERACCESS_NEWFOLDER": "Nueva Carpeta"
+    "FOLDERACCESS_NEWFOLDER": "Nueva Carpeta",
+
+    "NOTEGRADE_PERFECT": "Perfecto",
+    "NOTEGRADE_GREAT": "Genial",
+    "NOTEGRADE_GOOD": "Bueno",
+    "NOTEGRADE_MISS": "Falló"
 }

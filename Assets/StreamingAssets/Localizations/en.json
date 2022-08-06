@@ -95,6 +95,9 @@
     "RESULT_RETRY": "Retry",
     "RESULT_NEXT": "Next",
     "RESULT_CHARTER": "Charted by {CHARTER}",
+    "RESULT_RANK": "Rank",
+    "RESULT_ACCURACY": "Accuracy",
+    "RESULT_MAXCOMBO": "Max Combo",
 
     "GRAPHICS_VERYLOW": "Very Low",
     "GRAPHICS_LOW": "Low",
@@ -108,5 +111,10 @@
     "FOLDERACCESS_NODIR": "No directory selected",
     "FOLDERACCESS_SUCCESS": "Directory access was <color=#0F0>successful</color>, found {DIRCOUNT} folder(s).",
     "FOLDERACCESS_FAILURE": "Directory access <color=#F00>failed</color>.",
-    "FOLDERACCESS_NEWFOLDER": "New Folder"
+    "FOLDERACCESS_NEWFOLDER": "New Folder",
+
+    "NOTEGRADE_PERFECT": "Perfect",
+    "NOTEGRADE_GREAT": "Great",
+    "NOTEGRADE_GOOD": "Good",
+    "NOTEGRADE_MISS": "Miss"
 }
