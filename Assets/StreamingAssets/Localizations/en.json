@@ -31,10 +31,6 @@
     "OPTIONS_GRAPHICS_DESC": "",
     "OPTIONS_RENDERSCALE_NAME": "Render Scale",
     "OPTIONS_RENDERSCALE_DESC": "Similar to Graphics Quality, but does not affect UI",
-    "OPTIONS_NATIVEAUDIO_NAME": "Use Native Audio",
-    "OPTIONS_NATIVEAUDIO_DESC": "Bypasses Unity's audio system and lowers audio latency, but unpausing while playing causes stuttering.",
-    "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",
-    "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
     "OPTIONS_TARGETFPS_NAME": "FPS Limit",
     "OPTIONS_TARGETFPS_DESC": "",
     "OPTIONS_FPSCOUNTER_NAME": "FPS Counter",
@@ -82,6 +78,10 @@
     "OPTIONS_OTHERS_TAB": "Others",
     "OPTIONS_STORAGE_NAME": "Open storage settings",
     "OPTIONS_STORAGE_DESC": "After updating the location of your levels, the game will restart",
+    "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",
+    "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
+    "OPTIONS_NATIVEAUDIO_NAME": "Use Native Audio",
+    "OPTIONS_NATIVEAUDIO_DESC": "Bypasses Unity's audio system and lowers audio latency, but unpausing while playing causes stuttering.",
     "OPTIONS_STORAGE_BUTTON": "Select",
     "OPTIONS_PROFILER_NAME": "Enable Profiler",
     "OPTIONS_PROFILER_DESC": "Toggles Graphy",
@@ -116,5 +116,9 @@
     "NOTEGRADE_PERFECT": "Perfect",
     "NOTEGRADE_GREAT": "Great",
     "NOTEGRADE_GOOD": "Good",
-    "NOTEGRADE_MISS": "Miss"
+    "NOTEGRADE_MISS": "Miss",
+
+    "CALIBRATION_BUTTON": "Calibration",
+    "CALIBRATION_START": "Start",
+    "CALIBRATION_STOP": "Stop"
 }

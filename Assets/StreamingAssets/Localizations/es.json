@@ -31,10 +31,6 @@
     "OPTIONS_GRAPHICS_DESC": "",
     "OPTIONS_RENDERSCALE_NAME": "Escala del Renderizador",
     "OPTIONS_RENDERSCALE_DESC": "Similar a Calidad de Gráficos pero no afecta a la interfaz.",
-    "OPTIONS_NATIVEAUDIO_NAME": "Usar Audio Nativo",
-    "OPTIONS_NATIVEAUDIO_DESC": "Omite el sistema de audio de Unity y reduce la latencia del audio, pero al reanudar la música se produciran cortos.",
-    "OPTIONS_SAFEAREA_NAME": "Habilitar Area Segura",
-    "OPTIONS_SAFEAREA_DESC": "La interfaz evitará las cámaras integradas a la pantalla.",
     "OPTIONS_TARGETFPS_NAME": "Límite de FPS",
     "OPTIONS_TARGETFPS_DESC": "",
     "OPTIONS_FPSCOUNTER_NAME": "Contador de FPS",
@@ -82,6 +78,10 @@
     "OPTIONS_OTHERS_TAB": "Otros",
     "OPTIONS_STORAGE_NAME": "Abrir configuración de almacenamiento",
     "OPTIONS_STORAGE_DESC": "Después de actualizar la ubicación de tus niveles, el juego se reiniciará.",
+    "OPTIONS_SAFEAREA_NAME": "Habilitar Area Segura",
+    "OPTIONS_SAFEAREA_DESC": "La interfaz evitará las cámaras integradas a la pantalla.",
+    "OPTIONS_NATIVEAUDIO_NAME": "Usar Audio Nativo",
+    "OPTIONS_NATIVEAUDIO_DESC": "Omite el sistema de audio de Unity y reduce la latencia del audio, pero al reanudar la música se produciran cortos.",
     "OPTIONS_STORAGE_BUTTON": "Seleccionar",
     "OPTIONS_PROFILER_NAME": "Habilitar Profiler",
     "OPTIONS_PROFILER_DESC": "Habilita/deshabilita Graphy",
@@ -116,5 +116,9 @@
     "NOTEGRADE_PERFECT": "Perfecto",
     "NOTEGRADE_GREAT": "Genial",
     "NOTEGRADE_GOOD": "Bueno",
-    "NOTEGRADE_MISS": "Falló"
+    "NOTEGRADE_MISS": "Falló",
+
+    "CALIBRATION_BUTTON": "Calibración",
+    "CALIBRATION_START": "Iniciar",
+    "CALIBRATION_STOP": "Parar"
 }

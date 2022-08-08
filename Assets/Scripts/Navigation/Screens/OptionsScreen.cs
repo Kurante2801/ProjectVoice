@@ -17,6 +17,7 @@ public class OptionsScreen : Screen
     public RectTransform GeneralContent, NotesContent, OthersContent;
 
     public List<SettingElement> Prefabs = new();
+    public SettingNumberElement OffsetPrefab;
 
     [Tooltip("Click, Swipe Left, Swipe Right, Slide, Hold")]
     public List<SettingNoteElement> NoteSettingsPrefabs = new();
@@ -116,7 +117,7 @@ public class OptionsScreen : Screen
             Backdrop.Instance.SetBlur((int)value);
         });
 
-        var offset = CreateSetting<SettingNumberElement>(SettingType.Number, GeneralContent);
+        var offset = Instantiate(OffsetPrefab.gameObject, GeneralContent).GetComponent<SettingNumberElement>();
         offset.SetValues(PlayerSettings.AudioOffset.Value, 4);
         offset.SetLocalizationKeys("OPTIONS_AUDIOOFFSET_NAME", "OPTIONS_AUDIOOFFSET_DESC");
         offset.OnValueChanged.AddListener(value => PlayerSettings.AudioOffset.Value = value);

@@ -36,4 +36,12 @@ public class SettingNumberElement : SettingElement
         InputField.SetTextWithoutNotify(desired.ToString("F" + Decimals, CultureInfo.InvariantCulture));
         OnValueChanged?.Invoke(desired);
     }
+
+    public void Sumation(float value)
+    {
+        float current = float.TryParse(InputField.text, NumberStyles.Number, CultureInfo.InvariantCulture, out float result) ? result : 0f;
+        float desired = (float)Math.Round(current + value, Decimals);
+        InputField.SetTextWithoutNotify(desired.ToString("F" + Decimals, CultureInfo.InvariantCulture));
+        OnValueChanged?.Invoke(desired);
+    }
 }

@@ -30,7 +30,7 @@ public class CalibrationNote : MonoBehaviour
     {
         int diff = model.time - conductor.Time;
         var transform = this.transform as RectTransform;
-        transform.anchoredPosition = transform.anchoredPosition.WithY(diff.MapRange(0f, Note.Speed, 0f, 800f.ScreenScaledY()));
+        transform.anchoredPosition = transform.anchoredPosition.WithY(diff.MapRange(0f, Note.ScrollDurations[2], 0f, 800f.ScreenScaledY()));
 
         if (diff < 0)
             screen.DisposeNote(this);
