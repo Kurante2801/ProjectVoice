@@ -51,6 +51,7 @@ public class InitializationScreen : Screen
         }
 
         Context.LevelManager.LoadLevels();
-        Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
+        //Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
+        Context.ScreenManager.ChangeScreen("CalibrationScreen");
     }
 }

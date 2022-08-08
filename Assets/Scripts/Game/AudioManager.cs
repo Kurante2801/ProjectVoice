@@ -10,7 +10,7 @@ using System;
 
 // Based off https://github.com/Cytoid/Cytoid/blob/main/Assets/Scripts/AudioManager.cs
 // but using a free native audio because I'm poor
-public class AudioManager : SingletonMonoBehavior<AudioManager>
+public static class AudioManager
 {
     public static async UniTask<AudioController> LoadAudio(string path, AudioSource source, CancellationToken token = default, bool overrideNative = false)
     {
@@ -89,7 +89,19 @@ public class UnityAudioController : AudioController
     public override float Volume { get => source.volume; set => source.volume = value; }
     private int length = 0;
     public override int Length => length; // When using MPEGs on Windows, clip.Length may be wrong
-    public override bool Paused { get => AudioListener.pause; set => AudioListener.pause = value; }
+
+    private bool paused = true;
+    public override bool Paused
+    {
+        get => paused;
+        set
+        {
+            paused = value;
+            if (value) source.Pause();
+            else source.UnPause();
+        }
+    }
+
     public override bool Looping { get => source.loop; set => source.loop = value; }
 
     public UnityAudioController(AudioSource source, AudioClip clip, int length = -1)

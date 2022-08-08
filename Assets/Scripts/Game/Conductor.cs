@@ -16,6 +16,21 @@ public class Conductor : SingletonMonoBehavior<Conductor>
     private double offsetSeconds = 0D;
     private int offsetMilliseconds = 0;
 
+    private bool paused = true;
+    public bool Paused
+    {
+        get => paused;
+        set
+        {
+            if (Controller is UnityAudioController)
+                AudioListener.pause = true;
+            else
+                Controller.Paused = paused;
+
+            paused = value;
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -59,16 +74,18 @@ public class Conductor : SingletonMonoBehavior<Conductor>
 
         Time = MinTime;
         Initialized = true;
+        paused = false;
+        AudioListener.pause = false;
     }
 
-    public void Toggle() => SetPaused(!Controller.Paused);
+    public void Toggle() => Paused = !Paused;
 
     private double dspTime, dspReport;
     private int positionReport;
 
     private void Update()
     {
-        if (!Initialized || Controller.Paused) return;
+        if (!Initialized || Controller == null || Controller.Paused) return;
 
         if (isNative)
         {
@@ -104,5 +121,24 @@ public class Conductor : SingletonMonoBehavior<Conductor>
         }
     }
 
-    public void SetPaused(bool paused) => Controller.Paused = paused;
+    // Used in calibration screen
+    public void Load(AudioController controller)
+    {
+        Controller = controller;
+        MinTime = 0;
+        MaxTime = controller.Length;
+        isNative = Controller is NativeAudioController;
+        Controller.Looping = false;
+    }
+
+    public void SetAudioOffset(float seconds)
+    {
+        offsetSeconds = seconds;
+        offsetMilliseconds = Mathf.RoundToInt(seconds * 1000f);
+    }
+
+    /// <summary>
+    /// Doesn't stop audio playback, just disables conductor stuff
+    /// </summary>
+    public void Stop() => Initialized = false;
 }

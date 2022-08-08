@@ -231,7 +231,7 @@ public class Game : SingletonMonoBehavior<Game>
         State = null;
         OnGameRestarted?.Invoke(this);
 
-        Conductor.Instance.SetPaused(true);
+        Conductor.Instance.Paused = true;
         IsPaused = true;
         
         await UniTask.Delay(TimeSpan.FromSeconds(TransitionTime));
@@ -380,7 +380,7 @@ public class Game : SingletonMonoBehavior<Game>
     public void SetPaused(bool paused)
     {
         IsPaused = paused;
-        Conductor.Instance.SetPaused(paused);
+        Conductor.Instance.Paused = paused;
         UnityEngine.Screen.sleepTimeout = paused ? SleepTimeout.SystemSetting : SleepTimeout.NeverSleep;
         Context.SetAutoRotation(paused);
     }

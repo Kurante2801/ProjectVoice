@@ -74,6 +74,8 @@ public static class CommonExtensions
 
     public static Vector3 WithX(this Vector3 vector, float x) => new(x, vector.y, vector.z);
     public static Vector3 WithY(this Vector3 vector, float y) => new(vector.x, y, vector.z);
+    public static Vector2 WithX(this Vector2 vector, float x) => new(x, vector.y);
+    public static Vector2 WithY(this Vector2 vector, float y) => new(vector.x, y);
 
     /// <summary>
     /// Converts width and height from Screen size to World space
