@@ -8,7 +8,7 @@ public class CalibrationNote : MonoBehaviour
     [SerializeField] private RawImage background, foreground;
 
     public ChartModel.NoteModel model;
-    public Conductor conductor;
+    public CalibrationScreen.Conductor conductor;
     public CalibrationScreen screen;
 
     private void Awake()
@@ -17,7 +17,7 @@ public class CalibrationNote : MonoBehaviour
         foreground.color = PlayerSettings.ClickForegroundColor.Value;
     }
 
-    public void SetData(int time, Conductor conductor, CalibrationScreen screen)
+    public void SetData(int time, CalibrationScreen.Conductor conductor, CalibrationScreen screen)
     {
         model = new ChartModel.NoteModel();
         model.time = time;

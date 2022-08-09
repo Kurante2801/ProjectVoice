@@ -11,29 +11,21 @@ using DG.Tweening;
 using UnityEngine.Pool;
 using System.Threading.Tasks;
 using System.Linq;
-using Coffee.UIExtensions;
 
 public class CalibrationScreen : Screen
 {
     public override string GetID() => "CalibrationScreen";
+    private AudioSource metronomeSource, tambourineSource;
+    private Conductor conductor = new();
 
-    [SerializeField] private Conductor conductor;
     [SerializeField] private Texture2D pauseTex, playTex;
-    [SerializeField] private RawImage toggleImage;
+    [SerializeField] private RawImage toggleImage, touchIndicatorPrefab, collectionFXprefab;
     [SerializeField] private TMPro.TMP_Text toggleText;
     [SerializeField] private Button toggleButton, metronomeButton, tambourineButton;
     [SerializeField] private CalibrationNote notePrefab;
     [SerializeField] private RectTransform notesContainer, poolContainer;
     [SerializeField] private SettingNumberElement offsetSetting;
     [SerializeField] private SettingBooleanElement nativeSetting;
-    [SerializeField] private ParticleSystem tapFX;
-    [SerializeField] private UIParticle tapFXui;
-
-    private AudioSource metronomeSource, tambourineSource;
-    private AudioController metronomeController, tambourineController;
-    private CancellationTokenSource tokenSource;
-
-    private bool playing = false, metronomeVolume = true, tambourineVolume = true, loading = true;
 
     private ObjectPool<CalibrationNote> notesPool;
     private List<CalibrationNote> createdNotes = new();
@@ -41,58 +33,43 @@ public class CalibrationScreen : Screen
     protected override void Awake()
     {
         base.Awake();
+
         metronomeSource = gameObject.AddComponent<AudioSource>();
         tambourineSource = gameObject.AddComponent<AudioSource>();
 
+        metronomeSource.playOnAwake = false;
+        tambourineSource.playOnAwake = false;
+    }
+
+    private void Update()
+    {
+        conductor.Update();
+        if (conductor.Playing && conductor.MetronomeController != null && conductor.Time > conductor.MetronomeController.Length)
+            Stop();
+    }
+
+    public override async void OnScreenBecameActive()
+    {
         offsetSetting.SetValues(PlayerSettings.AudioOffset.Value, 4);
         offsetSetting.SetLocalizationKeys("OPTIONS_AUDIOOFFSET_NAME", "OPTIONS_AUDIOOFFSET_DESC");
-        offsetSetting.OnValueChanged.AddListener(value =>
-        {
-            PlayerSettings.AudioOffset.Value = value;
-            conductor.SetAudioOffset(value);
-        });
+        offsetSetting.OnValueChanged.AddListener(value => PlayerSettings.AudioOffset.Value = value);
 
         nativeSetting.SetValue(PlayerSettings.NativeAudio.Value);
         nativeSetting.SetLocalizationKeys("OPTIONS_NATIVEAUDIO_NAME", "OPTIONS_NATIVEAUDIO_DESC");
-        nativeSetting.OnValueChanged.AddListener(async value =>
+        nativeSetting.OnValueChanged.AddListener(value =>
         {
-            if (loading)
-            {
-                nativeSetting.SetValue(PlayerSettings.NativeAudio.Value);
-                return;
-            }
-                
             PlayerSettings.NativeAudio.Value = value;
-            loading = true;
-
-            tokenSource?.Cancel();
-            tokenSource?.Dispose();
-            tokenSource = new();
-
-            bool playing = this.playing;
-            SetPlaying(false);
-            metronomeController?.Unload();
-            metronomeController = await LoadController("ticks.ogg", metronomeSource);
-            metronomeController.Volume = metronomeVolume ? PlayerSettings.MusicVolume.Value : 0f;
-            tambourineController?.Unload();
-            tambourineController = await LoadController("tambourine.ogg", tambourineSource);
-            tambourineController.Volume = tambourineVolume ? PlayerSettings.MusicVolume.Value : 0f;
-            conductor.Load(metronomeController);
-            conductor.SetAudioOffset(PlayerSettings.AudioOffset.Value);
-            SetPlaying(playing);
-
-            loading = false;
+            Stop();
+            conductor.Unload();
+            _ = conductor.Load(metronomeSource, tambourineSource);
         });
-
-        metronomeSource.playOnAwake = false;
-        tambourineSource.playOnAwake = false;
-        tambourineSource.volume = PlayerSettings.MusicVolume.Value;
 
         toggleButton.image.color = DifficultyType.Easy.GetColor();
         toggleImage.texture = playTex;
 
-        metronomeButton.image.color = Context.MainColor;
-        tambourineButton.image.color = Context.MainColor;
+        toggleText.text = "CALIBRATION_START".Get();
+        metronomeButton.image.color = conductor.MetronomeAudible ? Context.MainColor : Context.Foreground1Color;
+        tambourineButton.image.color = conductor.TambourineAudible ? Context.MainColor : Context.Foreground1Color;
 
         notesPool = new(
             () => Instantiate(notePrefab.gameObject, notesContainer).GetComponent<CalibrationNote>(),
@@ -106,158 +83,89 @@ public class CalibrationScreen : Screen
                 note.gameObject.SetActive(false);
                 note.transform.SetParent(poolContainer, false);
             });
-    }
 
-    private void Update()
-    {
-        if (playing && conductor.Time > conductor.Controller.Length)
-            SetPlaying(false);
-    }
-
-    private async UniTask<AudioController> LoadController(string fileName, AudioSource source)
-    {
-        var token = tokenSource.Token;
-        var data = BetterStreamingAssets.ReadAllBytes("Calibration/" + fileName);
-        string cache = Path.Join(StorageUtil.TemporaryCachePath, StorageUtil.RandomFilename(fileName));
-
-        AudioController result;
-
-        try
-        {
-            await File.WriteAllBytesAsync(cache, data, token);
-            result = await AudioManager.LoadAudio(cache, source, token);
-        }
-        catch (OperationCanceledException)
-        {
-            StorageUtil.DeleteFromCache(cache);
-            return null;
-        }
-
-        StorageUtil.DeleteFromCache(cache);
-        return result;
-    }
-
-    public override async void OnScreenPostActive()
-    {
-        loading = true;
-        tokenSource = new CancellationTokenSource();
-        toggleText.text = "CALIBRATION_START".Get();
-
-        metronomeController?.Unload();
-        metronomeController = await LoadController("ticks.ogg", metronomeSource);
-
-        tambourineController?.Unload();
-        tambourineController = await LoadController("tambourine.ogg", tambourineSource);
-
-        conductor.Load(metronomeController);
-        conductor.SetAudioOffset(PlayerSettings.AudioOffset.Value);
-        loading = false;
-
-        tokenSource.Dispose();
-        tokenSource = null;
+        base.OnScreenBecameActive();
+        await conductor.Load(metronomeSource, tambourineSource);
     }
 
     public override void OnScreenBecameInactive()
     {
-        if (playing)
-            SetPlaying(false);
+        conductor.Unload();
+        base.OnScreenBecameInactive();
+    }
 
-        if(tokenSource != null)
+    public void Play()
+    {
+        conductor.Play();
+        
+        for(int i = 1; i <= 29; i++)
         {
-            tokenSource.Cancel();
-            tokenSource.Dispose();
+            var note = notesPool.Get();
+            note.SetData(i * 2000, conductor, this);
+            createdNotes.Add(note);
         }
 
-        metronomeController?.Unload();
-        tambourineController?.Unload();
+        toggleImage.texture = pauseTex;
+        toggleButton.image.DOKill();
+        toggleButton.image.DOColor(DifficultyType.Hard.GetColor(), 0.25f);
+        toggleText.text = "CALIBRATION_STOP".Get();
+    }
 
-        base.OnScreenBecameInactive();
+    public void Stop()
+    {
+        conductor.Stop();
+        for (int i = createdNotes.Count - 1; i > -1; i--)
+        {
+            var note = createdNotes[i];
+            notesPool.Release(note);
+            createdNotes.RemoveAt(i);
+        }
+        createdNotes.Clear();
+
+        toggleImage.texture = playTex;
+        toggleButton.image.DOKill();
+        toggleButton.image.DOColor(DifficultyType.Easy.GetColor(), 0.25f);
+        toggleText.text = "CALIBRATION_START".Get();
     }
 
     public void Toggle()
     {
-        SetPlaying(!playing);
-    }
-
-    public void SetPlaying(bool playing)
-    {
-        if (playing)
-        {
-            conductor.Initialize();
-            tambourineController.Play(0);
-            metronomeController.Volume = metronomeVolume ? PlayerSettings.MusicVolume.Value : 0f;
-
-            for(int i = 1; i <= 29; i ++)
-            {
-                var note = notesPool.Get();
-                note.SetData(i * 2000, conductor, this);
-                createdNotes.Add(note);
-            }
-        }
+        if (conductor.Playing)
+            Stop();
         else
-        {
-            conductor.Stop();
-            tambourineController.Paused = true;
-            metronomeController.Paused = true;
-
-            for(int i = createdNotes.Count - 1; i > -1; i--)
-            {
-                var note = createdNotes[i];
-                notesPool.Release(note);
-                createdNotes.RemoveAt(i);
-            }
-        }
-
-        UpdateButton(playing);
-        this.playing = playing;
+            Play();
     }
 
-    private void UpdateButton(bool playing)
+    public void ToggleMetronome()
     {
-        toggleImage.texture = playing ? pauseTex : playTex;
-        toggleButton.image.DOKill();
-        toggleButton.image.DOColor(playing ? DifficultyType.Hard.GetColor() : DifficultyType.Easy.GetColor(), 0.25f);
-        toggleText.text = playing ? "CALIBRATION_STOP".Get() : "CALIBRATION_START".Get();
-    }
-
-    public void MetronomeButton()
-    {
-        metronomeVolume = !metronomeVolume;
-
-        metronomeController.Volume = metronomeVolume ? PlayerSettings.MusicVolume.Value : 0f;
+        conductor.MetronomeAudible = !conductor.MetronomeAudible;
         metronomeButton.image.DOKill();
-        metronomeButton.image.DOColor(metronomeVolume ? Context.MainColor : Context.Foreground1Color, 0.25f);
+        metronomeButton.image.DOColor(conductor.MetronomeAudible ? Context.MainColor : Context.Foreground1Color, 0.25f);
     }
-
-    public void TambourineButton()
+    public void ToggleTambourine()
     {
-        tambourineVolume = !tambourineVolume;
-
-        tambourineController.Volume = tambourineVolume ? PlayerSettings.MusicVolume.Value : 0f;
+        conductor.TambourineAudible = !conductor.TambourineAudible;
         tambourineButton.image.DOKill();
-        tambourineButton.image.DOColor(tambourineVolume ? Context.MainColor : Context.Foreground1Color, 0.25f);
+        tambourineButton.image.DOColor(conductor.TambourineAudible ? Context.MainColor : Context.Foreground1Color, 0.25f);
     }
 
     public void DisposeNote(CalibrationNote note)
     {
         createdNotes.Remove(note);
         notesPool.Release(note);
-    }
 
-    public void ReturnButton()
-    {
-        if (!Context.ScreenManager.TryReturnScreen())
-            Context.ScreenManager.ChangeScreen("SongSelectionScreen");
+        var image = Instantiate(collectionFXprefab.gameObject, notesContainer).GetComponent<RawImage>();
+        image.DOFade(0f, 1f).OnComplete(() => Destroy(image.gameObject));
     }
 
     public void OnTrackDown()
     {
-        if (!playing) return;
+        if (!conductor.Playing) return;
 
         var times = new List<int>();
-        for (int i = 1; i <= 29; i ++)
+        for (int i = 1; i <= 29; i++)
         {
-            if(i * 2000 - conductor.Time > -300)
+            if (i * 2000 - conductor.Time > -300)
                 times.Add(i * 2000);
         }
         if (times.Count < 1) return;
@@ -265,9 +173,142 @@ public class CalibrationScreen : Screen
         int closest = times.OrderBy(x => Mathf.Abs(x - conductor.Time)).First();
         int diff = closest - conductor.Time;
 
-        var transform = tapFX.transform as RectTransform;
+        // Can't use particle systems on UI on Android
+        var image = Instantiate(touchIndicatorPrefab.gameObject, notesContainer).GetComponent<RawImage>();
+        image.DOFade(0f, 1f).OnComplete(() => Destroy(image.gameObject));
+
+        var transform = image.transform as RectTransform;
         transform.anchoredPosition = transform.anchoredPosition.WithY(diff.MapRange(0f, Note.ScrollDurations[2], 0f, 800f.ScreenScaledY()));
-        tapFX.Emit(1);
-        tapFXui.scale3D = new Vector3(70f.ScreenScaledX(), 4f.ScreenScaledY(), 1f);
+    }
+
+    public void ReturnButton()
+    {
+        Stop();
+        if (!Context.ScreenManager.TryReturnScreen())
+            Context.ScreenManager.ChangeScreen("OptionsScreen");
+    }
+
+    public class Conductor
+    {
+        public bool Playing = false;
+        public AudioController MetronomeController, TambourineController;
+
+        private bool metronomeAudible = true, tambourineAudible = true;
+        public bool MetronomeAudible {
+            get => metronomeAudible;
+            set
+            {
+                metronomeAudible = value;
+                if(MetronomeController != null)
+                    MetronomeController.Volume = value ? PlayerSettings.MusicVolume.Value : 0f;
+            }
+        }
+        public bool TambourineAudible
+        {
+            get => tambourineAudible;
+            set
+            {
+                tambourineAudible = value;
+                if (TambourineController != null)
+                    TambourineController.Volume = value ? PlayerSettings.MusicVolume.Value : 0f;
+            }
+        }
+        private CancellationTokenSource tokenSource;
+
+        public async UniTask Load(AudioSource metronomeSource, AudioSource tambourineSource)
+        {
+            MetronomeController = await LoadCalibrationAudio("metronome.ogg", metronomeSource);
+            MetronomeAudible = metronomeAudible;
+            TambourineController = await LoadCalibrationAudio("tambourine.ogg", tambourineSource);
+            TambourineAudible = tambourineAudible;
+        }
+
+        public void Unload()
+        {
+            MetronomeController?.Unload();
+            MetronomeController = null;
+            TambourineController?.Unload();
+            TambourineController = null;
+        }
+
+        public void Play()
+        {
+            Time = 0;
+            Playing = true;
+            MetronomeController.Play(0);
+            TambourineController.Play(0);
+            dspTime = AudioSettings.dspTime;
+        }
+
+        public void Stop()
+        {
+            Time = 0;
+            Playing = false;
+
+            if(MetronomeController != null)
+                MetronomeController.Paused = true;
+            if(TambourineController != null)
+                TambourineController.Paused = true;
+        }
+
+        public async UniTask<AudioController> LoadCalibrationAudio(string fileName, AudioSource source)
+        {
+            tokenSource?.Cancel();
+            tokenSource?.Dispose();
+            tokenSource = new CancellationTokenSource();
+
+            var data = BetterStreamingAssets.ReadAllBytes("Calibration/" + fileName);
+            string cache = Path.Join(StorageUtil.TemporaryCachePath, StorageUtil.RandomFilename(fileName));
+
+            AudioController result;
+
+            try
+            {
+                await File.WriteAllBytesAsync(cache, data, tokenSource.Token);
+                result = await AudioManager.LoadAudio(cache, source, tokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                StorageUtil.DeleteFromCache(cache);
+                return null;
+            }
+
+            StorageUtil.DeleteFromCache(cache);
+
+            tokenSource.Dispose();
+            tokenSource = null;
+            return result;
+        }
+
+        private double dspTime, dspReport;
+        private int positionReport;
+
+        public int Time { get; private set; }
+        public void Update()
+        {
+            if (!Playing || TambourineController == null) return;
+
+            if(TambourineController is UnityAudioController)
+            {
+                if (dspReport != AudioSettings.dspTime)
+                {
+                    dspReport = AudioSettings.dspTime;
+                    Time = (int)((AudioSettings.dspTime - dspTime - PlayerSettings.AudioOffset.Value) * 1000D);
+                }
+                else
+                    Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
+            }
+            else
+            {
+                var controller = TambourineController as NativeAudioController;
+                if (positionReport != ANAMusic.getCurrentPosition(controller.FileID))
+                {
+                    positionReport = ANAMusic.getCurrentPosition(controller.FileID);
+                    Time = positionReport + Mathf.RoundToInt(PlayerSettings.AudioOffset.Value * 1000f);
+                }
+                else
+                    Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
+            }
+        }
     }
 }

@@ -120,25 +120,4 @@ public class Conductor : SingletonMonoBehavior<Conductor>
                 Time += Mathf.RoundToInt(UnityEngine.Time.unscaledDeltaTime * 1000f);
         }
     }
-
-    // Used in calibration screen
-    public void Load(AudioController controller)
-    {
-        Controller = controller;
-        MinTime = 0;
-        MaxTime = controller.Length;
-        isNative = Controller is NativeAudioController;
-        Controller.Looping = false;
-    }
-
-    public void SetAudioOffset(float seconds)
-    {
-        offsetSeconds = seconds;
-        offsetMilliseconds = Mathf.RoundToInt(seconds * 1000f);
-    }
-
-    /// <summary>
-    /// Doesn't stop audio playback, just disables conductor stuff
-    /// </summary>
-    public void Stop() => Initialized = false;
 }
