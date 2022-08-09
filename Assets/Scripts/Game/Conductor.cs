@@ -39,7 +39,7 @@ public class Conductor : SingletonMonoBehavior<Conductor>
 
     protected override void OnDestroy()
     {
-        Controller.Unload();
+        Controller?.Unload();
         base.OnDestroy();
     }
 

@@ -10,6 +10,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.Pool;
 using System.Threading.Tasks;
+using System.Linq;
+using Coffee.UIExtensions;
 
 public class CalibrationScreen : Screen
 {
@@ -24,6 +26,8 @@ public class CalibrationScreen : Screen
     [SerializeField] private RectTransform notesContainer, poolContainer;
     [SerializeField] private SettingNumberElement offsetSetting;
     [SerializeField] private SettingBooleanElement nativeSetting;
+    [SerializeField] private ParticleSystem tapFX;
+    [SerializeField] private UIParticle tapFXui;
 
     private AudioSource metronomeSource, tambourineSource;
     private AudioController metronomeController, tambourineController;
@@ -69,8 +73,10 @@ public class CalibrationScreen : Screen
             SetPlaying(false);
             metronomeController?.Unload();
             metronomeController = await LoadController("ticks.ogg", metronomeSource);
+            metronomeController.Volume = metronomeVolume ? PlayerSettings.MusicVolume.Value : 0f;
             tambourineController?.Unload();
             tambourineController = await LoadController("tambourine.ogg", tambourineSource);
+            tambourineController.Volume = tambourineVolume ? PlayerSettings.MusicVolume.Value : 0f;
             conductor.Load(metronomeController);
             conductor.SetAudioOffset(PlayerSettings.AudioOffset.Value);
             SetPlaying(playing);
@@ -101,7 +107,13 @@ public class CalibrationScreen : Screen
                 note.transform.SetParent(poolContainer, false);
             });
     }
-    
+
+    private void Update()
+    {
+        if (playing && conductor.Time > conductor.Controller.Length)
+            SetPlaying(false);
+    }
+
     private async UniTask<AudioController> LoadController(string fileName, AudioSource source)
     {
         var token = tokenSource.Token;
@@ -236,5 +248,26 @@ public class CalibrationScreen : Screen
     {
         if (!Context.ScreenManager.TryReturnScreen())
             Context.ScreenManager.ChangeScreen("SongSelectionScreen");
+    }
+
+    public void OnTrackDown()
+    {
+        if (!playing) return;
+
+        var times = new List<int>();
+        for (int i = 1; i <= 29; i ++)
+        {
+            if(i * 2000 - conductor.Time > -300)
+                times.Add(i * 2000);
+        }
+        if (times.Count < 1) return;
+
+        int closest = times.OrderBy(x => Mathf.Abs(x - conductor.Time)).First();
+        int diff = closest - conductor.Time;
+
+        var transform = tapFX.transform as RectTransform;
+        transform.anchoredPosition = transform.anchoredPosition.WithY(diff.MapRange(0f, Note.ScrollDurations[2], 0f, 800f.ScreenScaledY()));
+        tapFX.Emit(1);
+        tapFXui.scale3D = new Vector3(70f.ScreenScaledX(), 4f.ScreenScaledY(), 1f);
     }
 }
