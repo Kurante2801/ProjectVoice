@@ -23,9 +23,9 @@ public class Conductor : SingletonMonoBehavior<Conductor>
         set
         {
             if (Controller is UnityAudioController)
-                AudioListener.pause = true;
+                AudioListener.pause = value;
             else
-                Controller.Paused = paused;
+                Controller.Paused = value;
 
             paused = value;
         }
@@ -85,7 +85,7 @@ public class Conductor : SingletonMonoBehavior<Conductor>
 
     private void Update()
     {
-        if (!Initialized || Controller == null || Controller.Paused) return;
+        if (!Initialized || Paused) return;
 
         if (isNative)
         {
