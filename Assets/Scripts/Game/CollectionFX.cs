@@ -15,7 +15,7 @@ public class CollectionFX : MonoBehaviour
         float scale = 1f.ScreenScaledX() * ParticleManager.Instance.SizeCurve.Evaluate(perc);
 
         transform.localScale = new Vector3(scale, scale, 1f);
-        SpriteRenderer.color = SpriteRenderer.color.WithAlpha(ParticleManager.Instance.AlphaCurve.Evaluate(perc));
+        SpriteRenderer.color = Color.white.WithAlpha(ParticleManager.Instance.AlphaCurve.Evaluate(perc));
         if (time > lifetime)
             ParticleManager.Instance.DisposeEffect(this);
     }
