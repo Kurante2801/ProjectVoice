@@ -2018,6 +2018,7 @@ MonoBehaviour:
   - {fileID: 3845056499714386540, guid: 7e047f745225e3b40b2b994e38598a8d, type: 3}
   - {fileID: 5158130018968340861, guid: 4ac6c715db8c7b246a30977f28e88570, type: 3}
   - {fileID: 4792010550876360754, guid: b4ed0de0da3f89040a95c399b8dca0aa, type: 3}
+  - {fileID: 4405619051754967952, guid: dd25149e01e59ff449eb04f40fdf937e, type: 3}
   SeparatorPrefab: {fileID: 8239302373705906001, guid: ff3c4ccebb8916a4897a4d3fda33115c, type: 3}
 --- !u!222 &8897631784576322176
 CanvasRenderer:

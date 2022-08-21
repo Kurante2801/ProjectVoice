@@ -39,6 +39,8 @@ public class PlayerSettings
     public static SettingColor HoldBackgroundColor = new("holdbackcolor", Color.black);
     public static SettingColor HoldTopForegroundColor = new("holdtopforecolor", new Color32(220, 75, 75, 255));
     public static SettingColor HoldBottomForegroundColor = new("holdbottomforecolor", new Color32(220, 75, 75, 255));
+    public static SettingColor HoldTickBackgroundColor = new("holdtickback", new Color32(220, 75, 75, 255), true);
+    public static SettingColor HoldTickForegroundColor = new("holdtickfore", Color.white, true);
 
     public static SettingShape SlideShape = new("slideshape", NoteShape.Diamond);
     public static SettingColor SlideBackgroundColor = new("slidebackcolor", Color.black);

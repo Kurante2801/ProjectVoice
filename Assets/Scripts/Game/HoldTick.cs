@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HoldTick : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer background, foreground;
     private HoldNote note;
     private float x;
     private ChartModel.NoteModel model;
@@ -28,6 +28,9 @@ public class HoldTick : MonoBehaviour
         model = new ChartModel.NoteModel();
         model.time = time;
 
+        background.color = PlayerSettings.HoldTickBackgroundColor.Value;
+        foreground.color = PlayerSettings.HoldTickForegroundColor.Value;
+
         ScreenSizeChanged(Context.ScreenWidth, Context.ScreenHeight);
         Update();
     }
@@ -49,6 +52,6 @@ public class HoldTick : MonoBehaviour
 
     private void ScreenSizeChanged(int w, int h)
     {
-        spriteRenderer.transform.localScale = new Vector3(125f.ScreenScaledX(), 10f.ScreenScaledX(), 1f);
+        transform.localScale = Vector2.one * 1f.ScreenScaledX();
     }
 }

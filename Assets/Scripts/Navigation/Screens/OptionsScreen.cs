@@ -180,6 +180,13 @@ public class OptionsScreen : Screen
         hold.OnBackgroundChanged.AddListener(value => PlayerSettings.HoldBackgroundColor.Value = value);
         hold.OnBottomForegroundChanged.AddListener(value => PlayerSettings.HoldBottomForegroundColor.Value = value);
         hold.OnTopForegroundChanged.AddListener(value => PlayerSettings.HoldTopForegroundColor.Value = value);
+        CreateSeparator(NotesContent);
+
+        var tick = Instantiate(NoteSettingsPrefabs[5].gameObject, NotesContent).GetComponent<SettingNoteElement>();
+        tick.SetLocalizationKeys("OPTIONS_HOLDTICK_NAME", "", "OPTIONS_HOLDTICK_BACK_MODAL", "OPTIONS_HOLDTICK_FORE_MODAL");
+        tick.SetValues(NoteShape.Diamond, PlayerSettings.HoldTickBackgroundColor.Value, PlayerSettings.HoldTickForegroundColor.Value, PlayerSettings.HoldTickBackgroundColor.Fallback, PlayerSettings.HoldTickForegroundColor.Fallback, true);
+        tick.OnBackgroundChanged.AddListener(value => PlayerSettings.HoldTickBackgroundColor.Value = value);
+        tick.OnForegroundChanged.AddListener(value => PlayerSettings.HoldTickForegroundColor.Value = value);
     }
 
     private void PopulateOthers()

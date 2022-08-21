@@ -46,11 +46,14 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: b880d94dd31d29f4d9cc11b8c85699ca, type: 3}
     - {fileID: 2800000, guid: 926e2263f96633146a0d586a140232a4, type: 3}
+    - {fileID: 2800000, guid: af22e07184c982d41a15ea8d46dd3e5d, type: 3}
+    - {fileID: 2800000, guid: d12e7dfdbf95d514abb8b867956b5c5a, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: af22e07184c982d41a15ea8d46dd3e5d, type: 3}
   - {fileID: 21300000, guid: 32011d921e8597c4986435dd727098ef, type: 3}
   - {fileID: 21300000, guid: 4b934ac278285ad4f9c6ad719142bc34, type: 3}
   - {fileID: 21300000, guid: 926e2263f96633146a0d586a140232a4, type: 3}
@@ -58,9 +61,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1e1c5477cce72e141b43e0e30aaf956a, type: 3}
   - {fileID: 21300000, guid: e17e8f3a8a9565b46b0780bf1f8934a4, type: 3}
   - {fileID: 21300000, guid: f08069abfdb1b1c4ca8b1e2ee8ebd69f, type: 3}
+  - {fileID: 21300000, guid: d12e7dfdbf95d514abb8b867956b5c5a, type: 3}
   - {fileID: 21300000, guid: 5345507e413b6064793956b2a7a3d378, type: 3}
   - {fileID: 21300000, guid: da18326f7cf9d5843ad4c4ec18dff917, type: 3}
   m_PackedSpriteNamesToIndex:
+  - hold_tick_back
   - judgement_diamond
   - track_line
   - white
@@ -68,6 +73,7 @@ SpriteAtlas:
   - judgement_circle
   - track_bottom
   - track_glow
+  - hold_tick_fore
   - track_active
   - track_background
   m_RenderDataMap: {}

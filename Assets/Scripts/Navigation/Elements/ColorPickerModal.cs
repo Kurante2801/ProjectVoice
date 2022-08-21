@@ -33,8 +33,6 @@ public class ColorPickerModal : MonoBehaviour
     public float Value { get => _value; set => _value = Mathf.Clamp01(value); }
 
     public Color32 RGBA => ColorExtensions.HSVToRGB(Hue, Saturation, Value).WithAlpha(Alpha);
-
-    private Color32 previous;
     private Color32? fallback;
 
     public UnityEvent<Color32> OnEditEnd = new();
@@ -145,8 +143,8 @@ public class ColorPickerModal : MonoBehaviour
         var color = RGBA;
         if (AllowAlpha)
         {
-            AlphaSlider.value = Alpha;
-            AlphaInput.SetTextWithoutNotify(Alpha.ToString());
+            AlphaSlider.SetValueWithoutNotify(color.a);
+            AlphaInput.SetTextWithoutNotify(color.a.ToString());
             AlphaGraphic.color = color.WithAlpha(255);
         }
 
@@ -170,7 +168,6 @@ public class ColorPickerModal : MonoBehaviour
         AllowAlpha = allowAlpha;
         ValueChanged();
 
-        previous = value;
         this.fallback = fallback;
         CancelColorImage.color = value.WithAlpha(allowAlpha ? value.a : (byte)255);
 
@@ -186,6 +183,7 @@ public class ColorPickerModal : MonoBehaviour
             ResetButton.onClick.AddListener(() =>
             {
                 Color.RGBToHSV((Color)this.fallback, out _hue, out _saturation, out _value);
+                Alpha = ((Color32)this.fallback).a;
                 ValueChanged(updateHue: true, updateSV: true);
             });
         }

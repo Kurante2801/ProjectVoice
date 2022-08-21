@@ -74,6 +74,10 @@
     "OPTIONS_NOTEHOLD_TOP_FORE_MODAL": "Hold Note Top Foreground",
     "OPTIONS_NOTEHOLD_BOTTOM_FOREGROUND_NAME": "Bottom Foreground Color",
     "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Top Foreground Color",
+    "OPTIONS_HOLDTICK_NAME": "Hold Tick",
+    "OPTIONS_HOLDTICK_DESC": "",
+    "OPTIONS_HOLDTICK_BACK_MODAL": "Hold Tick Background",
+    "OPTIONS_HOLDTICK_FORE_MODAL": "Hold Tick Foreground",
 
     "OPTIONS_OTHERS_TAB": "Others",
     "OPTIONS_STORAGE_NAME": "Open storage settings",

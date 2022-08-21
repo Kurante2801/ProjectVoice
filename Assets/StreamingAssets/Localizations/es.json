@@ -74,6 +74,10 @@
     "OPTIONS_NOTEHOLD_TOP_FORE_MODAL": "Color de Frente (Hold arriba)",
     "OPTIONS_NOTEHOLD_BOTTOM_FOREGROUND_NAME": "Color de Fondo Abajo",
     "OPTIONS_NOTEHOLD_TOP_FOREGROUND_NAME": "Color de Fondo Arriba",
+    "OPTIONS_HOLDTICK_NAME": "Hold Tick",
+    "OPTIONS_HOLDTICK_DESC": "",
+    "OPTIONS_HOLDTICK_BACK_MODAL": "Color de Fondo (Hold Tick)",
+    "OPTIONS_HOLDTICK_FORE_MODAL": "Color de Frente (Hold Tick)",
 
     "OPTIONS_OTHERS_TAB": "Otros",
     "OPTIONS_STORAGE_NAME": "Abrir configuración de almacenamiento",

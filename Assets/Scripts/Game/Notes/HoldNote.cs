@@ -103,19 +103,17 @@ public class HoldNote : Note
     {
         IsBeingHeld = false;
 
-        // Magic number, ensures we create ticks at around the same vertical distance independent of speed
-        float offset = Speed * 0.015625f;
         float startX = Track.GetPositionValue(Model.time);
         moves = false;
 
         ticks.Clear();
-        for (float i = Model.time; i <= Model.time + HoldTime; i += offset)
+        for (int i = 100; i <= HoldTime; i += 100)
         {
-            float x = Track.GetPositionValue(Mathf.RoundToInt(i));
+            float x = Track.GetPositionValue(Mathf.RoundToInt(i + Model.time));
             if (x != startX)
                 moves = true;
 
-            ticks.Add((x, Mathf.RoundToInt(i)));
+            ticks.Add((x, Mathf.RoundToInt(i + Model.time)));
         }
 
         if (moves)
