@@ -22,10 +22,14 @@ public class Conductor : SingletonMonoBehavior<Conductor>
         get => paused;
         set
         {
-            if (Controller is UnityAudioController)
-                AudioListener.pause = value;
+            if (Controller is NativeAudioController controller)
+            {
+                controller.Paused = value;
+                if (!value)
+                    ANAMusic.seekTo(controller.FileID, Time);
+            }
             else
-                Controller.Paused = value;
+                AudioListener.pause = value;
 
             paused = value;
         }
