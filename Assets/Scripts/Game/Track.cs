@@ -69,6 +69,10 @@ public class Track : MonoBehaviour
         foreach (var transition in Model.color_transitions)
             ColorTransitions.Add(new ColorTransition(transition));
 
+        // Ensure we don't despawn before all notes have been played
+        foreach(var note in Model.notes)
+            Model.despawn_time = Mathf.Max(Model.despawn_time, note.time + NoteGrade.Good.GetTiming());
+
         // Ensure despawn_time isn't lower than spawn_time + spawn_duration
         if (Model.spawn_duration > 0f)
             Model.despawn_time = Model.spawn_time + Mathf.Max(Model.despawn_time - Model.spawn_time, Model.spawn_duration);
