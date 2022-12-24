@@ -38,6 +38,7 @@ public class Track : MonoBehaviour
     [SerializeField] private List<TMP_Text> tmpMove = new(), tmpScale = new(), tmpColor = new();
 
     private bool isDebugTextEnabled = false;
+    private int currentNote = 0;
 
     private void Start()
     {
@@ -82,6 +83,8 @@ public class Track : MonoBehaviour
 
         if (isDebugTextEnabled)
             tmpID.text = Model.id.ToString();
+
+        currentNote = 0;
     }
 
     private void Update()
@@ -188,10 +191,16 @@ public class Track : MonoBehaviour
         var color = GetColorValue(time);
         background.color = leftGlow.color = rightGlow.color = color;
 
-        // Spawn notes
-        foreach(var model in Model.notes)
+        // Notes are sorted at game start, so we don't have to loop through all of them
+        var notes = Model.notes;
+        while (currentNote < notes.Count && Note.GetPosition(time, notes[currentNote]) <= Context.ScreenHeight * 0.1f)
         {
-            if (NoteExists(model.id) || Game.Instance.State.NoteIsJudged(model.id) || Note.GetPosition(time, model) > Context.ScreenHeight * 0.1f) continue;
+            var model = notes[currentNote];
+            if (NoteExists(model.id) || Game.Instance.State.NoteIsJudged(model.id))
+            {
+                currentNote++;
+                continue;
+            }
 
             var note = Game.Instance.GetPooledNote((NoteType)model.type, notesContainer);
             CreatedNotes.Add(note);

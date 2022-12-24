@@ -50,6 +50,8 @@ public class Game : SingletonMonoBehavior<Game>
     public SpriteAtlas GameAtlas;
     public List<SpriteAtlas> ShapesAtlas;
 
+    private int currentTrack = 0;
+
     protected override void Awake()
     {
         base.Awake();
@@ -113,13 +115,33 @@ public class Game : SingletonMonoBehavior<Game>
         else
             Chart = JsonConvert.DeserializeObject<ChartModel>(FileBrowserHelpers.ReadTextFromFile(chart));
 
+        // Sort IDs by time to save some loops in Update functions
+        int lastNote = 0;
+
+        Chart.tracks.Sort((a, b) => a.spawn_time.CompareTo(b.spawn_time));
+        for (int i = 0; i < Chart.tracks.Count; i++)
+        {
+            var track = Chart.tracks[i];
+            track.id = i;
+
+            // Ensure game doesn't end too soon
+            EndTime = Mathf.Max(EndTime, track.despawn_time + track.despawn_duration + 1000);
+
+            track.notes.Sort((a, b) => a.time.CompareTo(b.time));
+            // Notes must have unique IDs (even if they're from different tracks) so we use the lastNote variable
+            foreach (var note in track.notes)
+            {
+                note.id = lastNote;
+                lastNote++;
+            }
+        }
+        currentTrack = 0;
+
         // Load audio
         await UniTask.WaitUntil(() => Conductor.Instance != null);
         await Conductor.Instance.Load(Context.SelectedLevel, Chart);
 
-        // Ensure game doesn't end too soon (add 1 second in case I want to add an ending animation for full combo or something)
         EndTime = Conductor.Instance.MaxTime;
-        Chart.tracks.ForEach(track => EndTime = Mathf.Max(EndTime, track.despawn_time + track.despawn_duration + 1000));
         StartTime = Conductor.Instance.MinTime;
 
         // Pool tracks beforehand
@@ -178,16 +200,24 @@ public class Game : SingletonMonoBehavior<Game>
 
         if (IsPaused) return;
 
-        // Spawn notes
-        foreach(var track in Chart.tracks)
+        // Instead of looping through each track, hold a reference to the latest ID spawned, since they're sorted chronologically
+        // https://github.com/Cytoid/Cytoid/blob/1ce07d83628aef0fd5afbc450ecd4fed0600e47b/Assets/Scripts/Game/Game.cs#L506
+
+        var tracks = Chart.tracks;
+        while (currentTrack < tracks.Count && Conductor.Instance.Time.IsBetween(tracks[currentTrack].spawn_time, tracks[currentTrack].despawn_time))
         {
-            if (!Conductor.Instance.Time.IsBetween(track.spawn_time, track.despawn_time)) continue;
-            if (TrackExists(track)) continue;
+            if (TrackExists(tracks[currentTrack]))
+            {
+                currentTrack++;
+                continue;
+            }
 
             var spawned = tracksPool.Get();
             CreatedTracks.Add(spawned);
-            spawned.Model = track;
+            spawned.Model = tracks[currentTrack];
             spawned.Initialize();
+        
+            currentTrack++;
         }
     }
 
