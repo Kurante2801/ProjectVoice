@@ -57,13 +57,23 @@ public static class LegacyParser
                     meta.artist = entry.Value;
                     break;
                 case "diff":
+                    // Difficulties are stored as such: easy-hard-extra
+                    // example: 7-11-17
                     string[] diffs = entry.Value.Split('-');
                     for(int i = 0; i < diffs.Length; i++)
                     {
                         int diff = int.TryParse(diffs[i], out int diff_parsed) ? diff_parsed : 0;
-                        if (diff < 1) continue;
-                        
-                        var type = (Enum.TryParse<DifficultyType>(i.ToString(), out var type_parsed) && Enum.IsDefined(typeof(DifficultyType), type_parsed)) ? type_parsed : DifficultyType.Extra;
+                        if (diff < 1) continue; // We can skip difficulties by assigning them a value of 0
+
+                        // First two difficulties parsed are always Easy and Hard, they can be skipped by assigning a difficulty of 0
+                        // Any difficulty afterwards is always Extra
+                        var type = i switch
+                        {
+                            0 => DifficultyType.Easy,
+                            1 => DifficultyType.Hard,
+                            _ => DifficultyType.Extra,
+                        };
+
                         var chart = new ChartSection()
                         {
                             difficulty = diff,
@@ -72,8 +82,9 @@ public static class LegacyParser
                         };
 
                         if (i < 3)
-                            chart.path = $"track_{chart.type.ToString().ToLower()}.json";
+                            chart.path = $"track_{type.ToString().ToLower()}.json";
                         else
+                            // Additional charts can be added by naming them track_extra2.json, track_extra3.json and so on (start from 2)
                             chart.path = $"track_extra{i - 1}.json";
 
                         meta.charts.Add(chart);
@@ -102,6 +113,7 @@ public static class LegacyParser
                     meta.charter = entry.Value;
                     break;
                 case "preview_time":
+                    // In milliseconds
                     meta.preview_time = int.TryParse(entry.Value, out int time) ? time : -1;
                     break;
             }
@@ -114,6 +126,7 @@ public static class LegacyParser
         return meta;
     }
 
+    // Legacy colors are stored as int that reference these values (meaning that legacy can't do RGB sadly)
     public static string[] LegacyColors =
     {
         "#F98F95", "#F9E5A1", "#D3D3D3", "#77D1DE", "#97D384", "#F3B67E", "#E2A0CB", "#8CBCE7", "#76DBCB", "#AEA6F0"

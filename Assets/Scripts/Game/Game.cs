@@ -135,7 +135,6 @@ public class Game : SingletonMonoBehavior<Game>
                 lastNote++;
             }
         }
-        currentTrack = 0;
 
         // Load audio
         await UniTask.WaitUntil(() => Conductor.Instance != null);
@@ -225,6 +224,7 @@ public class Game : SingletonMonoBehavior<Game>
     {
         State.HasStarted = true;
         State.IsPlaying = true;
+        currentTrack = 0;
 
         TransitionTime = 0.5f;
         OnGameStarted?.Invoke(this);

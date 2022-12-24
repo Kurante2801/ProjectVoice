@@ -49,6 +49,7 @@ public class PlayerSettings
     // Other
     public static SettingBool DebugTracks = new("debugtracks", false);
     public static SettingBool Profiler = new("graphy", false, value => Context.SetupProfiler());
+    public static SettingBool DebugJudgements = new("debugjudgements", false);
 
     // Classes
     public class SettingString

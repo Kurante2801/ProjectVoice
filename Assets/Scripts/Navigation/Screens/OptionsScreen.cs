@@ -226,6 +226,11 @@ public class OptionsScreen : Screen
         debugtracks.SetValue(PlayerSettings.DebugTracks.Value);
         debugtracks.SetLocalizationKeys("OPTIONS_DEBUGTRACKS_NAME", "OPTIONS_DEBUGTRACKS_DESC");
         debugtracks.OnValueChanged.AddListener(value => PlayerSettings.DebugTracks.Value = value);
+
+        var debugjudgements = CreateSetting<SettingBooleanElement>(SettingType.Boolean, OthersContent);
+        debugjudgements.SetValue(PlayerSettings.DebugJudgements.Value);
+        debugjudgements.SetLocalizationKeys("OPTIONS_DEBUGJUDGEMENTS_NAME", "OPTIONS_DEBUGJUDGEMENTS_DESC");
+        debugjudgements.OnValueChanged.AddListener(value => PlayerSettings.DebugJudgements.Value = value);
     }
     
     public void ReturnButton()

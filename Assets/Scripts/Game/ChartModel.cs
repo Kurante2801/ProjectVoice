@@ -50,7 +50,7 @@ public class ChartModel
         public int easing;
         public int start_time;
         public int end_time;
-        public string start_value;
+        public string start_value; // Hex color
         public string end_value;
     }
 

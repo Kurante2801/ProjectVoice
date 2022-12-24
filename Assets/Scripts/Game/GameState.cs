@@ -82,6 +82,9 @@ public sealed class GameState
         // Ensure million score
         if (Score > 995000 && ClearCount == NoteCount && IsFullScorePossible)
             Score = 1000000D;
+
+        if (grade != NoteGrade.Perfect && PlayerSettings.DebugJudgements.Value)
+            Debug.Log($"[Note] ID {model.id}: {grade}\nModel.time = {model.time} (millis)\nConductor.Time = {Conductor.Instance.Time}");
     }
 }
 
