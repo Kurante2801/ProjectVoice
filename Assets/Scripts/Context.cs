@@ -110,6 +110,10 @@ public class Context : SingletonMonoBehavior<Context>
         AudioSource.bypassEffects = true;
 
         IsInitialized = true;
+
+#if UNITY_EDITOR
+        Modifiers.Add(Modifier.Auto);
+#endif
     }
 
     public static async void PlaySongPreview(Level level)
