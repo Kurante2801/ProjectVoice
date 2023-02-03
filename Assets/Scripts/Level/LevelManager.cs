@@ -7,18 +7,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class LevelManager
 {
     public readonly Dictionary<string, Level> LoadedLevels = new();
     private readonly string[] extensions = new string[] { ".wav", ".ogg", ".mp3" };
+    public bool Loaded { get; private set; } = false;
 
     // CommonExtensions.GetSubEntry loops through all files in a given folder, I don't like it either but Scoped Storage has forced my hand
-    public void LoadLevels()
+    public async Task LoadLevels()
     {
+        Loaded = false;
         LoadedLevels.Clear();
         var paths = new List<string>();
-        var directories = FileBrowserHelpers.GetEntriesInDirectory(Context.UserDataPath, false).Where(entry => entry.IsDirectory);
+        var directories = FileBrowserHelpers.GetEntriesInDirectory(PlayerSettings.LevelsPath.Value, false).Where(entry => entry.IsDirectory);
 
         int folders = 0;
         foreach (var entry in directories)
@@ -33,7 +36,7 @@ public class LevelManager
                     continue;
                 }
             }
-            string data = FileBrowserHelpers.ReadTextFromFile(file);
+            string data = await StorageUtil.ReadTextAsync(file);
 
             var level = new Level();
             level.Path = entry.Path;
@@ -83,6 +86,7 @@ public class LevelManager
             LoadedLevels[level.ID] = level;
         }
 
-        Debug.Log($"Found {folders} folders in {Context.UserDataPath} and loaded {LoadedLevels.Count} levels");
+        Debug.Log($"Found {folders} folders in {PlayerSettings.LevelsPath.Value} and loaded {LoadedLevels.Count} levels");
+        Loaded = true;
     }
 }

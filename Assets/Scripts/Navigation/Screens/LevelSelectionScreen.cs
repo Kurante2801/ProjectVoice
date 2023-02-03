@@ -7,46 +7,55 @@ using UnityEngine.UI;
 public class LevelSelectionScreen : Screen
 {
     public override string GetID() => "LevelSelectionScreen";
+    
+    private readonly Dictionary<string, LevelCard> levels = new();
+    [SerializeField] private GameObject levelCardPrefab, scrollView;
+    [SerializeField] private RectTransform content;
+    [SerializeField] private TMPro.TMP_Text noLevelsText;
 
-    public Dictionary<string, LevelCard> Levels = new();
-
-    public GameObject LevelCardPrefab, ScrollView;
-    public RectTransform Content;
-    public TMPro.TMP_Text NoLevelsText;
-
-    public override void OnScreenInitialized()
+    public override void OnScreenBecameActive()
     {
         if(Context.LevelManager.LoadedLevels.Count == 0)
         {
-            ScrollView.SetActive(false);
-            NoLevelsText.gameObject.SetActive(true);
+            scrollView.SetActive(false);
+            noLevelsText.gameObject.SetActive(true);
 
             if (!string.IsNullOrWhiteSpace(Context.FileErrorText))
             {
-                NoLevelsText.fontSize = 18f;
-                NoLevelsText.text = Context.FileErrorText;
+                noLevelsText.fontSize = 18f;
+                noLevelsText.text = Context.FileErrorText;
             }
             else
-                NoLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", Context.UserDataPath);
+                noLevelsText.text = "LEVEL_SEL_NOLEVELS".Get().Replace("{PATH}", StorageUtil.GetFileName(PlayerSettings.LevelsPath.Value));
 
             base.OnScreenInitialized();
             return;
         }
 
-        foreach (Transform child in Content)
-            Destroy(child.gameObject);
-        
         var sorted = Context.LevelManager.LoadedLevels.Values.OrderBy(level => level.Meta.title).ToList();
 
-        foreach (var level in sorted)
+        // Remove old levels
+        foreach (var entry in levels.ToList())
         {
-            var card = Instantiate(LevelCardPrefab, Content).GetComponent<LevelCard>();
-            card.SetLevel(level);
-
-            Levels[level.ID] = card;
+            if (sorted.FirstOrDefault(level => level.Meta.id == entry.Key) == null)
+            {
+                Destroy(entry.Value.gameObject);
+                levels.Remove(entry.Key);
+            }
         }
 
-        base.OnScreenInitialized();
+        // Add new levels
+        foreach(var level in sorted)
+        {
+            if (!levels.ContainsKey(level.Meta.id))
+            {
+                var card = Instantiate(levelCardPrefab, content).GetComponent<LevelCard>();
+                card.SetLevel(level);
+                levels.Add(level.Meta.id, card);
+            }
+        }
+
+        base.OnScreenBecameActive();
     }
 
     public void OptionsButton()

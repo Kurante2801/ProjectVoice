@@ -1,5 +1,7 @@
 {
   "LANGUAGE_NAME": "español",
+
+  "INIT_LOADING": "Cargando niveles...",
   "LEVEL_SEL_NOLEVELS": "No se encontraron niveles, colóquelos en <br>{PATH}<br>y reinicia el juego",
 
   "OPTIONS": "Opciones",
@@ -10,6 +12,7 @@
   "RESET": "Restaurar",
   "CANCEL": "Cancelar",
   "GO": "Comenzar",
+  "NEXT": "Siguiente",
 
   "NOTESHAPE_DIAMOND": "Rombo",
   "NOTESHAPE_CIRCLE": "Círculo",
@@ -81,7 +84,7 @@
 
   "OPTIONS_OTHERS_TAB": "Otros",
   "OPTIONS_STORAGE_NAME": "Abrir configuración de almacenamiento",
-  "OPTIONS_STORAGE_DESC": "Después de actualizar la ubicación de tus niveles, el juego se reiniciará.",
+  "OPTIONS_STORAGE_DESC": "",
   "OPTIONS_SAFEAREA_NAME": "Habilitar Area Segura",
   "OPTIONS_SAFEAREA_DESC": "La interfaz evitará las cámaras integradas a la pantalla.",
   "OPTIONS_NATIVEAUDIO_NAME": "Usar Audio Nativo",
@@ -110,13 +113,14 @@
   "GRAPHICS_MEDIUM": "Medio",
   "GRAPHICS_HIGH": "Alto",
 
-  "FOLDERACCESS_REQUEST": "Seleccione la ubicación en la que se almacena sus niveles",
+  "FOLDERACCESS_REQUEST": "Project Voice requires access to a folder to load levels from.\nIt can be an empty folder that you will later add levels to.",
+  "FOLDERACCESS_LOADING": "Cargando...",
+  "FOLDERACCESS_SUCCESS": "Cargado {LEVELS} niveles!",
+  "FOLDERACCESS_FAILURE": "Error al cargar niveles",
+  "FOLDERACCESS_NODIR": "Ninguna carpeta seleccionada",
+  "FOLDERACCESS_BROWSE": "Buscar",
   "FOLDERACCESS_ACCEPT": "Seleccionar esta carpeta",
   "FOLDERACCESS_HEADER": "Seleccionar Carpeta",
-  "FOLDERACCESS_LOADING": "Intentando abrir carpeta...",
-  "FOLDERACCESS_NODIR": "Ningún directorio seleccionado",
-  "FOLDERACCESS_SUCCESS": "El acceso al directorio fue <color=#0F0>exitoso</color>, se encontraron {DIRCOUNT} carpeta/s",
-  "FOLDERACCESS_FAILURE": "El acceso al directorio <color=#F00>fracazó.",
   "FOLDERACCESS_NEWFOLDER": "Nueva Carpeta",
 
   "NOTEGRADE_PERFECT": "Perfecto",

@@ -1,5 +1,7 @@
 {
   "LANGUAGE_NAME": "english",
+
+  "INIT_LOADING": "Loading levels...",
   "LEVEL_SEL_NOLEVELS": "No levels found, place them under <br>{PATH}<br>and restart the game",
 
   "OPTIONS": "Options",
@@ -10,6 +12,7 @@
   "RESET": "Reset",
   "CANCEL": "Cancel",
   "GO": "GO",
+  "NEXT": "Next",
 
   "NOTESHAPE_DIAMOND": "Diamond",
   "NOTESHAPE_CIRCLE": "Circle",
@@ -81,7 +84,7 @@
 
   "OPTIONS_OTHERS_TAB": "Others",
   "OPTIONS_STORAGE_NAME": "Open storage settings",
-  "OPTIONS_STORAGE_DESC": "After updating the location of your levels, the game will restart",
+  "OPTIONS_STORAGE_DESC": "",
   "OPTIONS_SAFEAREA_NAME": "Enable Safe Area",
   "OPTIONS_SAFEAREA_DESC": "The UI will avoid camera notches.",
   "OPTIONS_NATIVEAUDIO_NAME": "Use Native Audio",
@@ -110,13 +113,14 @@
   "GRAPHICS_MEDIUM": "Medium",
   "GRAPHICS_HIGH": "High",
 
-  "FOLDERACCESS_REQUEST": "Select the location your levels are stored at",
+  "FOLDERACCESS_REQUEST": "Project Voice requires access to a folder to load levels from.\nIt can be an empty folder that you will later add levels to.",
+  "FOLDERACCESS_LOADING": "Loading...",
+  "FOLDERACCESS_SUCCESS": "Loaded {LEVELS} levels!",
+  "FOLDERACCESS_FAILURE": "Failed to load levels",
+  "FOLDERACCESS_NODIR": "No folder selected",
+  "FOLDERACCESS_BROWSE": "Browse",
   "FOLDERACCESS_ACCEPT": "Select current folder",
   "FOLDERACCESS_HEADER": "Select Folder",
-  "FOLDERACCESS_LOADING": "Attempting to open folder...",
-  "FOLDERACCESS_NODIR": "No directory selected",
-  "FOLDERACCESS_SUCCESS": "Directory access was <color=#0F0>successful</color>, found {DIRCOUNT} folder(s).",
-  "FOLDERACCESS_FAILURE": "Directory access <color=#F00>failed</color>.",
   "FOLDERACCESS_NEWFOLDER": "New Folder",
 
   "NOTEGRADE_PERFECT": "Perfect",

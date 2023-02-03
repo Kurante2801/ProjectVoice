@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MainColorEvent : MonoBehaviour
 {
-    public float TransitionDuration = 0.25f;
+    public float TransitionDuration = 0f;
     public List<Graphic> Graphics = new();
 
     private void OnEnable()

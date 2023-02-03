@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class StorageUtil
@@ -99,5 +100,19 @@ public static class StorageUtil
             File.Create(Path.Join(directoryPath, fileName));
         else
             FileBrowserHelpers.CreateFileInDirectory(directoryPath, fileName);
+    }
+
+    public static async Task<string> ReadTextAsync(string path)
+    {
+        if (Context.AndroidVersionCode <= 29)
+            return await File.ReadAllTextAsync(path);
+        else
+        {
+            string cache = CopyToCache(path);
+            string result = await File.ReadAllTextAsync(cache);
+            DeleteFromCache(cache);
+            return result;
+        }
+            
     }
 }

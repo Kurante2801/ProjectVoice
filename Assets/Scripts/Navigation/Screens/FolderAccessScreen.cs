@@ -9,102 +9,100 @@ using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 public class FolderAccessScreen : Screen
 {
     public override string GetID() => "FolderAccessScreen";
 
-    [SerializeField] private TMP_Text accessState;
+    [SerializeField] private TMP_Text header;
     [SerializeField] private TMP_InputField directory;
-    [SerializeField] private Button returnButton;
-
-    public static bool CanLeave = true;
-    public static bool IsFirstTime = true;
-    private static bool shouldRestart = false;
-
-    public override void OnScreenInitialized()
-    {
-        base.OnScreenInitialized();
-        shouldRestart = false;
-    }
+    [SerializeField] private Button browseButton, nextButton;
 
     public override void OnScreenBecameActive()
     {
-        IsFirstTime = false;
+        nextButton.interactable = Context.LevelManager.Loaded;
 
-        returnButton.interactable = CanLeave;
-        accessState.text = "FOLDERACCESS_REQUEST".Get();
-        directory.text = "";
+        if (Context.LevelManager.Loaded)
+            header.text = "FOLDERACCESS_SUCCESS".Get().Replace("{LEVELS}", Context.LevelManager.LoadedLevels.Count.ToString());
+        else
+            header.text = "FOLDERACCESS_REQUEST".Get();
 
-        // Check for existing
-        if (!string.IsNullOrEmpty(PlayerSettings.UserDataPath.Value))
-        {
-            directory.text = PlayerSettings.UserDataPath.Value;
-            accessState.text = "FOLDERACCESS_LOADING".Get();
-
-            var entries = FileBrowserHelpers.GetEntriesInDirectory(PlayerSettings.UserDataPath.Value, false);
-            if (entries == null)
-            {
-                accessState.text = "FOLDERACCESS_FAILURE".Get();
-                CanLeave = false;
-                returnButton.interactable = false;
-            }
-            else
-            {
-                accessState.text = "FOLDERACCESS_SUCCESS".Get().Replace("{DIRCOUNT}", entries.Where(entry => entry.IsDirectory).ToArray().Length.ToString());
-                CanLeave = true;
-                returnButton.interactable = true;
-            }
-        }
+        string path = PlayerSettings.LevelsPath.Value;
+        directory.text = path != null ? StorageUtil.GetFileName(path) : "";
 
         base.OnScreenBecameActive();
     }
 
-    public void SelectButton() => StorageUtil.BrowseFolder(path =>
+    private void DisableButtons()
     {
-        if (string.IsNullOrEmpty(path)) return;
+        nextButton.interactable = false;
+        browseButton.interactable = false;
+    }
 
-        if (!StorageUtil.DirectoryExists(path))
-        {
-            Debug.LogError("Directory does not exist");
-            return;
-        }
-
-        // Make sure path is not root of storage
-        if (Context.AndroidVersionCode <= 29 && Regex.IsMatch(path, @"^\/storage\/emulated\/\d+$"))
-        {
-            path = Path.Combine(path, "Project Voice");
-            // We can use IO on api level 29 and below
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-        }
-        shouldRestart = PlayerSettings.UserDataPath.Value != path;
-        PlayerSettings.UserDataPath.Value = path;
-
-        // Create .nomedia folder
-        if (!StorageUtil.GetSubfilePath(path, ".nomedia", out _))
-            StorageUtil.CreateFile(path, ".nomedia");
-
-        OnScreenBecameActive();
-    });
-
-    public async void ReturnButton()
+    private void EnableButtons()
     {
-        if (FileBrowser.IsOpen || !CanLeave) return;
+        nextButton.interactable = Context.LevelManager.Loaded;
+        browseButton.interactable = true;
+    }
 
-        if (!IsFirstTime && shouldRestart)
+    public void BrowseButton()
+    {
+        DisableButtons();
+        StorageUtil.BrowseFolder(async path =>
         {
-            Context.ScreenManager.ChangeScreen(null);
-            Context.FadeOutSongPreview();
-            Backdrop.Instance.SetBackdrop(null);
-            Context.SelectedLevel = null;
+            if(path == null)
+            {
+                EnableButtons();
+                return;
+            }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Navigation");
-            return;
-        }
+            if (!StorageUtil.DirectoryExists(path))
+            {
+                Debug.LogError("Directory does not exist\n" + path);
+                EnableButtons();
+                return;
+            }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Make sure path is not root of storage
+            if(Context.AndroidVersionCode <= 29 && Regex.IsMatch(path, @"^\/storage\/emulated\/\d+$"))
+            {
+                path = Path.Combine(path, "Project Voice");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+            }
+
+            // Create .nomedia
+            if (!StorageUtil.GetSubfilePath(path, ".nomedia", out _))
+                StorageUtil.CreateFile(path, ".nomedia");
+#endif
+
+            directory.text = StorageUtil.GetFileName(path);
+
+            header.text = "FOLDERACCESS_LOADING".Get();
+            try
+            {
+                PlayerSettings.LevelsPath.Value = path;
+                await Context.LevelManager.LoadLevels();
+            }
+            catch(Exception e)
+            {
+                header.text = "FOLDERACCESS_FAILURE".Get();
+                Debug.LogError(e);
+            }
+
+            if (Context.LevelManager.Loaded)
+                header.text = "FOLDERACCESS_SUCCESS".Get().Replace("{LEVELS}", Context.LevelManager.LoadedLevels.Count.ToString());
+            EnableButtons();
+        });
+    }
+
+    public void NextButton()
+    {
+        if (FileBrowser.IsOpen) return;
 
         if (!Context.ScreenManager.TryReturnScreen())
-            Context.ScreenManager.ChangeScreen("InitializationScreen", addToHistory: false);
+            Context.ScreenManager.ChangeScreen("LevelSelectionScreen", addToHistory: false);
     }
 }

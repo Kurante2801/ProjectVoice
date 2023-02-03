@@ -726,10 +726,10 @@ MonoBehaviour:
   CanvasGroup: {fileID: 0}
   RectTransform: {fileID: 0}
   GraphicRaycaster: {fileID: 0}
-  LevelCardPrefab: {fileID: 6297851548087053093, guid: f36dbd2f6ae2173489cc6580c8f5c4d3, type: 3}
-  ScrollView: {fileID: 8146503992944707374}
-  Content: {fileID: 8146503993389368024}
-  NoLevelsText: {fileID: 5165930691083423271}
+  levelCardPrefab: {fileID: 6297851548087053093, guid: f36dbd2f6ae2173489cc6580c8f5c4d3, type: 3}
+  scrollView: {fileID: 8146503992944707374}
+  content: {fileID: 8146503993389368024}
+  noLevelsText: {fileID: 5165930691083423271}
 --- !u!114 &8146503993444622347
 MonoBehaviour:
   m_ObjectHideFlags: 0

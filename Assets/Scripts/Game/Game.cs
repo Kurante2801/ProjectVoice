@@ -73,7 +73,7 @@ public class Game : SingletonMonoBehavior<Game>
         if (Context.SelectedLevel == null)
         {
             var level = new Level();
-            level.Path = Path.Join(Context.UserDataPath, EditorLevelDirectory) + Path.DirectorySeparatorChar;
+            level.Path = Path.Join(PlayerSettings.LevelsPath.Value, EditorLevelDirectory) + Path.DirectorySeparatorChar;
 
             if (File.Exists(level.Path + "level.json"))
                 level.Meta = JsonConvert.DeserializeObject<LevelMeta>(File.ReadAllText(level.Path + "level.json"));

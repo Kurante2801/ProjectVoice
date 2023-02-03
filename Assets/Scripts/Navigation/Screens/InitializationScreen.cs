@@ -19,11 +19,10 @@ public class InitializationScreen : Screen
             await Context.LocalizationManager.Initialize();
 
         // Android scoped storage stuff
-        string path = PlayerSettings.UserDataPath.Value;
+        string path = PlayerSettings.LevelsPath.Value;
         if (string.IsNullOrEmpty(path))
         {
-            FolderAccessScreen.CanLeave = false;
-            Context.ScreenManager.ChangeScreen("FolderAccessScreen", addToHistory: false);
+            Context.ScreenManager.ChangeScreen("FolderAccessScreen", addToHistory: false, destroyOld: true);
             return;
         }
         else
@@ -32,25 +31,22 @@ public class InitializationScreen : Screen
             var paths = SimpleFileBrowser.FileBrowserHelpers.GetEntriesInDirectory(path, false);
             if (paths == null)
             {
-                FolderAccessScreen.CanLeave = false;
-                Context.ScreenManager.ChangeScreen("FolderAccessScreen", addToHistory: false);
+                Context.ScreenManager.ChangeScreen("FolderAccessScreen", addToHistory: false, destroyOld: true);
                 return;
             }
         }
 
-        FolderAccessScreen.IsFirstTime = false;
-        Context.UserDataPath = PlayerSettings.UserDataPath.Value;
-
+        // TODO: This needs refactoring, it's not reliable (especially with Auto modifier)
         if (Context.SelectedLevel != null)
         {
             if(Context.State != null && Context.State.IsCompleted && Context.SelectedChart != null && !Context.Modifiers.Contains(Modifier.Auto))
-                Context.ScreenManager.ChangeScreen("ResultScreen", addToHistory: false);
+                Context.ScreenManager.ChangeScreen("ResultScreen", addToHistory: false, destroyOld: true);
             else
                 Context.ScreenManager.ChangeScreen("LevelSummaryScreen");
             return;
         }
 
-        Context.LevelManager.LoadLevels();
-        Context.ScreenManager.ChangeScreen("LevelSelectionScreen");
+        await Context.LevelManager.LoadLevels();
+        Context.ScreenManager.ChangeScreen("LevelSelectionScreen", destroyOld: true);
     }
 }
