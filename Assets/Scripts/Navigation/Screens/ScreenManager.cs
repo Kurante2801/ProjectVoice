@@ -65,7 +65,6 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
     public async void ChangeScreen(string screen_id, ScreenTransition transition = ScreenTransition.Fade, float duration = 0.25f, bool addToHistory = true, bool destroyOld = false, bool simultaneous = false)
     {
-        Debug.Log(string.Join(" < ", History));
         if (!string.IsNullOrWhiteSpace(ChangingToScreenId))
         {
             Debug.LogWarning($"Atempted to change screen while transitioning to {ChangingToScreenId}");
@@ -148,7 +147,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
     public bool TryReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
     {
         var screen = PreviousScreen();
-        if (screen != null)
+        if(screen != null)
         {
             ChangeScreen(screen, default, duration, false, destroy, simultaneous);
             return true;

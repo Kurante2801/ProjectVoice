@@ -251,7 +251,7 @@ public class OptionsScreen : Screen
             }
         }
             
-        if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
-            Context.ScreenManager.ChangeScreen("LevelSelectionScreen", simultaneous: true);
+        if (!manager.TryReturnScreen(simultaneous: true))
+            manager.ChangeScreen("LevelSelectionScreen", simultaneous: true);
     }
 }
