@@ -88,7 +88,7 @@ public class OptionsScreen : Screen
         });
 
         var targetfps = CreateSetting<SettingDropdownElement>(SettingType.Dropdown, GeneralContent);
-        targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS" }, new object[] { 30, 60, 120 }, PlayerSettings.TargetFPS.Value);
+        targetfps.SetValues(new[] { "30 FPS", "60 FPS", "120 FPS", "144 FPS" }, new object[] { 30, 60, 120, 144 }, PlayerSettings.TargetFPS.Value);
         targetfps.SetLocalizationKeys("OPTIONS_TARGETFPS_NAME", "OPTIONS_TARGETFPS_DESC");
         targetfps.OnValueChanged.AddListener((_, _, value) => PlayerSettings.TargetFPS.Value = (int)value);
 
@@ -235,10 +235,29 @@ public class OptionsScreen : Screen
     
     public void ReturnButton()
     {
-        if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
+        var manager = Context.ScreenManager;
+        if (manager.History.Count > 0)
         {
-            Debug.Log("This shouldn't be called");
+            var screen = manager.PopAndPeekHistory();
+            // Ensure level still exists! (user may have changed level location folder)
+            if (screen == "LevelSummaryScreen")
+            {
+                var level = Context.SelectedLevel;
+                if (level == null || !Context.LevelManager.LoadedLevels.ContainsKey(level.Meta.id))
+                {
+                    // Skip LevelSummary
+                    if(!manager.TryReturnScreen())
+                        manager.ChangeScreen("LevelSelectScreen");
+                    Backdrop.Instance.SetBackdrop(null);
+                    Context.FadeOutSongPreview();
+                    return;
+                }
+            }
+            manager.ChangeScreen(screen, simultaneous: true);
+
+        } else
             Context.ScreenManager.ChangeScreen("LevelSelectionScreen", simultaneous: true);
-        }
+            
+        //if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
     }
 }

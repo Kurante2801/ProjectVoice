@@ -1867,7 +1867,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 35.55}
+  m_SizeDelta: {x: 0, y: 35.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7387680788485661692
 CanvasRenderer:
@@ -2439,7 +2439,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 35.55}
+  m_SizeDelta: {x: 0, y: 35.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7387680790096627879
 CanvasRenderer:
@@ -2604,7 +2604,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 45.03}
+  m_SizeDelta: {x: 0, y: 45.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7387680790118295180
 CanvasRenderer:
@@ -3441,6 +3441,10 @@ PrefabInstance:
     - target: {fileID: 2704727862892278006, guid: b94948ccf77101743836286bb09d4c34, type: 3}
       propertyPath: m_Name
       value: Difficulty Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 8562736289237253795, guid: b94948ccf77101743836286bb09d4c34, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 80.12
       objectReference: {fileID: 0}
     - target: {fileID: 8727872246580055587, guid: b94948ccf77101743836286bb09d4c34, type: 3}
       propertyPath: m_Pivot.x

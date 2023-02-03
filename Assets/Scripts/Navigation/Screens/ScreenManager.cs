@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 // Heavily super basef off https://github.com/Cytoid/Cytoid/blob/main/Assets/Scripts/Screen/ScreenManager.cs
@@ -35,7 +36,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
             screen.gameObject.SetActive(false);
 
         if (!string.IsNullOrWhiteSpace(InitialScreenId))
-            ChangeScreen(InitialScreenId, ScreenTransition.None);
+            ChangeScreen(InitialScreenId, ScreenTransition.None, addToHistory: false);
     }
 
     public Screen CreateScreen(string screen_id)
@@ -116,7 +117,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
     public string PopAndPeekHistory()
     {
-        if (History.Count > 1)
+        if (History.Count > 0)
         {
             History.Pop();
             return History.Peek();
@@ -132,7 +133,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
     public bool TryReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
     {
-        if (History.Count > 1)
+        if (History.Count > 0)
         {
             ReturnScreen(duration, destroy, simultaneous);
             return true;

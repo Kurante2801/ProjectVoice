@@ -115,7 +115,7 @@
 
   "FOLDERACCESS_REQUEST": "Project Voice requires access to a folder to load levels from.\nIt can be an empty folder that you will later add levels to.",
   "FOLDERACCESS_LOADING": "Cargando...",
-  "FOLDERACCESS_SUCCESS": "Cargado {LEVELS} niveles!",
+  "FOLDERACCESS_SUCCESS": "{LEVELS} niveles cargados!",
   "FOLDERACCESS_FAILURE": "Error al cargar niveles",
   "FOLDERACCESS_NODIR": "Ninguna carpeta seleccionada",
   "FOLDERACCESS_BROWSE": "Buscar",
