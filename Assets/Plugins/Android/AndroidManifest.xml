@@ -3,14 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.unity3d.player"
     xmlns:tools="http://schemas.android.com/tools">
-    <application android:allowAudioPlaybackCapture="true">
-        <activity android:name="com.unity3d.player.UnityPlayerActivity"
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<application
+		android:allowAudioPlaybackCapture="true"
+		android:allowBackup="true"
+		android:fullBackupContent="true"
+		android:isGame="true"
+        android:appCategory="game">
+		<activity android:name="com.unity3d.player.UnityPlayerActivity"
+				  android:screenOrientation="userLandscape"
                   android:theme="@style/UnityThemeSelector">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
-        </activity>
-    </application>
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			<meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+		</activity>
+	</application>
 </manifest>

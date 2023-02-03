@@ -16,8 +16,8 @@ MonoBehaviour:
   material: {fileID: 1053333423450310472}
   materialHashCode: -208624210
   m_Version: 1.1.0
-  m_SourceFontFileGUID: e38febe63ce7dbf43b9df01aa7123d07
-  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: e38febe63ce7dbf43b9df01aa7123d07, type: 3}
+  m_SourceFontFileGUID: 0d8481679f5d79e4e81ce00d65733736
+  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 0d8481679f5d79e4e81ce00d65733736, type: 3}
   m_SourceFontFile: {fileID: 0}
   m_AtlasPopulationMode: 0
   m_FaceInfo:
@@ -2631,13 +2631,13 @@ MonoBehaviour:
     italicTypeface: {fileID: 0}
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
-  - regularTypeface: {fileID: 11400000, guid: f5cfae43384530a4f8ccc6af074fb0b3, type: 2}
+  - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
   - regularTypeface: {fileID: 11400000, guid: c8fc65bc94ad34240bbeffb2b77dfce0, type: 2}
     italicTypeface: {fileID: 0}
-  - regularTypeface: {fileID: 0}
+  - regularTypeface: {fileID: 11400000, guid: c8fc65bc94ad34240bbeffb2b77dfce0, type: 2}
     italicTypeface: {fileID: 0}
   - regularTypeface: {fileID: 11400000, guid: 812cd2046d5a9e24195345ec08d43bf5, type: 2}
     italicTypeface: {fileID: 0}

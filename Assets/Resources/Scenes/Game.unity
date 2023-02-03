@@ -1781,7 +1781,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 28.45}
+  m_SizeDelta: {x: 0, y: 28.44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1010748541
 MonoBehaviour:
@@ -2364,6 +2364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -2963,7 +2964,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 26.07}
+  m_SizeDelta: {x: 0, y: 26.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1543502125
 MonoBehaviour:
@@ -3798,6 +3799,7 @@ GameObject:
   - component: {fileID: 1959804265}
   - component: {fileID: 1959804267}
   - component: {fileID: 1959804266}
+  - component: {fileID: 1959804268}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -3863,3 +3865,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959804264}
   m_CullTransparentMesh: 1
+--- !u!114 &1959804268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959804264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1

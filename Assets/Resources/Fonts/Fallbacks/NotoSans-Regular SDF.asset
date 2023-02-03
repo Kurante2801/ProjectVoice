@@ -60,7 +60,7 @@ Material:
     - _GlowOffset: 0
     - _GlowOuter: 0.05
     - _GlowPower: 0.75
-    - _GradientScale: 51
+    - _GradientScale: 9
     - _LightAngle: 3.1416
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
@@ -178,6 +178,7 @@ MonoBehaviour:
     m_StyleName: Regular
     m_PointSize: 90
     m_Scale: 1
+    m_UnitsPerEM: 0
     m_LineHeight: 122.56348
     m_AscentLine: 96.19629
     m_CapLine: 64
@@ -231,7 +232,7 @@ MonoBehaviour:
   atlas: {fileID: 0}
   m_AtlasWidth: 1024
   m_AtlasHeight: 1024
-  m_AtlasPadding: 50
+  m_AtlasPadding: 8
   m_AtlasRenderMode: 4165
   m_glyphInfoList: []
   m_KerningTable:
@@ -245,7 +246,7 @@ MonoBehaviour:
     sourceFontFileGUID: 80614dd09f5065447ab8754c590ac259
     pointSizeSamplingMode: 0
     pointSize: 90
-    padding: 50
+    padding: 8
     packingMode: 0
     atlasWidth: 1024
     atlasHeight: 1024
