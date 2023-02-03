@@ -4,12 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public static class TextureExtensions
 {
-    public static async UniTask<Texture2D> LoadTexture(string path)
+    public static async UniTask<Texture2D> LoadTexture(string path, bool mips = false)
     {
         bool cached = false;
         if (Context.AndroidVersionCode > 29)
@@ -24,10 +25,20 @@ public static class TextureExtensions
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             throw new Exception(request.error);
 
-        var texture = DownloadHandlerTexture.GetContent(request);
+        Texture2D texture;
+
+        if (mips)
+        {
+            texture = new Texture2D(2, 2);
+            texture.LoadImage(request.downloadHandler.data);
+            texture.Apply();
+        }
+        else
+            texture = DownloadHandlerTexture.GetContent(request);
+        
         texture.wrapMode = TextureWrapMode.Clamp; // This fixes a 1 px border around the image
 
-        if(cached)
+        if (cached)
             StorageUtil.DeleteFromCache(path);
 
         return texture;
@@ -69,4 +80,18 @@ public static class TextureExtensions
     }
 
     public static Texture2D Blurred(this Texture original, int ammount) => Blurred((Texture2D)original, ammount);
+
+    public static Texture2D ReSize(this Texture2D tex, int width, int height)
+    {
+        tex.filterMode = FilterMode.Trilinear;
+        tex.Apply();
+
+        var rt = new RenderTexture(width, height, 8);
+        Graphics.Blit(tex, rt);
+
+        var result = new Texture2D(width, height);
+        result.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
+        result.Apply();
+        return result;
+    }
 }

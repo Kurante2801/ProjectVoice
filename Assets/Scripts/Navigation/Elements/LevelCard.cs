@@ -69,7 +69,8 @@ public class LevelCard : MonoBehaviour
         var texture = await TextureExtensions.LoadTexture(background);
         if (texture == null) return;
 
-        Background.texture = texture;
+        var w = Math.Min((transform as RectTransform).sizeDelta.x, texture.width);
+        Background.texture = texture.ReSize((int)w, (int)w / (texture.width / texture.height));
         BackgroundFitter.aspectRatio = Level.Meta.background_aspect_ratio ?? texture.width / (float)texture.height;
         Background.DOFade(1f, 0.25f);
     }

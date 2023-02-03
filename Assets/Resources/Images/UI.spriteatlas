@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 6128c6f4cde93e2418775d38f0ac1251, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 87ab265131e04f343ba37c18d813cafb, type: 3}
+  - {fileID: 21300000, guid: 019db3c1f4d9db240b99aea2f82ece23, type: 3}
+  - {fileID: 21300000, guid: 7403eb025c26f0d44bb2391a6a2f1f63, type: 3}
+  - {fileID: 21300000, guid: e582a412c910b074ba05e6922fee7aa8, type: 3}
+  - {fileID: 21300000, guid: a688092269056704aae6f7b40c1cc556, type: 3}
+  - {fileID: 21300000, guid: 3940ae3243d99cc429e36b1044a415d8, type: 3}
+  - {fileID: 21300000, guid: 53ab36f27fcc4a34b9f98a5957d1c8d3, type: 3}
+  - {fileID: 21300000, guid: 926e2263f96633146a0d586a140232a4, type: 3}
+  - {fileID: 21300000, guid: 5b6f8844357a97d4198333a38fe8cd32, type: 3}
+  - {fileID: 21300000, guid: d4b3cb44d13b2494181753864299e3e5, type: 3}
+  - {fileID: 21300000, guid: 2b049ea4c314889458fd83b46f3838f4, type: 3}
+  - {fileID: 21300000, guid: b7993ce6a8d0b5246bfa88397eddd03c, type: 3}
+  - {fileID: 21300000, guid: 0c310668655b9e5479e6569021a937cd, type: 3}
+  - {fileID: 21300000, guid: 3bc99959935e49842b1e13530f8aa5b0, type: 3}
+  - {fileID: 21300000, guid: b476c4b95021c2743a1cbe539ea39a48, type: 3}
+  - {fileID: 21300000, guid: 20a61ada7e7e4c14d8adab569b28d7ec, type: 3}
+  - {fileID: 21300000, guid: 8f8fdb3bc84632046b9011900c83844a, type: 3}
+  - {fileID: 21300000, guid: 1073bf4cbf161394fbf80b5e0a20ded3, type: 3}
+  - {fileID: 21300000, guid: 8840967c27729464ca34a178b6c3b676, type: 3}
+  - {fileID: 21300000, guid: 2f74e30d660ff7340b3332cec6198bc3, type: 3}
+  - {fileID: 21300000, guid: 0fb3231d3b5990245aabb6bde0349433, type: 3}
+  - {fileID: 21300000, guid: 7cb0b27d11384e047a7785ae889f0261, type: 3}
+  - {fileID: 21300000, guid: 4b53e74e22a0fec4faa0b6ce1fcc9854, type: 3}
+  - {fileID: 21300000, guid: fe86661ff55e6564cb94212e1b51fd5e, type: 3}
+  - {fileID: 21300000, guid: 0489dbff802a8144a8888dbbbb4008da, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - science
+  - circle_outlined
+  - pause
+  - folder
+  - circle
+  - check_circle
+  - settings
+  - white
+  - close
+  - hsv_knob
+  - replay
+  - rounded_8px
+  - folder_open
+  - rounded_16px
+  - transparency_indicator
+  - link
+  - check
+  - checkbox_checked
+  - arrow_back
+  - volume_up
+  - arrow_dropdown
+  - info
+  - metronome
+  - play
+  - folder_new
+  m_RenderDataMap: {}
+  m_Tag: UI
+  m_IsVariant: 0
