@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -64,6 +65,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
     public async void ChangeScreen(string screen_id, ScreenTransition transition = ScreenTransition.Fade, float duration = 0.25f, bool addToHistory = true, bool destroyOld = false, bool simultaneous = false)
     {
+        Debug.Log(string.Join(" < ", History));
         if (!string.IsNullOrWhiteSpace(ChangingToScreenId))
         {
             Debug.LogWarning($"Atempted to change screen while transitioning to {ChangingToScreenId}");
@@ -117,7 +119,7 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
 
     public string PopAndPeekHistory()
     {
-        if (History.Count > 0)
+        if (History.Count > 2)
         {
             History.Pop();
             return History.Peek();
@@ -126,18 +128,32 @@ public class ScreenManager : SingletonMonoBehavior<ScreenManager>
         return null;
     }
 
-    public void ReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
+    public string PreviousScreen()
     {
-        ChangeScreen(PopAndPeekHistory(), default, duration, false, destroy, simultaneous);
+        // Is our current screen in the history stack?
+        if (History.Peek() == ActiveScreenId)
+        {
+            if (History.Count > 2)
+                return PopAndPeekHistory();
+            return null;
+        }
+        else
+        {
+            if (History.Count > 1)
+                return History.Peek();
+            return null;
+        }
     }
 
     public bool TryReturnScreen(float duration = 0.25f, bool destroy = false, bool simultaneous = false)
     {
-        if (History.Count > 0)
+        var screen = PreviousScreen();
+        if (screen != null)
         {
-            ReturnScreen(duration, destroy, simultaneous);
+            ChangeScreen(screen, default, duration, false, destroy, simultaneous);
             return true;
         }
         return false;
+
     }
 }

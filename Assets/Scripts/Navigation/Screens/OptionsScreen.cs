@@ -236,28 +236,22 @@ public class OptionsScreen : Screen
     public void ReturnButton()
     {
         var manager = Context.ScreenManager;
-        if (manager.History.Count > 0)
+        if(manager.PreviousScreen() == "LevelSummaryScreen")
         {
-            var screen = manager.PopAndPeekHistory();
             // Ensure level still exists! (user may have changed level location folder)
-            if (screen == "LevelSummaryScreen")
+            var level = Context.SelectedLevel;
+            if (level == null || !Context.LevelManager.LoadedLevels.ContainsKey(level.Meta.id))
             {
-                var level = Context.SelectedLevel;
-                if (level == null || !Context.LevelManager.LoadedLevels.ContainsKey(level.Meta.id))
-                {
-                    // Skip LevelSummary
-                    if(!manager.TryReturnScreen())
-                        manager.ChangeScreen("LevelSelectScreen");
-                    Backdrop.Instance.SetBackdrop(null);
-                    Context.FadeOutSongPreview();
-                    return;
-                }
+                manager.History.Pop();
+                if (!manager.TryReturnScreen())
+                    manager.ChangeScreen("LevelSelectionScreen");
+                Backdrop.Instance.SetBackdrop(null);
+                Context.FadeOutSongPreview();
+                return;
             }
-            manager.ChangeScreen(screen, simultaneous: true);
-
-        } else
-            Context.ScreenManager.ChangeScreen("LevelSelectionScreen", simultaneous: true);
+        }
             
-        //if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
+        if (!Context.ScreenManager.TryReturnScreen(simultaneous: true))
+            Context.ScreenManager.ChangeScreen("LevelSelectionScreen", simultaneous: true);
     }
 }

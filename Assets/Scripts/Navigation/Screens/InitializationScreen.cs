@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class InitializationScreen : Screen
 {
     public override string GetID() => "InitializationScreen";
     public bool IsInitialized { get; protected set; }
+
+    [SerializeField] private GameObject loadingText;
     
     public async override void OnScreenTransitionInEnded()
     {
@@ -36,17 +39,18 @@ public class InitializationScreen : Screen
             }
         }
 
-        // TODO: This needs refactoring, it's not reliable (especially with Auto modifier)
-        if (Context.SelectedLevel != null)
+        if (!Context.LevelManager.Loaded)
         {
-            if(Context.State != null && Context.State.IsCompleted && Context.SelectedChart != null && !Context.Modifiers.Contains(Modifier.Auto))
-                Context.ScreenManager.ChangeScreen("ResultScreen", addToHistory: false, destroyOld: true);
-            else
-                Context.ScreenManager.ChangeScreen("LevelSummaryScreen");
-            return;
+            loadingText.SetActive(true);
+            await Context.LevelManager.LoadLevels();
         }
 
-        await Context.LevelManager.LoadLevels();
-        Context.ScreenManager.ChangeScreen("LevelSelectionScreen", destroyOld: true);
+        var state = Context.State;
+        if (state != null && state.IsCompleted && Context.SelectedChart != null && !Context.Modifiers.Contains(Modifier.Auto))
+            Context.ScreenManager.ChangeScreen("ResultScreen", addToHistory: false, destroyOld: true);
+        else if (Context.SelectedLevel != null)
+            Context.ScreenManager.ChangeScreen("LevelSummaryScreen");
+        else
+            Context.ScreenManager.ChangeScreen("LevelSelectionScreen", destroyOld: true);
     }
 }

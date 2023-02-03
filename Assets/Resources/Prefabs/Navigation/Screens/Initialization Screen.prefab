@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5138651594938389812
 RectTransform:
   m_ObjectHideFlags: 0
@@ -242,3 +242,4 @@ MonoBehaviour:
   CanvasGroup: {fileID: 0}
   RectTransform: {fileID: 0}
   GraphicRaycaster: {fileID: 0}
+  loadingText: {fileID: 5069373875897130735}

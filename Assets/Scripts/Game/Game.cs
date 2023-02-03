@@ -17,8 +17,13 @@ public class Game : SingletonMonoBehavior<Game>
 {
     private new Camera camera;
     public ChartModel Chart;
-    public GameState State;
-    
+    public GameState State
+    {
+        get => Context.State;
+        set => Context.State = value;
+    }
+
+
     public string EditorLevelDirectory = "a13092021a";
 
     public UnityEvent<Game> OnGameLoaded = new();
@@ -72,6 +77,7 @@ public class Game : SingletonMonoBehavior<Game>
         // Load test level
         if (Context.SelectedLevel == null)
         {
+#if UNITY_EDITOR
             var level = new Level();
             level.Path = Path.Join(PlayerSettings.LevelsPath.Value, EditorLevelDirectory) + Path.DirectorySeparatorChar;
 
@@ -95,6 +101,9 @@ public class Game : SingletonMonoBehavior<Game>
                 Backdrop.Instance.SetBackdrop(background, level.Meta.background_aspect_ratio ?? 4f / 3f, true);
 
             Context.Modifiers.Add(Modifier.Auto);
+#else
+            throw new Exception("No level selected");
+#endif
         }
 
         // Make background stay behind sprites
@@ -273,7 +282,6 @@ public class Game : SingletonMonoBehavior<Game>
     {
         ClearGameplayElements();
         State.IsCompleted = true;
-        Context.State = State;
 
         TransitionTime = 1f;
         Backdrop.Instance.BackgroundOverlay.DOFade(0f, TransitionTime);
